@@ -38,11 +38,15 @@ const Hero = () => {
 
             <div className="flex flex-wrap gap-4 mt-10">
 
-              <button className="bg-blue-700 text-white px-7 py-3 rounded-lg hover:bg-blue-800 transition">
+              <button onClick={() => {
+                window.location.href="/colleges"
+              }} className="bg-blue-700 text-white px-7 py-3 rounded-lg hover:bg-blue-800 transition">
                 Explore Colleges
               </button>
 
-              <button className="border border-gray-300 px-7 py-3 rounded-lg hover:bg-gray-100 transition">
+              <button onClick={() => {
+                window.location.href="/reviews"
+              }} className="border border-gray-300 px-7 py-3 rounded-lg hover:bg-gray-100 transition">
                 Write Review
               </button>
 

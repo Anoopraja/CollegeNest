@@ -1,4 +1,4 @@
-const Colleges = [
+const college = [
   {
     "id": 1,
     "name": "Muzaffarpur Institute of Technology",
@@ -456,62 +456,40 @@ const Colleges = [
     "image": "/college/arwal.jpg"
   }
 ]
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+// import { Link } from "react-router-dom";
 
-import { Link } from "react-router-dom";
-const College = () => {
+const Colleges = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900">
-          Explore BEU Colleges
-        </h1>
-        <p className="text-gray-500 mt-3">
-          Read honest reviews and ratings from students.
-        </p>
-      </div>
+    <div className="max-w-6xl mx-auto py-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {Colleges.map((college) => (
-          <div
-            key={college.id}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
-          >
-            {/* College Name */}
-            <h2 className="text-xl font-bold text-gray-900 mb-3">
-              {college.name}
-            </h2>
+      {college.map((college) => (
+        <div
+          key={college.id}
+          className="border rounded-xl p-5 shadow"
+        >
+          <h2 className="text-2xl font-bold">
+            {college.name}
+          </h2>
 
-            {/* District */}
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-gray-500">District</span>
-              <span className="font-medium text-gray-800">
-                {college.district}
-              </span>
-            </div>
+          <p>{college.district}</p>
 
-            {/* Rating */}
-            <div className="flex items-center justify-between mb-5">
-              <span className="text-gray-500">Rating</span>
+          <p>⭐ {college.rating}</p>
 
-              <div className="flex items-center gap-2">
-                <span className="text-yellow-500 text-lg">⭐</span>
-                <span className="font-semibold text-gray-900">
-                  {college.rating}/5
-                </span>
-              </div>
-            </div>
+          <Link to={`/college/${college.id}`}>
+            <button
+              onClick={() => console.log(college.id)}
+              className="mt-4 bg-blue-600 text-white px-5 py-2 rounded-lg"
+            >
+              View Details
+            </button>
+          </Link>
+        </div>
+      ))}
 
-            {/* Button */}
-            <Link to={`/college/${college.id}`}>
-              <button className="w-full py-3 rounded-xl bg-blue-500 text-white">
-                View Details
-              </button>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </section>
+    </div>
   );
 };
 
-export default College;
+export default Colleges;
