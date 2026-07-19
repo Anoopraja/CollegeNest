@@ -1,4 +1,4 @@
-const college = [
+const CollegeData = [
   {
     "id": 1,
     "name": "Muzaffarpur Institute of Technology",
@@ -456,40 +456,5 @@ const college = [
     "image": "/college/arwal.jpg"
   }
 ]
-import React from "react";
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-// import { Link } from "react-router-dom";
 
-const Colleges = () => {
-  return (
-    <div className="max-w-6xl mx-auto py-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-      {college.map((college) => (
-        <div
-          key={college.id}
-          className="border rounded-xl p-5 shadow"
-        >
-          <h2 className="text-2xl font-bold">
-            {college.name}
-          </h2>
-
-          <p>{college.district}</p>
-
-          <p>⭐ {college.rating}</p>
-
-          <Link to={`/college/${college.id}`}>
-            <button
-              onClick={() => console.log(college.id)}
-              className="mt-4 bg-blue-600 text-white px-5 py-2 rounded-lg"
-            >
-              View Details
-            </button>
-          </Link>
-        </div>
-      ))}
-
-    </div>
-  );
-};
-
-export default Colleges;
+export  default CollegeData;
