@@ -1,4 +1,4 @@
-const CollegeData = [
+const College = [
   {
     "id": 1,
     "name": "Muzaffarpur Institute of Technology",
@@ -457,4 +457,4 @@ const CollegeData = [
   }
 ]
 
-export  default CollegeData;
+export  default College;

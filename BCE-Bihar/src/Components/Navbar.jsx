@@ -1,3 +1,14 @@
+import { Link, NavLink } from "react-router-dom";
+import useState from "react";
+// const [menuOpen, setMenuOpen] = useState(false);
+
+const navClass = ({ isActive }) =>
+  `block px-3 py-2 transition ${
+    isActive
+      ? "text-blue-700 font-semibold"
+      : "text-gray-700 hover:text-blue-700"
+  }`;
+
 const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
@@ -17,34 +28,37 @@ const Navbar = () => {
 
         {/* Menu */}
         <ul className="hidden md:flex items-center gap-8 text-gray-700 font-medium">
-          <li className="hover:text-blue-700 cursor-pointer" onClick={() => {
-            window.location.href = '/';
-          }} >Home</li>
-          <li className="hover:text-blue-700 cursor-pointer" onClick={() => {
-            window.location.href = '/colleges';
-          }} >Colleges</li>
-          <li className="hover:text-blue-700 cursor-pointer" onClick={() => {
-            window.location.href = '/reviews';
-          }} >Reviews</li>
-          <li className="hover:text-blue-700 cursor-pointer" onClick={() => {
-            window.location.href = '/community';
-          }} >Community</li>
-          <li className="hover:text-blue-700 cursor-pointer" onClick={() => {
-            window.location.href = '/contact';
-          }} >Contact</li>
+          <NavLink to="/" className="hover:text-blue-700 cursor-pointer">Home</NavLink>
+          <NavLink to="/college" className="hover:text-blue-700 cursor-pointer">College</NavLink>
+          <NavLink to="/reviews" className="hover:text-blue-700 cursor-pointer">Reviews</NavLink>
+          <NavLink to="/community" className="hover:text-blue-700 cursor-pointer">Community</NavLink>
+          <NavLink to="/contact" className="hover:text-blue-700 cursor-pointer">Contact</NavLink>
         </ul>
 
+        {/* mobile menu */}
+        <div className="md:hidden lg:hidden">
+          <button className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
+            <img className="h-4" src="https://www.svgrepo.com/show/511065/menu-alt-02.svg" alt="" />
+          </button>
+        </div>
+
+
+        {/* tablet menu  */}
+        <div className="hidden md:flex sm:hidden lg:hidden items-center gap-3">
+          <button className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
+            <img className="h-4" src="https://www.svgrepo.com/show/511065/menu-alt-02.svg" alt="" />
+          </button>
+        </div>
         {/* Right */}
         <div className="flex items-center gap-3">
 
-          <button className="hidden md:block border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
+          <NavLink to="/login" className="hidden md:block border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
             Login
-          </button>
+          </NavLink>
 
-          <button className="bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800">
+          <NavLink to="/login" className="bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800">
             Sign Up
-          </button>
-
+          </NavLink>
         </div>
 
       </div>
