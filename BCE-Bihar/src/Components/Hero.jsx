@@ -1,8 +1,10 @@
+import { NavLink } from "react-router-dom";
+
 const Hero = () => {
   return (
     <section className="bg-slate-50">
 
-      <div className="max-w-7xl mx-auto px-6 py-15">
+      <div className="sm:top max-w-7xl mx-auto px-6 py-15">
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
 
@@ -38,17 +40,12 @@ const Hero = () => {
 
             <div className="flex flex-wrap gap-4 mt-10">
 
-              <button onClick={() => {
-                window.location.href="/colleges"
-              }} className="bg-blue-700 text-white px-7 py-3 rounded-lg hover:bg-blue-800 transition">
+              <NavLink to="/college" className="text-white border bg-blue-700 px-7 py-3 rounded-lg hover:bg-blue-800 transition">
                 Explore Colleges
-              </button>
-
-              <button onClick={() => {
-                window.location.href="/reviews"
-              }} className="border border-gray-300 px-7 py-3 rounded-lg hover:bg-gray-100 transition">
+              </NavLink>
+              <NavLink to="/review" className="border border-gray-300 px-7 py-3 rounded-lg hover:bg-gray-100 transition">
                 Write Review
-              </button>
+              </NavLink>
 
             </div>
 

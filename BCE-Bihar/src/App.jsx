@@ -8,6 +8,7 @@ import Colleges from './Components/pages/College'
 
 import { Route, Routes } from 'react-router-dom'
 import Login from './Components/pages/login'
+import Signup from './Components/pages/signup'
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
      <Navbar />
       <Routes>
         <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
         <Route index element={<Hero />} />
         <Route path='/college' element={<Colleges />} />
         <Route path='/community' element={<Community />} />
