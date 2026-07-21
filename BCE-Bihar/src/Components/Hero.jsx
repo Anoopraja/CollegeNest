@@ -43,7 +43,7 @@ const Hero = () => {
               <NavLink to="/college" className="text-white border bg-blue-700 px-7 py-3 rounded-lg hover:bg-blue-800 transition">
                 Explore Colleges
               </NavLink>
-              <NavLink to="/review" className="border border-gray-300 px-7 py-3 rounded-lg hover:bg-gray-100 transition">
+              <NavLink to="/reviews" className="border border-gray-300 px-7 py-3 rounded-lg hover:bg-gray-100 transition">
                 Write Review
               </NavLink>
 

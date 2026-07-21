@@ -2,7 +2,7 @@ import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
 import Hero from './Components/Hero'
 import Community from './Components/pages/Community'
-import Contact from './Components/pages/contact'
+import Contact from './Components/pages/Contact'
 import Reviews from './Components/pages/Review'
 import Colleges from './Components/pages/College'
 
