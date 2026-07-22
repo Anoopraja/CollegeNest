@@ -20,8 +20,8 @@ const Navbar = () => {
           </div>
 
           <div className="hidden sm:block">
-            <h1 className="font-bold text-gray-900">BEU Reviews</h1>
-            <p className="text-xs text-gray-500">Bihar Engineering</p>
+            <h1 className="font-bold text-gray-900">College Reviews</h1>
+            <p className="text-xs text-gray-500">Engineering decision made easy</p>
           </div>
         </div>
 
