@@ -1,9 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 
-window.addEventListener("onclick", function () {
-  setOpen(false);
-})
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -12,15 +9,13 @@ const Navlist = {
   path: [
     { name: "Home", path: "/" },
     { name: "College", path: "/college" },
-    { name: "Reviews", path: "/reviews" },
+    // { name: "Reviews", path: "/reviews" },
     { name: "Community", path: "/community" },
     { name: "Contact", path: "/contact" },
   ],
 }
 
-  onclick = () => {
-
-  }
+  
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
@@ -48,7 +43,7 @@ const Navlist = {
                     : "text-gray-700 hover:text-blue-700"
                   }`
                 }
-                to={item.link}
+                to={item.path}
               >
                 {item.name}
               </NavLink>
