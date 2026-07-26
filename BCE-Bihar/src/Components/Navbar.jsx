@@ -1,10 +1,22 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 
-
+window.addEventListener("onclick", function () {
+  setOpen(false);
+})
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  
+const Navlist = {
+  path: [
+    { name: "Home", path: "/" },
+    { name: "College", path: "/college" },
+    { name: "Reviews", path: "/reviews" },
+    { name: "Community", path: "/community" },
+    { name: "Contact", path: "/contact" },
+  ],
+}
 
   onclick = () => {
 
@@ -27,11 +39,21 @@ const Navbar = () => {
 
         {/* Menu */}
         <ul className="hidden lg:flex items-center gap-8 text-gray-700 font-medium">
-          <NavLink to="/" className="hover:text-blue-700 cursor-pointer">Home</NavLink>
-          <NavLink to="/college" className="hover:text-blue-700 cursor-pointer">College</NavLink>
-          <NavLink to="/reviews" className="hover:text-blue-700 cursor-pointer">Reviews</NavLink>
-          <NavLink to="/community" className="hover:text-blue-700 cursor-pointer">Community</NavLink>
-          <NavLink to="/contact" className="hover:text-blue-700 cursor-pointer">Contact</NavLink>
+          {Navlist.path.map((item, index) => (
+            <li key={index}>
+              <NavLink
+                className={({ isActive }) =>
+                  `block px-3 py-2 transition ${isActive
+                    ? "text-blue-700 font-semibold"
+                    : "text-gray-700 hover:text-blue-700"
+                  }`
+                }
+                to={item.link}
+              >
+                {item.name}
+              </NavLink>
+            </li>
+          ))}
         </ul>
        {open && (
         <div className="lg:hidden absolute top-16 left-0 w-full bg-white border-t shadow-md">
