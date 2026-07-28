@@ -9,7 +9,7 @@ const College = [
     "established": 1954,
     "rating": 4.6,
     "reviews": 256,
-    "image": "/college/mit.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR9t7FVwAYmFVzCnX7y1luP3idpFZAWLufSECXXCHVFw&s=10"
   },
   {
     "id": 2,
@@ -21,7 +21,7 @@ const College = [
     "established": 1960,
     "rating": 4.4,
     "reviews": 210,
-    "image": "/college/bce.jpg"
+    "image": "https://content.jdmagicbox.com/comp/bhagalpur/x6/9999px641.x641.110203114241.g2x6/catalogue/bhagalpur-college-of-engineering-sabour-bhagalpur-colleges-1d9rht9.jpg?w=1920&q=75"
   },
   {
     "id": 3,
@@ -33,7 +33,7 @@ const College = [
     "established": 2008,
     "rating": 4.2,
     "reviews": 132,
-    "image": "/college/nce.jpg"
+    "image": "https://www.collegedhundo.com/images/college/cropped-dsc03506.jpg"
   },
   {
     "id": 4,
@@ -45,7 +45,7 @@ const College = [
     "established": 2008,
     "rating": 4.1,
     "reviews": 98,
-    "image": "/college/dce.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBb_at5JSof4XOaWnZK0gJ14OBdUG0Pzl3zvC6v38Qdg&s=10"
   },
   {
     "id": 5,
@@ -57,7 +57,7 @@ const College = [
     "established": 2008,
     "rating": 4.2,
     "reviews": 120,
-    "image": "/college/mce.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUxB1mIykbV0kkWXX0Jyn3MfPcLQko2IzKAth-N9XRdrKQnHXGgrZd914N&s=10"
   },
   {
     "id": 6,
@@ -69,7 +69,7 @@ const College = [
     "established": 2012,
     "rating": 4.0,
     "reviews": 95,
-    "image": "/college/lnjpit.jpg"
+    "image": "https://media.collegedekho.com/media/img/institute/crawled_images/None/DFDGFDGFD.jpg?width=640"
   },
   {
     "id": 7,
@@ -81,7 +81,7 @@ const College = [
     "established": 2016,
     "rating": 4.1,
     "reviews": 82,
-    "image": "/college/bakhtiyarpur.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzrMbv4NchJQsmmUTaiUS9wKpVJZeHfv7j5G3IsSC3W2pEBjdsfSuhgBk8&s=10"
   },
   {
     "id": 8,
@@ -93,7 +93,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 52,
-    "image": "/college/araria.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWZn8LobbMO8pZIf4De_FFWPw_i_qwEwvsGmOZqNJgQYq3edeEBccTXKaS&s=10"
   },
   {
     "id": 9,
@@ -105,7 +105,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 58,
-    "image": "/college/aurangabad.jpg"
+    "image": "https://findmycollege.com/_next/image?url=https%3A%2F%2Fcontent.findmycollege.com%2Fcolleges%2F43359-government-college-of-engineering-aurangabad-infrastructure-1774872105494-27277ed1-9f08-423b-811e-02303db8c0f5.jpg&w=1920&q=75"
   },
   {
     "id": 10,
@@ -117,7 +117,7 @@ const College = [
     "established": 2019,
     "rating": 3.9,
     "reviews": 43,
-    "image": "/college/banka.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVv_Er1eI6gqvrW2xfZ85ZUHYPGVSjV3pJknGXBpN7sw&s"
   },
   {
     "id": 11,
@@ -129,7 +129,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 47,
-    "image": "/college/bhojpur.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5wWYKIqxQB_pqiq5rqD3m4PLkFP9TsCExWGgdSJ0ydYfMjisLqb_2ZSz-&s=10"
   },
   {
     "id": 12,
@@ -141,7 +141,7 @@ const College = [
     "established": 2019,
     "rating": 3.9,
     "reviews": 41,
-    "image": "/college/buxar.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR56nGlHfiiiHgNNHS2_pu-zkccpSavSfhO9Eedclg9WA&s=10"
   },
   {
     "id": 13,
@@ -153,7 +153,7 @@ const College = [
     "established": 2019,
     "rating": 4.1,
     "reviews": 66,
-    "image": "/college/gaya.jpg"
+    "image": "https://images.shiksha.com/mediadata/images/1742789857phpPwRhKl.jpeg"
   },
   {
     "id": 14,
@@ -165,7 +165,7 @@ const College = [
     "established": 2019,
     "rating": 3.8,
     "reviews": 35,
-    "image": "/college/jamui.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlHofaSdjvESxsELwkHzWIQPkifSyi_qc44siw4hi7dDvdBKJSgSei0dM&s=10"
   },
   {
     "id": 15,
@@ -177,7 +177,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 39,
-    "image": "/college/jehanabad.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwbI55AtimkdPvCL3bEuqAJLK18QxP7KatJgeV4dW-Uw&s=10"
   },
   {
     "id": 16,
@@ -189,7 +189,7 @@ const College = [
     "established": 2019,
     "rating": 3.9,
     "reviews": 34,
-    "image": "/college/kaimur.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkcU2p5g1XbrBL7MUdrr2tQiHf1qbRM3zYzmq31yW5fQ&s=10"
   },
   {
     "id": 17,
@@ -201,7 +201,7 @@ const College = [
     "established": 2019,
     "rating": 3.9,
     "reviews": 37,
-    "image": "/college/khagaria.jpg"
+    "image": "https://assets.findmycollege.com/FMC_IMAGES/43349/assets/eb0b2712b0ec73edbd0b968a39b16fc63f412f5b6806d9bc141110ee5cf0224f.jpeg"
   },
   {
     "id": 18,
@@ -213,7 +213,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 42,
-    "image": "/college/kishanganj.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXEV5gzGJ4fn8A2mbSVyFS61ASZJhVZrCsd1xXC1RH4saXd1-tN30KhoRb&s=10"
   },
   {
     "id": 19,
@@ -225,7 +225,7 @@ const College = [
     "established": 2019,
     "rating": 3.9,
     "reviews": 31,
-    "image": "/college/lakhisarai.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5cwEdaitb7WqYX8pzKA_UoNOOjsofWrxUOCR5jQMr0ja4eTYz87YgcLg&s=10"
   },
   {
     "id": 20,
@@ -237,7 +237,7 @@ const College = [
     "established": 2019,
     "rating": 3.8,
     "reviews": 30,
-    "image": "/college/madhepura.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQP4vCrTW2kzQ-49iUsAPoqPdW-jVpasq7ikgjHa2hWrw3RLNFequEkhVg&s=10"
   },
   {
     "id": 21,
@@ -249,7 +249,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 45,
-    "image": "/college/madhubani.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ2C8v38Ni8sqc2KRm6rrshFucW1sETbCGDITmMx80SA&s"
   },
   {
     "id": 22,
@@ -261,7 +261,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 40,
-    "image": "/college/munger.jpg"
+    "image": "https://gecmunger.org/wp-content/uploads/2023/04/C4-1024x768.jpg"
   },
   {
     "id": 23,
@@ -273,7 +273,7 @@ const College = [
     "established": 2019,
     "rating": 3.9,
     "reviews": 33,
-    "image": "/college/nawada.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV56PQuIK9J4sfn47cYllUD4WZUiqANwb6T-rpTtyFmA&s=10"
   },
   {
     "id": 24,
@@ -285,7 +285,7 @@ const College = [
     "established": 2019,
     "rating": 4.1,
     "reviews": 63,
-    "image": "/college/purnea.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRztKJWITO_YStBOgpmQHOHur0ODr-oTXmEnITzCNV0sw&s=10"
   },
   {
     "id": 25,
@@ -297,7 +297,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 44,
-    "image": "/college/samastipur.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnu6T7Fb8mXl-ry5wxtTYfDdEF-ofqVl0YYKx51gcZuw&s"
   },
   {
     "id": 26,
@@ -309,7 +309,7 @@ const College = [
     "established": 2019,
     "rating": 3.8,
     "reviews": 28,
-    "image": "/college/sheohar.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGgjNdWWtTV8Dh8tKDznhGieESvgfAFUxF0WcmIFHQ0Q&s=10"
   },
   {
     "id": 27,
@@ -321,7 +321,7 @@ const College = [
     "established": 2019,
     "rating": 3.9,
     "reviews": 29,
-    "image": "/college/sheikhpura.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmqYQeHI0GPWDrIXQgYcxNQ9Q2PjPu3ROEfPelRwGWtw&s=10"
   },
   {
     "id": 28,
@@ -333,7 +333,7 @@ const College = [
     "established": 2019,
     "rating": 4.1,
     "reviews": 55,
-    "image": "/college/siwan.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlqNAHi2Iy5fSzT5cozDiCFEdYz7uytu-ff4o_jUKkGZzchx-T80zxe_TH&s=10"
   },
   {
     "id": 29,
@@ -345,7 +345,7 @@ const College = [
     "established": 2019,
     "rating": 4.2,
     "reviews": 72,
-    "image": "/college/vaishali.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK1BwW5Iwf6t9Nt8Ox6yDTozynJy-sWkMIaR8nIlH9ig&s=10"
   },
   {
     "id": 30,
@@ -357,7 +357,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 50,
-    "image": "/college/westchamparan.jpg"
+    "image": "https://campuspro.co.in/collage-image/1751978393_row_38.jpg"
   },
   {
     "id": 31,
@@ -369,7 +369,7 @@ const College = [
     "established": 2016,
     "rating": 4.0,
     "reviews": 60,
-    "image": "/college/sit.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA37C7PLh0c9TF6KONqUttEMY9BAN3nHVB9Np9HxWGKw&s"
   },
   {
     "id": 32,
@@ -381,7 +381,7 @@ const College = [
     "established": 2017,
     "rating": 3.9,
     "reviews": 36,
-    "image": "/college/supaul.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsYiPKQUAqvE9DWlV_ynElkTV55nY5Ed-TjiTxZUIRe30sQGiO60OXSKkH&s=10"
   },
   {
     "id": 33,
@@ -393,7 +393,7 @@ const College = [
     "established": 2017,
     "rating": 3.9,
     "reviews": 38,
-    "image": "/college/saharsa.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeMP1ZrGyxncTobKvHCngp_rDTX36U6zTufaIDOFWT8_L5XB6AVXxp9nrG&s=10"
   },
   {
     "id": 34,
@@ -405,7 +405,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 40,
-    "image": "/college/gopalganj.jpg"
+    "image": "https://image-static.collegedunia.com/public/reviewPhotos/1010313/IMG20241210151300.jpg"
   },
   {
     "id": 35,
@@ -417,7 +417,7 @@ const College = [
     "established": 2019,
     "rating": 4.0,
     "reviews": 41,
-    "image": "/college/katihar.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIgVoVhRxim1beyGDfBRsVO-DKFDe6zlVdTj7eihZ9pbNCYHoMKWrFztzO&s=10"
   },
   {
     "id": 36,
@@ -429,7 +429,7 @@ const College = [
     "established": 2019,
     "rating": 4.1,
     "reviews": 49,
-    "image": "/college/rohtas.jpg"
+    "image": "https://findmycollege.com/_next/image?url=https%3A%2F%2Fassets.findmycollege.com%2FFMC_IMAGES%2F43359%2Fassets%2Fgovernment-engineering-college-aurangabad-bihar-gaya-colleges-4w316z1w7p.jpg&w=1920&q=75"
   },
   {
     "id": 37,
@@ -441,7 +441,7 @@ const College = [
     "established": 2019,
     "rating": 3.8,
     "reviews": 27,
-    "image": "/college/shivhar.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyzYSsQwi13O9l7ifsylbvONe5eJMJ_zLnuSF1mVQdSw&s"
   },
   {
     "id": 38,
@@ -453,7 +453,7 @@ const College = [
     "established": 2019,
     "rating": 3.9,
     "reviews": 32,
-    "image": "/college/arwal.jpg"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQUxffmy7TneaGIW2WSQeIYH0MuAoSQLf83Xvq5FTd3g&s=10"
   }
 ]
 

@@ -42,8 +42,11 @@ const Colleges = () => {
               key={item.id}
               className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
-              <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
-                🎓
+              <div className= "w-auto h-auto rounded-xl bg-gray-100 flex items-center justify-center mb-4">
+                <img
+                  src={item.image}
+                  className="w-full h-full object-cover rounded-xl"
+                />
               </div>
 
               <h3 className="text-xl font-semibold text-gray-800 mb-3">
