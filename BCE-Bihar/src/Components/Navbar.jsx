@@ -82,12 +82,22 @@ const Navlist = {
           </NavLink>
 
           <div className="p-4 border-t">
-            <button className="w-full border py-2 rounded-lg mb-3">
+           <NavLink
+           to={"/login"}
+           >
+            <button 
+            className="w-full border py-2 rounded-lg mb-3">
               Login
             </button>
-
+            </NavLink>
+            <NavLink 
+            to={"/signup"}>
             <button className="w-full bg-blue-700 text-white py-2 rounded-lg">
               Sign Up
+            </button>
+            </NavLink>
+            <button className="w-full bg-blue-700 text-white py-2 rounded-lg mt-3">
+              Logout
             </button>
           </div>
         </div>)}
@@ -108,6 +118,9 @@ const Navlist = {
 
           <NavLink to="/signup" className="lg:bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800">
             Sign Up
+          </NavLink>
+          <NavLink to="/signup" className="hidden lg:bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800">
+          Logout
           </NavLink>
           {/* mobile menu */}
           <div className="lg:hidden">

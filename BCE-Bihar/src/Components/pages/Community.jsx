@@ -32,6 +32,8 @@ const posts = [
   },
 ];
 
+
+
 const Community = () => {
   return (
     <section className="bg-slate-50 min-h-screen py-12">
@@ -61,22 +63,22 @@ const Community = () => {
         <div className="grid md:grid-cols-4 gap-6 mb-10">
 
           <div className="bg-white rounded-2xl border p-6 text-center">
-            <h2 className="text-4xl font-bold text-blue-600">10K+</h2>
+            <h2 className="text-4xl font-bold text-blue-600 students">10K+</h2>
             <p className="text-gray-500 mt-2">Students</p>
           </div>
 
           <div className="bg-white rounded-2xl border p-6 text-center">
-            <h2 className="text-4xl font-bold text-blue-600">3.5K+</h2>
+            <h2 className="text-4xl font-bold text-blue-600 post">3.5K+</h2>
             <p className="text-gray-500 mt-2">Posts</p>
           </div>
 
           <div className="bg-white rounded-2xl border p-6 text-center">
-            <h2 className="text-4xl font-bold text-blue-600">38</h2>
+            <h2 className="text-4xl font-bold text-blue-600 colleges">38</h2>
             <p className="text-gray-500 mt-2">Colleges</p>
           </div>
 
           <div className="bg-white rounded-2xl border p-6 text-center">
-            <h2 className="text-4xl font-bold text-blue-600">500+</h2>
+            <h2 className="text-4xl font-bold text-blue-600 discussions">500+</h2>
             <p className="text-gray-500 mt-2">Daily Discussions</p>
           </div>
 
