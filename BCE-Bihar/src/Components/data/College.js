@@ -45,7 +45,7 @@ const College = [
     "established": 2008,
     "rating": 4.1,
     "reviews": 98,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBb_at5JSof4XOaWnZK0gJ14OBdUG0Pzl3zvC6v38Qdg&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCcngvg6uW_aZ0IGr4wShu8JZEBb_PeOWudqJjc4VgAkSxgnDd03POnKM&s=10"
   },
   {
     "id": 5,
@@ -69,7 +69,7 @@ const College = [
     "established": 2012,
     "rating": 4.0,
     "reviews": 95,
-    "image": "https://media.collegedekho.com/media/img/institute/crawled_images/None/DFDGFDGFD.jpg?width=640"
+    "image": "https://assets.allegiance-educare.com/colleges/1461848406g5%20-%20Copy.webp"
   },
   {
     "id": 7,
