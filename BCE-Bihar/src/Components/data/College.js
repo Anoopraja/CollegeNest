@@ -381,7 +381,7 @@ const College = [
     "established": 2017,
     "rating": 3.9,
     "reviews": 36,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsYiPKQUAqvE9DWlV_ynElkTV55nY5Ed-TjiTxZUIRe30sQGiO60OXSKkH&s=10"
+    "image": "https://cache.careers360.mobi/media/colleges/social-media/media-gallery/24067/2024/9/2/Campus%20View%20of%20Supaul%20College%20of%20Engineering%20Supaul_Campus-View.png"
   },
   {
     "id": 33,
@@ -441,7 +441,7 @@ const College = [
     "established": 2019,
     "rating": 3.8,
     "reviews": 27,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyzYSsQwi13O9l7ifsylbvONe5eJMJ_zLnuSF1mVQdSw&s"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFP90ezhpHRejKRkJ6Zmq8YiOfrnGMlqtgby7ubBVRYdWsc1PEvzJ6Bv8&s=10"
   },
   {
     "id": 38,
