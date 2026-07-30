@@ -95,22 +95,22 @@ const Hero = () => {
       <div className="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-cyan-200 blur-3xl opacity-40"></div>
 
       {/* Announcement Bar */}
-      <div className="bg-blue-600 text-white">
+      {/* <div className="bg-blue-600 text-white">
 
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
 
-          <p className="text-sm font-medium">
+          {/* <p className="text-sm font-medium">
             🚀 JEE Main Counselling 2026 is Live • Compare Colleges Before Choosing
-          </p>
+          </p> */}
 
-          <button className="hidden md:flex items-center gap-2 text-sm font-semibold hover:underline">
+          {/* <button className="hidden md:flex items-center gap-2 text-sm font-semibold hover:underline">
             Compare Now
             <ArrowRight size={16} />
-          </button>
+          </button> */}
 
-        </div>
+        {/* </div> */}
 
-      </div>
+      {/* </div> */} 
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
 
