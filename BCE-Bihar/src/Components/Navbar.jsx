@@ -23,12 +23,12 @@ const Navlist = {
 
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center text-white font-bold">
-            <img className="h-auto" src="/logo.svg" alt="Logo" />
+          <div className="w-10 h-auto rounded-lg flex items-center justify-center text-white font-bold">
+            <img className="h-auto rounded-2xl" src="/logo.jpg" alt="Logo" />
           </div>
 
           <div className="hidden sm:block">
-            <h1 className="font-bold text-gray-900">College Reviews</h1>
+            <h1 className="font-bold text-gray-900">CollegeNest</h1>
             <p className="text-xs text-gray-500">Engineering decision made easy</p>
           </div>
         </div>
