@@ -11,7 +11,8 @@ const Colleges = () => {
 
   const handleSearch = () => {
     const filtered = College.filter((college) =>
-      college.name.toLowerCase().includes(search.toLowerCase())
+      college.name.toLowerCase().includes(search.trim().toLowerCase())
+    
     );
 
     setResult(filtered);
@@ -23,7 +24,15 @@ const Colleges = () => {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+              else if (e.key === 'Escape') {
+                setSearch("");
+                setResult(College);
+              }
+            }}
             type="text"
             placeholder="Search for colleges..."
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

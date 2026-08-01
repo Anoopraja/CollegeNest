@@ -19,10 +19,10 @@ const Hero = () => {
 
   const images = [
   // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUxB1mIykbV0kkWXX0Jyn3MfPcLQko2IzKAth-N9XRdrKQnHXGgrZd914N&s=10",
-  // "https://content.jdmagicbox.com/comp/bhagalpur/x6/9999px641.x641.110203114241.g2x6/catalogue/bhagalpur-college-of-engineering-sabour-bhagalpur-colleges-1d9rht9.jpg?w=1920&q=75",
+  "https://content.jdmagicbox.com/comp/bhagalpur/x6/9999px641.x641.110203114241.g2x6/catalogue/bhagalpur-college-of-engineering-sabour-bhagalpur-colleges-1d9rht9.jpg?w=1920&q=75",
   // "https://www.collegedhundo.com/images/college/cropped-dsc03506.jpg",
-  "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1200&auto=format&fit=crop",
-  // "https://assets.allegiance-educare.com/colleges/1461848406g5%20-%20Copy.webp",
+  // "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1200&auto=format&fit=crop",
+  // "https://assets.allegiance-educare.com/colleges/1461848406g5%20-%20Copy.webp", 
   // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzrMbv4NchJQsmmUTaiUS9wKpVJZeHfv7j5G3IsSC3W2pEBjdsfSuhgBk8&s=10"
 ];
 
@@ -94,23 +94,22 @@ const Hero = () => {
       <div className="absolute -top-44 -left-32 h-96 w-96 rounded-full bg-blue-200 blur-3xl opacity-40"></div>
       <div className="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-cyan-200 blur-3xl opacity-40"></div>
 
-      {/* Announcement Bar */}
       {/* <div className="bg-blue-600 text-white">
 
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
 
-          {/* <p className="text-sm font-medium">
+          { <p className="text-sm font-medium">
             🚀 JEE Main Counselling 2026 is Live • Compare Colleges Before Choosing
-          </p> */}
+          </p> }
 
-          {/* <button className="hidden md:flex items-center gap-2 text-sm font-semibold hover:underline">
+          { <button className="hidden md:flex items-center gap-2 text-sm font-semibold hover:underline">
             Compare Now
             <ArrowRight size={16} />
-          </button> */}
+          </button> }
 
-        {/* </div> */}
+        </div> 
 
-      {/* </div> */} 
+      </div>   */}
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
 
@@ -362,7 +361,7 @@ const Hero = () => {
 
           {/* RIGHT SIDE */}
 
-          <div className="relative hidden lg:block">
+          <div className="relative  hidden lg:block">
 
             {/* Main Image */}
             <img
