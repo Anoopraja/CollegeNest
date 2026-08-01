@@ -12,6 +12,7 @@ const Navlist = {
     // { name: "Reviews", path: "/reviews" },
     { name: "Community", path: "/community" },
     { name: "Contact", path: "/contact" },
+    { name: "Counselling", path: "/counselling" },
   ],
 }
 
@@ -79,6 +80,11 @@ const Navlist = {
           onClick={() => setOpen(false)}
           className="block px-6 py-3">
             Contact
+          </NavLink>
+          <NavLink to="/counselling" 
+          onClick={() => setOpen(false)}
+          className="block px-6 py-3">
+            Counselling
           </NavLink>
 
           <div className="p-4 border-t">

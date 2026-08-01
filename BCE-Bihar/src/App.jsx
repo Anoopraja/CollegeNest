@@ -10,6 +10,7 @@ import { Route, Routes } from 'react-router-dom'
 import Login from './Components/pages/login'
 import Signup from './Components/pages/signup'
 import CollegeInfo from './Components/pages/Collegeinfo'
+import Counselling from './Components/pages/Councling'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path='/community' element={<Community />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/reviews' element={<Reviews />} />
+        <Route path='/counselling' element={<Counselling />} />
        
       </Routes>
       <Footer />

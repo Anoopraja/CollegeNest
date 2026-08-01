@@ -403,7 +403,7 @@ const Hero = () => {
 
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-5">
+              {/* <div className="grid grid-cols-2 gap-4 mt-5">
 
                 <div>
 
@@ -469,7 +469,7 @@ const Hero = () => {
 
                 </div>
 
-              </div>
+              </div> */}
 
             </div>
 
@@ -515,7 +515,7 @@ const Hero = () => {
             </div>
 
             {/* Student Review */}
-            <div ref={(el) => (cardsRef.current[1] = el)} className="absolute top-52 -right-8 bg-white rounded-2xl shadow-xl p-5 w-72">
+            {/* <div ref={(el) => (cardsRef.current[1] = el)} className="absolute top-52 -right-8 bg-white rounded-2xl shadow-xl p-5 w-72">
 
               <div className="flex items-center gap-3">
 
@@ -557,7 +557,7 @@ const Hero = () => {
 
               </p>
 
-            </div>
+            </div> */}
 
             {/* Hostel Card */}
             <div ref={(el) => (cardsRef.current[2] = el)} className="absolute bottom-52 -right-10 bg-blue-600 text-white rounded-2xl p-5 w-64 shadow-xl">
