@@ -11,6 +11,7 @@ import Login from './Components/pages/login'
 import Signup from './Components/pages/signup'
 import CollegeInfo from './Components/pages/Collegeinfo'
 import Counselling from './Components/pages/Councling'
+import ChatLive from './Components/pages/ChatLive'
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path='/college' element={<Colleges />} />
         <Route path="/college/:id" element={<CollegeInfo />} />
         <Route path='/community' element={<Community />} />
+        <Route path="/community/:id" element={<ChatLive />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/reviews' element={<Reviews />} />
         <Route path='/counselling' element={<Counselling />} />

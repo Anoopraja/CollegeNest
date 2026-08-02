@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 const posts = [
   {
     id: 1,
@@ -32,15 +33,23 @@ const posts = [
   },
 ];
 
-
+const branch = ["CSE", "ECE", "ME", "CE", "EE", "IT", "AEI", "PE", "BT", "FT", "CHE", "EIE", "MIN", "MET"];
 
 const Community = () => {
   return (
-    <section className="bg-slate-50 min-h-screen py-12">
+    <section className="bg-slate-50 min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-5">
 
         {/* Heading */}
-
+        <div className="text-center mb-12 border-b  pb-6 flex gap-3 items-center justify-center flex-wrap">
+          {branch.map((item) => (
+            <NavLink key={item} to={item}>
+              <span className="bg-white border px-4 py-2 rounded-full cursor-pointer hover:bg-blue-600 hover:text-white transition">
+                {item}
+              </span>
+            </NavLink>
+          ))}
+        </div>
         <div className="text-center mb-12">
 
           <span className="bg-blue-100 text-blue-600 px-4 py-2 rounded-full font-medium">
