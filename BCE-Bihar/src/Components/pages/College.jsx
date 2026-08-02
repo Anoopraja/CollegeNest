@@ -53,7 +53,7 @@ const Colleges = () => {
             >
               <div className= "w-auto h-auto rounded-xl bg-gray-100 flex items-center justify-center mb-4">
                 <img
-                  src={item.image}
+                  src={item.imageUrl}
                   className="w-full h-full object-cover rounded-xl"
                 />
               </div>
