@@ -126,9 +126,9 @@ const CollegeInfo = () => {
 
         </div>
       </div>
-      {/* campus */}
-      <div>
-
+      {/* campus Gallery */}
+      <div className="">
+        
       </div>
 
     </section>
