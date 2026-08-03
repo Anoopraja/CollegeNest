@@ -127,9 +127,31 @@ const CollegeInfo = () => {
         </div>
       </div>
       {/* campus Gallery */}
-      <div className="">
-        
-      </div>
+      <section>
+        <div className="flex items-center justify-between m-8 ">
+          <div>
+            <h2 className="text-3xl font-bold">Campus Gallery</h2>
+            <p className="text-gray-500 mt-2">
+              Explore the college campus and facilities.
+            </p>
+          </div>
+          <button className="border px-5 py-2 rounded-lg hover:bg-gray-100 transition">
+            View All
+          </button>
+        </div>
+        <div className="p-5 gap-5 flex justify-start content-center w-full h-50 bg-slate-100 rounded-2xl ">
+          <img
+          src={college.image}
+          alt={college.name}
+          className="w-50 object-cover rounded-3xl"
+        />
+        <button>+</button>
+        </div>
+
+      </section>
+
+
+
 
     </section>
   );

@@ -20,7 +20,7 @@ const College = [
     image: "https://i0.wp.com/www.mitmuzaffarpur.org/wp-content/uploads/2018/05/img-3.jpg?fit=450%2C270&ssl=1",
     logo: "/logos/mit.png",
     rating: 4.6,
-    admission: "UGEAC (JEE Main)",
+    admission: "BCECE UGEAC (JEE Main)",
     about: "One of the oldest engineering institutes in Bihar offering UG and PG programmes.",
     branches: [
       "Computer Science & Engineering",
@@ -44,7 +44,7 @@ const College = [
   },
 
   {
-    id: 3,
+    id: 2,
     name: "Bhagalpur College of Engineering",
     shortName: "BCE Bhagalpur",
     slug: "bce-bhagalpur",
@@ -63,7 +63,7 @@ const College = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZzLVIb2-R0aln_D8hVuPnXBao-3EY3Pi47tCf_WjLUw&s=10",
     logo: "/logos/bce.png",
     rating: 4.5,
-    admission: "UGEAC (JEE Main)",
+    admission: "BCECE UGEAC (JEE Main)",
     about: "One of Bihar's oldest engineering colleges with a fully residential campus.",
     branches: [
       "CSE",
@@ -83,7 +83,7 @@ const College = [
   },
 
   {
-    id: 8,
+    id: 3,
     name: "Bakhtiyarpur College of Engineering",
     shortName: "BCE Bakhtiyarpur",
     slug: "bakhtiyarpur-college-of-engineering",
@@ -116,7 +116,7 @@ const College = [
   },
 
   {
-    id: 2,
+    id: 4,
     name: "Gaya College of Engineering",
     shortName: "GCE Gaya",
     slug: "gce-gaya",
@@ -135,7 +135,7 @@ const College = [
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmv8ShCTf8k20q0zW2xsT6Ix1dHvulXF9UOgVtGMdztsAfvkqwzZ3BB0-i&s=10",
     logo: "/logos/gce.png",
     rating: 4.2,
-    admission: "UGEAC (JEE Main)",
+    admission: "BCECE UGEAC (JEE Main)",
     about: "Government engineering college known for its large campus and academic environment.",
     branches: [
       "CSE",
@@ -155,7 +155,7 @@ const College = [
   },
 
   {
-    id: 6,
+    id: 5,
     name: "Nalanda College of Engineering",
     shortName: "NCE Chandi",
     slug: "nce-chandi",
@@ -188,7 +188,7 @@ const College = [
   },
 
   {
-    id: 4,
+    id: 6,
     name: "Motihari College of Engineering",
     shortName: "MCE Motihari",
     slug: "mce-motihari",
@@ -223,7 +223,7 @@ const College = [
   },
 
   {
-    id: 5,
+    id: 7,
     name: "Darbhanga College of Engineering",
     shortName: "DCE Darbhanga",
     slug: "dce-darbhanga",
@@ -256,7 +256,7 @@ const College = [
   },
 
   {
-    id: 7,
+    id: 8,
     name: "Lok Nayak Jai Prakash Institute of Technology",
     shortName: "LNJPIT Chapra",
     slug: "lnjpit-chapra",
@@ -288,7 +288,7 @@ const College = [
   },
 
   {
-    id: 10,
+    id: 9,
     name: "Rashtrakavi Ramdhari Singh Dinkar College of Engineering",
     shortName: "RRSDCE Begusarai",
     slug: "rrsdce-begusarai",
@@ -321,7 +321,7 @@ const College = [
   },
 
   {
-    id: 9,
+    id: 10,
     name: "Sitamarhi Institute of Technology",
     shortName: "SIT Sitamarhi",
     slug: "sit-sitamarhi",
@@ -353,7 +353,7 @@ const College = [
   },
 
   {
-    id: 24,
+    id: 11,
     name: "B. P. Mandal College of Engineering",
     shortName: "BPMCE Madhepura",
     slug: "bp-mandal-college-of-engineering",
@@ -385,7 +385,7 @@ const College = [
   },
 
   {
-    id: 11,
+    id: 12,
     name: "Katihar Engineering College",
     shortName: "KEC Katihar",
     slug: "katihar-engineering-college",
@@ -420,7 +420,7 @@ const College = [
   },
 
   {
-    id: 28,
+    id: 13,
     name: "Purnea College of Engineering",
     shortName: "PCE Purnea",
     slug: "purnea-college-of-engineering",
@@ -451,7 +451,7 @@ const College = [
   },
 
   {
-    id: 29,
+    id: 14,
     name: "Saharsa College of Engineering",
     shortName: "SCE Saharsa",
     slug: "saharsa-college-of-engineering",
@@ -483,7 +483,7 @@ const College = [
   },
 
   {
-    id: 12,
+    id: 15,
     name: "Shri Phanishwar Nath Renu Engineering College,",
     shortName: "GEC Araria",
     slug: "gec-araria",
@@ -514,7 +514,7 @@ const College = [
   },
 
   {
-    id: 15,
+    id: 16,
     name: "Government Engineering College Banka",
     shortName: "GEC Banka",
     slug: "gec-banka",
@@ -547,7 +547,7 @@ const College = [
   },
 
   {
-    id: 19,
+    id: 17,
     name: "Government Engineering College Jamui",
     shortName: "GEC Jamui",
     slug: "gec-jamui",
@@ -580,7 +580,7 @@ const College = [
   },
 
   {
-    id: 13,
+    id: 18,
     name: "Government Engineering College Arwal",
     shortName: "GEC Arwal",
     slug: "gec-arwal",
@@ -612,7 +612,7 @@ const College = [
   },
 
   {
-    id: 14,
+    id: 19,
     name: "Government Engineering College Aurangabad",
     shortName: "GEC Aurangabad",
     slug: "gec-aurangabad",
@@ -649,7 +649,7 @@ const College = [
   },
 
   {
-    id: 16,
+    id: 20,
     name: "Government Engineering College Bhojpur",
     shortName: "GEC Bhojpur",
     slug: "gec-bhojpur",
@@ -682,7 +682,7 @@ const College = [
   },
 
   {
-    id: 17,
+    id: 21,
     name: "Government Engineering College Buxar",
     shortName: "GEC Buxar",
     slug: "gec-buxar",
@@ -715,7 +715,7 @@ const College = [
   },
 
   {
-    id: 18,
+    id: 22,
     name: "Government Engineering College Gopalganj",
     shortName: "GEC Gopalganj",
     slug: "gec-gopalganj",
@@ -747,7 +747,7 @@ const College = [
   },
 
   {
-    id: 20,
+    id: 23,
     name: "Government Engineering College Jehanabad",
     shortName: "GEC Jehanabad",
     slug: "gec-jehanabad",
@@ -779,7 +779,7 @@ const College = [
   },
 
   {
-    id: 21,
+    id: 24,
     name: "Government Engineering College Khagaria",
     shortName: "GEC Khagaria",
     slug: "gec-khagaria",
@@ -812,7 +812,7 @@ const College = [
   },
 
   {
-    id: 22,
+    id: 25,
     name: "Government Engineering College Kishanganj",
     shortName: "GEC Kishanganj",
     slug: "gec-kishanganj",
@@ -844,7 +844,7 @@ const College = [
   },
 
   {
-    id: 23,
+    id: 26,
     name: "Government Engineering College Lakhisarai",
     shortName: "GEC Lakhisarai",
     slug: "gec-lakhisarai",
@@ -876,7 +876,7 @@ const College = [
   },
 
   {
-    id: 25,
+    id: 27,
     name: "Government Engineering College Madhubani",
     shortName: "GEC Madhubani",
     slug: "gec-madhubani",
@@ -906,7 +906,7 @@ const College = [
   },
 
   {
-    id: 26,
+    id: 28,
     name: "Government Engineering College Munger",
     shortName: "GEC Munger",
     slug: "gec-munger",
@@ -937,7 +937,7 @@ const College = [
   },
 
   {
-    id: 27,
+    id: 29,
     name: "Government Engineering College Nawada",
     shortName: "GEC Nawada",
     slug: "gec-nawada",
@@ -1003,7 +1003,7 @@ const College = [
   // },
 
   {
-    id: 32,
+    id: 30,
     name: "Government Engineering College Sheikhpura",
     shortName: "GEC Sheikhpura",
     slug: "gec-sheikhpura",
@@ -1038,7 +1038,7 @@ const College = [
   },
 
   {
-    id: 34,
+    id: 31,
     name: "Government Engineering College Siwan",
     shortName: "GEC Siwan",
     slug: "gec-siwan",
@@ -1072,7 +1072,7 @@ const College = [
   },
 
   {
-    id: 35,
+    id: 32,
     name: "Government Engineering College Supaul",
     shortName: "GEC Supaul",
     slug: "gec-supaul",
@@ -1106,7 +1106,7 @@ const College = [
   },
 
   {
-    id: 37,
+    id: 33,
     name: "Government Engineering College West Champaran",
     shortName: "GEC West Champaran",
     slug: "gec-west-champaran",
@@ -1140,7 +1140,7 @@ const College = [
   },
 
   {
-    id: 33,
+    id: 34,
     name: "Government Engineering College Sheohar",
     shortName: "GEC Sheohar",
     slug: "gec-sheohar",
@@ -1154,7 +1154,7 @@ const College = [
     university: "Bihar Engineering University",
     approval: "AICTE",
     website: "https://gecsheohar.ac.in",
-    image: "/images/colleges/gec-sheohar.jpg",
+    image: "https://guidenova.in/sheo1.jpeg",
     logo: "/logos/gec-sheohar.png",
     admission: "UGEAC (JEE Main)",
     branches: [
@@ -1174,7 +1174,7 @@ const College = [
   },
 
   {
-    id: 36,
+    id: 35,
     name: "Government Engineering College Vaishali",
     shortName: "GEC Vaishali",
     slug: "gec-vaishali",
@@ -1188,7 +1188,7 @@ const College = [
     university: "Bihar Engineering University",
     approval: "AICTE",
     website: "https://gecvaishali.ac.in",
-    image: "/images/colleges/gec-vaishali.jpg",
+    image: "https://collegeforum.in/apis/assets/uploads/2026/03/collegePhotoGallery/collegephotogallery-1774976694360-793991125.webp",
     logo: "/logos/gec-vaishali.png",
     admission: "UGEAC (JEE Main)",
     branches: [
@@ -1208,7 +1208,7 @@ const College = [
   },
 
   {
-    id: 30,
+    id: 36,
     name: "Government Engineering College Samastipur",
     shortName: "GEC Samastipur",
     slug: "gec-samastipur",
@@ -1220,7 +1220,7 @@ const College = [
     approval: "AICTE",
     address: "Samastipur, Bihar",
     website: "https://gecsamastipur.org",
-    image: "/images/colleges/gec-samastipur.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnu6T7Fb8mXl-ry5wxtTYfDdEF-ofqVl0YYKx51gcZuw&s",
     logo: "/logos/gec-samastipur.png",
     admission: "UGEAC (JEE Main)",
     branches: [
@@ -1240,7 +1240,7 @@ const College = [
   },
 
   {
-    id: 38,
+    id: 37,
     name: "Government Engineering College Bhojpur",
     shortName: "GEC Bhojpur",
     slug: "gec-bhojpur",
@@ -1254,7 +1254,7 @@ const College = [
     university: "Bihar Engineering University",
     approval: "AICTE",
     website: "https://gecbhojpur.ac.in",
-    image: "/images/colleges/gec-bhojpur.jpg",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVUxG-zs9P3wWY0OAMJs9UuJf_rgaZangFId6L5IcTTktKI2ynZRMVo_M4&s=10",
     logo: "/logos/gec-bhojpur.png",
     admission: "UGEAC (JEE Main)",
     branches: [
