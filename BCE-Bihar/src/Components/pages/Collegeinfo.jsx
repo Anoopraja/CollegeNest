@@ -139,13 +139,13 @@ const CollegeInfo = () => {
             View All
           </button>
         </div>
-        <div className="p-5 gap-5 flex justify-start content-center w-full h-50 bg-slate-100 rounded-2xl ">
+        <div className="p-5 gap-5 flex justify-start items-center content-center w-full h-50 bg-slate-100 rounded-2xl ">
           <img
-          src={college.image}
-          alt={college.name}
-          className="w-50 object-cover rounded-3xl"
-        />
-        <button>+</button>
+            src={college.image}
+            alt={college.name}
+            className="w-50 object-cover rounded-3xl"
+          />
+          <h1 className="text-3xl font-bold cursor-pointer">+</h1>
         </div>
 
       </section>
