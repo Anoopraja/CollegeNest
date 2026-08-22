@@ -35,64 +35,57 @@ const Hero = () => {
 
   const [current, setCurrent] = useState(0);
   useEffect(() => {
-
     const interval = setInterval(() => {
-
       setCurrent((prev) => (prev + 1) % images.length);
-
     }, 4000);
 
     return () => clearInterval(interval);
-    useEffect(() => {
+  }, []);
 
-      const tl = gsap.timeline();
+  useEffect(() => {
+    const tl = gsap.timeline();
 
-      tl.from(leftRef.current, {
-        x: -80,
-        opacity: 0,
-        duration: 1,
-      })
-        .from(
-          imageRef.current,
-          {
-            scale: 0.9,
-            opacity: 0,
-            duration: 1,
-          },
-          "-=0.7"
-        )
-        .from(
-          cardsRef.current,
-          {
-            y: 50,
-            opacity: 0,
-            stagger: 0.2,
-          },
-          "-=0.5"
-        );
-    }, []);
-    useEffect(() => {
+    tl.from(leftRef.current, {
+      x: -80,
+      opacity: 0,
+      duration: 1,
+    })
+      .from(
+        imageRef.current,
+        {
+          scale: 0.9,
+          opacity: 0,
+          duration: 1,
+        },
+        "-=0.7"
+      )
+      .from(
+        cardsRef.current,
+        {
+          y: 50,
+          opacity: 0,
+          stagger: 0.2,
+        },
+        "-=0.5"
+      );
+  }, []);
 
-      cardsRef.current.forEach((card, index) => {
-
-        gsap.to(card, {
-          y: index % 2 === 0 ? -12 : 12,
-          repeat: -1,
-          yoyo: true,
-          duration: 2 + index,
-        });
-
+  useEffect(() => {
+    cardsRef.current.forEach((card, index) => {
+      gsap.to(card, {
+        y: index % 2 === 0 ? -12 : 12,
+        repeat: -1,
+        yoyo: true,
+        duration: 2 + index,
       });
-
-    }, []);
-
+    });
   }, []);
   return (
     <section ref={heroRef} className="relative overflow-hidden bg-slate-50">
 
       {/* Background Blur */}
       <div className="absolute -top-44 -left-32 h-96 w-96 rounded-full bg-blue-200 blur-3xl opacity-40"></div>
-      <div className="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-cyan-200 blur-3xl opacity-40"></div>
+      <div className="absolute bottom-0 right-0 h-100 w-100 rounded-full bg-cyan-200 blur-3xl opacity-40"></div>
 
       {/* <div className="bg-blue-600 text-white">
 
@@ -368,11 +361,11 @@ const Hero = () => {
               ref={imageRef}
               src={images[current]}
               alt="Engineering College"
-              className="h-[680px] w-full rounded-3xl object-cover shadow-2xl"
+              className="h-170 w-full rounded-3xl object-cover shadow-2xl"
             />
 
             {/* Dark Overlay */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-slate-900/60 via-transparent"></div>
+            <div className="absolute inset-0 rounded-3xl bg-linear-to-t from-slate-900/60 via-transparent"></div>
 
             {/* Featured College Card */}
             <div className="absolute bottom-6 left-6 bg-white rounded-2xl shadow-xl p-6 w-[320px]">

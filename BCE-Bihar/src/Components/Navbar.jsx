@@ -1,22 +1,25 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
+import { AuthService } from "./appWrite/appwrite.js";
+import conf from "./appWrite/conf.js";
 
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  
-const Navlist = {
-  path: [
-    { name: "Home", path: "/" },
-    { name: "College", path: "/college" },
-    // { name: "Reviews", path: "/reviews" },
-    { name: "Community", path: "/community" },
-    { name: "Contact", path: "/contact" },
-    { name: "Counselling", path: "/counselling" },
-  ],
-}
 
-  
+
+  const Navlist = {
+    path: [
+      { name: "Home", path: "/" },
+      { name: "College", path: "/college" },
+      // { name: "Reviews", path: "/reviews" },
+      { name: "Community", path: "/community" },
+      // { name: "Contact", path: "/contact" },
+      { name: "Counselling", path: "/counselling" },
+    ],
+  }
+
+
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
@@ -51,62 +54,62 @@ const Navlist = {
             </li>
           ))}
         </ul>
-       {open && (
-        <div className="lg:hidden absolute top-16 left-0 w-full bg-white border-t shadow-md">
-          <NavLink to="/"
-          onClick={() => setOpen(false)}
-          className="block px-6 py-3">
-            Home
-          </NavLink>
-
-          <NavLink to="/college"
-          onClick={() => setOpen(false)} className="block px-6 py-3">
-            College
-          </NavLink>
-
-          <NavLink to="/reviews"
-          onClick={() => setOpen(false)}
-          className="block px-6 py-3">
-            Reviews
-          </NavLink>
-
-          <NavLink to="/community" 
-          onClick={() => setOpen(false)}
-          className="block px-6 py-3">
-            Community
-          </NavLink>
-
-          <NavLink to="/contact" 
-          onClick={() => setOpen(false)}
-          className="block px-6 py-3">
-            Contact
-          </NavLink>
-          <NavLink to="/counselling" 
-          onClick={() => setOpen(false)}
-          className="block px-6 py-3">
-            Counselling
-          </NavLink>
-
-          <div className="p-4 border-t">
-           <NavLink
-           to={"/login"}
-           >
-            <button 
-            className="w-full border py-2 rounded-lg mb-3">
-              Login
-            </button>
+        {open && (
+          <div className="lg:hidden absolute top-16 left-0 w-full bg-white border-t shadow-md">
+            <NavLink to="/"
+              onClick={() => setOpen(false)}
+              className="block px-6 py-3">
+              Home
             </NavLink>
-            <NavLink 
-            to={"/signup"}>
-            <button className="w-full bg-blue-700 text-white py-2 rounded-lg">
-              Sign Up
-            </button>
+
+            <NavLink to="/college"
+              onClick={() => setOpen(false)} className="block px-6 py-3">
+              College
             </NavLink>
-            <button className="w-full bg-blue-700 text-white py-2 rounded-lg mt-3">
-              Logout
-            </button>
-          </div>
-        </div>)}
+
+            <NavLink to="/reviews"
+              onClick={() => setOpen(false)}
+              className="block px-6 py-3">
+              Reviews
+            </NavLink>
+
+            <NavLink to="/community"
+              onClick={() => setOpen(false)}
+              className="block px-6 py-3">
+              Community
+            </NavLink>
+
+            <NavLink to="/contact"
+              onClick={() => setOpen(false)}
+              className="block px-6 py-3">
+              Contact
+            </NavLink>
+            <NavLink to="/counselling"
+              onClick={() => setOpen(false)}
+              className="block px-6 py-3">
+              Counselling
+            </NavLink>
+
+            <div className="p-4 border-t">
+              <NavLink
+                to={"/login"}
+              >
+                <button
+                  className="w-full border py-2 rounded-lg mb-3">
+                  Login
+                </button>
+              </NavLink>
+              <NavLink
+                to={"/signup"}>
+                <button className="w-full bg-blue-700 text-white py-2 rounded-lg">
+                  Sign Up
+                </button>
+              </NavLink>
+              <button className="hidden w-full bg-blue-700 text-white py-2 rounded-lg mt-3">
+                Logout
+              </button>
+            </div>
+          </div>)}
 
         {/* Right */}
         <div className="flex items-center gap-3">
@@ -126,7 +129,7 @@ const Navlist = {
             Sign Up
           </NavLink>
           <NavLink to="/signup" className="hidden lg:bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800">
-          Logout
+            Logout
           </NavLink>
           {/* mobile menu */}
           <div className="lg:hidden">

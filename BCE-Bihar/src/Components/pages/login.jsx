@@ -1,6 +1,30 @@
 import { Link } from "react-router-dom";
+import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import authService from "../appWrite/appwrite.js";
+
+
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const login = async (event) => {
+    event.preventDefault();
+
+    try {
+      await authService.login({ email, password });
+      setError("");
+      navigate("/");
+    } catch (error) {
+      console.error(error, "are sahi password daliye maharaj");
+      setError("Login failed. Please check your credentials.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
@@ -16,12 +40,12 @@ function Login() {
           </h1>
 
           <p className="text-gray-500 text-sm mt-2">
-            Sign in to your BEU Reviews account
+            login in to your CollegeNest Reviews account
           </p>
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={login}>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -32,6 +56,8 @@ function Login() {
               type="email"
               placeholder="Enter your email"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -53,10 +79,19 @@ function Login() {
               type="password"
               placeholder="Enter your password"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
+          {error && (
+            <p className="text-sm text-red-600">
+              {error}
+            </p>
+          )}
+
           <button
+            type="submit"
             className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-medium transition"
           >
             Login

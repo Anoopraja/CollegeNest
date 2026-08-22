@@ -1,6 +1,39 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import authService from "../appWrite/appwrite.js";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+
+  const signup = async (event) => {
+    event.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match. Please try again.");
+      return;
+    }
+
+    try {
+      await authService.createAccount({
+        email,
+        password,
+        name: fullName,
+      });
+
+      setError("");
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+      setError("Signup failed. Please try again.");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
@@ -16,12 +49,12 @@ const Signup = () => {
           </h1>
 
           <p className="text-gray-500 text-sm mt-2">
-            Join the BEU Reviews community
+            Join the CollegeNest Reviews community
           </p>
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={signup}>
 
           {/* Name */}
           <div>
@@ -30,6 +63,8 @@ const Signup = () => {
             </label>
 
             <input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               type="text"
               placeholder="Enter your full name"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
@@ -39,10 +74,12 @@ const Signup = () => {
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              College Email
+            Email
             </label>
 
             <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="example@college.edu.in"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
@@ -56,6 +93,8 @@ const Signup = () => {
             </label>
 
             <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               type="password"
               placeholder="Create a password"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
@@ -69,6 +108,8 @@ const Signup = () => {
             </label>
 
             <input
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               type="password"
               placeholder="Confirm your password"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
@@ -90,8 +131,15 @@ const Signup = () => {
             </p>
           </div>
 
+          {error && (
+            <p className="text-sm text-red-600">
+              {error}
+            </p>
+          )}
+
           {/* Sign Up Button */}
           <button
+            type="submit"
             className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-medium transition"
           >
             Create Account
