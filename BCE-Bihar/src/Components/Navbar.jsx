@@ -148,6 +148,13 @@ const Navbar = () => {
           to="/signup" className="lg:bg-blue-700 text-white px-5 py-2 rounded-lg lg:hover:bg-blue-800">
             Logout
           </NavLink>
+
+            <NavLink to="/profile">
+              <img 
+              className="h-10 hover:opacity-75" src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png" alt="" />
+            </NavLink>
+          
+        
           {/* mobile menu */}
           <div className="lg:hidden">
             <button
@@ -157,6 +164,9 @@ const Navbar = () => {
 
             </button>
 
+            {/* <div className="absolute top-16 left-0 w-full bg-white border-t shadow-md">
+              <img className="h-4" src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png" alt="" />
+            </div> */}
 
           </div>
 

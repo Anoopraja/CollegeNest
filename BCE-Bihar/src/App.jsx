@@ -5,6 +5,7 @@ import Community from './Components/pages/Community'
 import Contact from './Components/pages/Contact'
 import Reviews from './Components/pages/Review'
 import Colleges from './Components/pages/College'
+import Profile from './Components/pages/User/userProfile'
 
 import { Route, Routes } from 'react-router-dom'
 import Login from './Components/pages/login'
@@ -29,6 +30,7 @@ function App() {
         <Route path='/contact' element={<Contact />} />
         <Route path='/reviews' element={<Reviews />} />
         <Route path='/counselling' element={<Counselling />} />
+        <Route path='/profile' element={<Profile />} />
        
       </Routes>
       <Footer />
