@@ -17,22 +17,32 @@ export class AuthService {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
             if (userAccount) {
                 // call another method
-                return this.login({email, password});
+                return this.login({ email, password });
+                console.log("Account created:", userAccount);
             } else {
-               return  userAccount;
+                return userAccount;
             }
         } catch (error) {
             throw error;
         }
     }
 
-    async login({email, password}) {
+    async login({ email, password }) {
+    try {
         try {
-            return await this.account.createEmailSession(email, password);
-        } catch (error) {
-            throw error;
+            await this.account.deleteSessions();
+        } catch (_) {
+            // no active session, ignore
         }
+
+        const login = await this.account.createEmailPasswordSession(email, password);
+        console.log("LOGIN ho gya:", login);
+        return login;
+    } catch (error) {
+        console.error("LOGIN ERROR:", error);
+        throw error;
     }
+}
 
     async getCurrentUser() {
         try {
@@ -46,9 +56,12 @@ export class AuthService {
 
     async logout() {
         try {
-            await this.account.deleteSessions();
+            if (this.account){
+                const logout = await this.account.deleteSessions()
+                return logout;
+            };
         } catch (error) {
-            console.log("Appwrite serive :: logout :: error", error);
+            console.log("jaaa logout nhi hua", error);
         }
     }
 }

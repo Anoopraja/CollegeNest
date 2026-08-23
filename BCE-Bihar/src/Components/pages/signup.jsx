@@ -25,9 +25,10 @@ const Signup = () => {
         password,
         name: fullName,
       });
-
-      setError("");
-      navigate("/");
+      if (userAccount) {
+        return this.login({ email, password });
+      }
+      // navigate("/");
     } catch (e) {
       console.error(e);
       setError("Signup failed. Please try again.");
@@ -40,9 +41,6 @@ const Signup = () => {
 
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-xl bg-blue-700 flex items-center justify-center text-white text-2xl font-bold">
-            B
-          </div>
 
           <h1 className="text-2xl font-bold text-gray-900 mt-4">
             Create Account
@@ -74,7 +72,7 @@ const Signup = () => {
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-            Email
+              Email
             </label>
 
             <input
@@ -139,6 +137,8 @@ const Signup = () => {
 
           {/* Sign Up Button */}
           <button
+          value={signup}
+          onChange={(e) => setSignup(e.target.value)}
             type="submit"
             className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-medium transition"
           >

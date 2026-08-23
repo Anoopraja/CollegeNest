@@ -14,16 +14,15 @@ function Login() {
 
   const login = async (event) => {
     event.preventDefault();
-
     try {
-      await authService.login({ email, password });
-      setError("");
-      navigate("/");
+        const session = await authService.login({ email: email.trim(), password });
+        setError("");
+        navigate("/");
     } catch (error) {
-      console.error(error, "are sahi password daliye maharaj");
-      setError("Login failed. Please check your credentials.");
+        console.error("LOGIN FAILED:", error);
+        setError(error.message || "Login failed");
     }
-  };
+};
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
@@ -31,9 +30,6 @@ function Login() {
 
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-xl bg-blue-700 flex items-center justify-center text-white text-2xl font-bold">
-            B
-          </div>
 
           <h1 className="mt-4 text-2xl font-bold text-gray-900">
             Welcome Back

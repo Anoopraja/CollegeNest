@@ -1,13 +1,28 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
-import { AuthService } from "./appWrite/appwrite.js";
+import authService, { AuthService } from "./appWrite/appwrite.js";
 import conf from "./appWrite/conf.js";
+import { LogOut } from "lucide-react";
 
 
 const Navbar = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState("");
 
+  const menuHandler = () => {
+    if(!open){
+      const setOpen = ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdQVdpsxa7yZB6No3QXxaqy2BZUwi2shevtoISvWiuWwn-rRKwFm7qvh8&s=10")
+    }
+  }
 
+    const handleLogout = async () => {
+    try {
+      await authService.logout();
+      navigate("/login");
+      console.log("Logged out successfully");
+    } catch (error) {
+      console.log("Logout failed:", error);
+    }
+  };
   const Navlist = {
     path: [
       { name: "Home", path: "/" },
@@ -105,7 +120,8 @@ const Navbar = () => {
                   Sign Up
                 </button>
               </NavLink>
-              <button className="hidden w-full bg-blue-700 text-white py-2 rounded-lg mt-3">
+              <button 
+              className="w-full bg-blue-700 text-white py-2 rounded-lg mt-3">
                 Logout
               </button>
             </div>
@@ -125,10 +141,11 @@ const Navbar = () => {
             Login
           </NavLink>
 
-          <NavLink to="/signup" className="lg:bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800">
+          <NavLink to="/signup" className="lg:bg-blue-700 text-white px-5 py-2 rounded-lg lg:hover:bg-blue-800">
             Sign Up
           </NavLink>
-          <NavLink to="/signup" className="hidden lg:bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800">
+          <NavLink 
+          to="/signup" className="lg:bg-blue-700 text-white px-5 py-2 rounded-lg lg:hover:bg-blue-800">
             Logout
           </NavLink>
           {/* mobile menu */}
@@ -136,7 +153,8 @@ const Navbar = () => {
             <button
               onClick={() => setOpen(!open)}
               className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
-              <img className="h-4" src="https://www.svgrepo.com/show/511065/menu-alt-02.svg" alt="" />
+              <img className="h-4 menu" src={open ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa-crgMstRhpFClNlu0smuBcSZysGDrkkHcGju2wQZ4Q&s" : "https://www.svgrepo.com/show/511065/menu-alt-02.svg"} alt="" />
+
             </button>
 
 
