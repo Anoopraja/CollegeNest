@@ -1,681 +1,440 @@
 import React from "react";
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import CountUp from "react-countup";
+import { NavLink } from "react-router-dom";
 import {
   Search,
   ArrowRight,
+  Users,
+  Star,
+  MessageCircle,
+  MapPin,
+  Scale,
+  TrendingUp,
   GraduationCap,
-  CheckCircle2,
+  UserRound,
+  Building2,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+function Hero() {
 
-const Hero = () => {
-  const heroRef = useRef(null);
-  const leftRef = useRef(null);
-  const imageRef = useRef(null);
-  const cardsRef = useRef([]);
-
-  const images = [
-  // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUxB1mIykbV0kkWXX0Jyn3MfPcLQko2IzKAth-N9XRdrKQnHXGgrZd914N&s=10",
-  "https://content.jdmagicbox.com/comp/bhagalpur/x6/9999px641.x641.110203114241.g2x6/catalogue/bhagalpur-college-of-engineering-sabour-bhagalpur-colleges-1d9rht9.jpg?w=1920&q=75",
-  // "https://www.collegedhundo.com/images/college/cropped-dsc03506.jpg",
-  // "https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1200&auto=format&fit=crop",
-  // "https://assets.allegiance-educare.com/colleges/1461848406g5%20-%20Copy.webp", 
-  // "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzrMbv4NchJQsmmUTaiUS9wKpVJZeHfv7j5G3IsSC3W2pEBjdsfSuhgBk8&s=10"
-];
 
   const stats = [
-    { end: 38, suffix: "+", title: "Colleges" },
-    { end: 8000, suffix: "+", title: "Reviews" },
-    { end: 500, suffix: "+", title: "Placements" },
-    { end: 95, suffix: "%", title: "Verified Students" },
+    {
+      icon: <Building2 size={26} />,
+      number: "38+",
+      title: "Colleges in Bihar (BEU)",
+    },
+    {
+      icon: <Users size={26} />,
+      number: "10,000+",
+      title: "Students & Alumni",
+    },
+    {
+      icon: <MessageCircle size={26} />,
+      number: "5,000+",
+      title: "Reviews & Insights",
+    },
+    {
+      icon: <TrendingUp size={26} />,
+      number: "100%",
+      title: "Student Focused",
+    },
   ];
 
-  const [current, setCurrent] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % images.length);
-    }, 4000);
+  const features = [
+    {
+      icon: <Search size={25} />,
+      title: "Honest Reviews",
+      description: "Real student experiences and insights",
+    },
+    {
+      icon: <Scale size={25} />,
+      title: "Easy Comparison",
+      description: "Compare colleges based on rating, facilities & more",
+    },
+    {
+      icon: <MapPin size={25} />,
+      title: "College Information",
+      description: "All essential details in one place",
+    },
+    {
+      icon: <Users size={25} />,
+      title: "Active Community",
+      description: "Connect with students and alumni",
+    },
+  ];
 
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const tl = gsap.timeline();
-
-    tl.from(leftRef.current, {
-      x: -80,
-      opacity: 0,
-      duration: 1,
-    })
-      .from(
-        imageRef.current,
-        {
-          scale: 0.9,
-          opacity: 0,
-          duration: 1,
-        },
-        "-=0.7"
-      )
-      .from(
-        cardsRef.current,
-        {
-          y: 50,
-          opacity: 0,
-          stagger: 0.2,
-        },
-        "-=0.5"
-      );
-  }, []);
-
-  useEffect(() => {
-    cardsRef.current.forEach((card, index) => {
-      gsap.to(card, {
-        y: index % 2 === 0 ? -12 : 12,
-        repeat: -1,
-        yoyo: true,
-        duration: 2 + index,
-      });
-    });
-  }, []);
   return (
-    <section ref={heroRef} className="relative overflow-hidden bg-slate-50">
+    <main className="bg-white text-slate-950 overflow-hidden">
 
-      {/* Background Blur */}
-      <div className="absolute -top-44 -left-32 h-96 w-96 rounded-full bg-blue-200 blur-3xl opacity-40"></div>
-      <div className="absolute bottom-0 right-0 h-100 w-100 rounded-full bg-cyan-200 blur-3xl opacity-40"></div>
+      {/* ================= HERO ================= */}
+      <section className="min-h-[calc(100vh-80px)]">
 
-      {/* <div className="bg-blue-600 text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-10">
 
-        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-          { <p className="text-sm font-medium">
-            🚀 JEE Main Counselling 2026 is Live • Compare Colleges Before Choosing
-          </p> }
+            {/* ========== LEFT CONTENT ========== */}
+            <div>
 
-          { <button className="hidden md:flex items-center gap-2 text-sm font-semibold hover:underline">
-            Compare Now
-            <ArrowRight size={16} />
-          </button> }
+              {/* Trust Badge */}
+              <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 px-5 py-2.5 rounded-full text-sm font-semibold">
 
-        </div> 
+                {/* <span className="text-lg">🔥</span> */}
+                <h1>GenZ on Top</h1>
 
-      </div>   */}
+                {/* India's Trusted College Review Platform */}
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
+              </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
 
-          {/* LEFT */}
+              {/* Heading */}
+              <h1 className="mt-7 text-5xl md:text-6xl lg:text-[64px] font-bold leading-[1.08] tracking-tight">
 
-          <div ref={leftRef}>
+                Discover Better
+                <br />
 
-            {/* Badge */}
+                Colleges.{" "}
 
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-5 py-2 rounded-full font-semibold">
+                <span className="text-blue-600">
+                  Build
+                </span>
 
-              <GraduationCap size={18} />
+                <br />
 
-              Trusted by 15,000+ Engineering Students
+                <span className="text-blue-600">
+                  Brighter Futures.
+                </span>
 
-            </div>
+              </h1>
 
-            {/* Heading */}
 
-            <h1 className="mt-8 text-5xl md:text-6xl font-black text-slate-900 leading-tight">
+              {/* Description */}
+              <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600">
 
-              Find Your
+                CollegeNest helps students to find, compare and review
+                engineering colleges across Bihar and we are trying to catch whole country — all in
+                one place.
 
-              <span className="text-blue-600">
-                {" "}Perfect Engineering
-              </span>
+              </p>
 
-              <br />
 
-              College with Confidence
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap gap-4 mt-8">
 
-            </h1>
+                <NavLink 
+                to="/college">
+                  <button
 
-            {/* Description */}
+                    className="
+                    flex items-center gap-3
+                    bg-blue-600
+                    hover:bg-blue-700
+                    text-white
+                    px-7 py-4
+                    rounded-xl
+                    font-semibold
+                    transition
+                    shadow-lg shadow-blue-600/20
+                  "
+                  >
 
-            <p className="mt-8 text-lg leading-8 text-slate-600 max-w-xl">
+                    <Search size={20}
+                    />
 
-              Discover verified student reviews, placement records,
-              hostel facilities, faculty ratings, fee structure,
-              campus life, scholarships, internships, coding culture,
-              alumni network and much more before choosing your college.
+                    Explore Colleges
 
-            </p>
+                    <ArrowRight size={19} />
 
-            {/* Search */}
+                  </button>
+                </NavLink>
 
-            <div className="mt-10 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 flex flex-col md:flex-row gap-3">
+                <NavLink to="/community"> 
+                <button
+                  className="
+                    flex items-center gap-3
+                    px-7 py-4
+                    rounded-xl
+                    border border-slate-300
+                    hover:border-blue-600
+                    hover:text-blue-600
+                    font-semibold
+                    transition
+                  "
+                >
 
-              <div className="flex items-center flex-1 px-4">
+                  <Users size={20} />
 
-                <Search className="text-slate-400" size={22} />
+                  Join Community
+
+                </button>
+                </NavLink>
+
+              </div>
+
+
+              {/* Search */}
+              <div
+                className="
+                  mt-10
+                  max-w-2xl
+                  flex items-center
+                  bg-white
+                  border border-slate-200
+                  rounded-2xl
+                  p-2
+                  shadow-lg shadow-slate-200/50
+                "
+              >
+
+                <Search
+                  size={23}
+                  className="ml-4 text-slate-400"
+                />
 
                 <input
                   type="text"
-                  placeholder="Search Engineering Colleges..."
-                  className="w-full px-3 py-4 outline-none"
+                  value={name}
+                  placeholder="Search colleges by name, location or branch..."
+                  className="
+                    flex-1
+                    px-4
+                    py-3
+                    outline-none
+                    text-slate-700
+                    placeholder:text-slate-400
+                  "
                 />
 
-              </div>
-
-              <button className="bg-blue-600 hover:bg-blue-700 transition text-white rounded-xl px-8 py-4 font-semibold flex items-center justify-center gap-2">
-
-                Search
-
-                <ArrowRight size={18} />
-
-              </button>
-
-            </div>
-
-            {/* Popular */}
-
-            <div className="mt-6">
-
-              <p className="font-semibold text-slate-700 mb-3">
-
-                Popular Searches
-
-              </p>
-
-              <div className="flex flex-wrap gap-3">
-
-                {[
-                  "NIT Patna",
-                  "MIT Muzaffarpur",
-                  "BCE Bhagalpur",
-                  "CSE",
-                  "AI & ML",
-                  "Best Hostel",
-                ].map((item) => (
-
-                  <button
-                    key={item}
-                    to="/college"
-                    className="bg-white border border-slate-200 hover:border-blue-500 hover:text-blue-600 px-4 py-2 rounded-full transition"
-                  >
-                    {item}
-                  </button>
-
-                ))}
-
-              </div>
-
-            </div>
-
-            {/* Buttons */}
-
-            <div className="flex flex-wrap gap-4 mt-10">
-
-
-
-             <NavLink to="/college">
-              <button className="bg-blue-600 hover:bg-blue-700 transition text-white px-8 py-4 rounded-xl font-semibold">
-
-                Explore Colleges
-
-              </button>
-              </NavLink>
-
-              <NavLink to="/community">
-              <button className="border-2 border-slate-300 hover:border-blue-600 hover:text-blue-600 transition px-8 py-4 rounded-xl font-semibold">
-
-                Let Connect with Students
-
-              </button>
-              </NavLink>
-
-            </div>
-
-            {/* Features */}
-
-            <div className="grid grid-cols-2 gap-4 mt-10">
-
-              {[
-                "Verified Reviews",
-                "Placement Reports",
-                "Hostel Ratings",
-                "Faculty Reviews",
-                "College Comparison",
-                "Scholarship Details",
-              ].map((item) => (
-
-                <div
-                  key={item}
-                  className="flex items-center gap-3"
+                <button
+                  onClick={() => {
+                    if (name.trim() !== "") {
+                      navigate(`/college?search=${encodeURIComponent(name)}`);
+                    }
+                  }}
+                  className="
+                    bg-blue-600
+                    hover:bg-blue-700
+                    text-white
+                    px-7
+                    py-3.5
+                    rounded-xl
+                    font-semibold
+                    transition
+                  "
                 >
-
-                  <CheckCircle2
-                    className="text-green-500"
-                    size={20}
-                  />
-
-                  <span className="text-slate-700">
-
-                    {item}
-
-                  </span>
-
-                </div>
-
-              ))}
-
-            </div>
-
-            {/* Students */}
-
-            <div className="flex items-center gap-5 mt-12">
-
-              <div className="flex -space-x-3">
-
-                {/* <img
-                  ref={imageRef}
-                  src={images[current]}
-                  alt="Engineering College"
-                  className="h-[680px] w-full rounded-3xl object-cover shadow-2xl"
-                /> */}
-
-              </div>
-
-              <div>
-
-                <h3 className="font-bold text-lg">
-
-                  15,000+
-
-                </h3>
-
-                <p className="text-slate-500">
-
-                  Students Trust Our Platform
-
-                </p>
+                  Search
+                </button>
 
               </div>
 
             </div>
 
-            {/* Statistics */}
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mt-14">
-
-              {[
-                {
-                  number: "38+",
-                  title: "Colleges",
-                },
-                {
-                  number: "8K+",
-                  title: "Reviews",
-                },
-                {
-                  number: "500+",
-                  title: "Placements",
-                },
-                {
-                  number: "95%",
-                  title: "Verified",
-                },
-              ].map((item) => (
-
-                <div
-                  key={item.title}
-                  className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-lg transition"
-                >
-
-                  <h2 className="text-3xl font-bold text-blue-600">
-
-                    {item.number}
-
-                  </h2>
-
-                  <p className="text-slate-600 mt-2">
-
-                    {item.title}
-
-                  </p>
-
-                </div>
-
-              ))}
-
-            </div>
-
-          </div>
-
-          {/* Right Side will be added in Part 2 */}
-
-          {/* RIGHT SIDE */}
-
-          <div className="relative  hidden lg:block">
-
-            {/* Main Image */}
-            <img
-              ref={imageRef}
-              src={images[current]}
-              alt="Engineering College"
-              className="h-170 w-full rounded-3xl object-cover shadow-2xl"
-            />
-
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 rounded-3xl bg-linear-to-t from-slate-900/60 via-transparent"></div>
-
-            {/* Featured College Card */}
-            <div className="absolute bottom-6 left-6 bg-white rounded-2xl shadow-xl p-6 w-[320px]">
-
-              <div className="flex items-center justify-between">
-
-                <div>
-
-                  <h3 className="font-bold text-xl">
-
-                    NIT Patna
-
-                  </h3>
-
-                  <p className="text-slate-500">
-
-                    Patna, Bihar
-
-                  </p>
-
-                </div>
-
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">
-
-                  #1
-
-                </span>
-
-              </div>
-
-              {/* <div className="grid grid-cols-2 gap-4 mt-5">
-
-                <div>
-
-                  <p className="text-slate-400 text-sm">
-
-                    Average Package
-
-                  </p>
-
-                  <h4 className="font-bold text-lg">
-
-                    ₹12.5 LPA
-
-                  </h4>
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-400 text-sm">
-
-                    Highest
-
-                  </p>
-
-                  <h4 className="font-bold text-lg">
-
-                    ₹54 LPA
-
-                  </h4>
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-400 text-sm">
-
-                    Reviews
-
-                  </p>
-
-                  <h4 className="font-bold">
-
-                    1,250+
-
-                  </h4>
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-400 text-sm">
-
-                    Rating
-
-                  </p>
-
-                  <h4 className="font-bold text-yellow-500">
-
-                    ★ 4.8
-
-                  </h4>
-
-                </div>
-
-              </div> */}
-
-            </div>
-
-            {/* Placement Card */}
-            <div ref={(el) => (cardsRef.current[0] = el)} className="absolute -top-6 -left-10 bg-white rounded-2xl shadow-xl p-5 w-72">
-
-              <p className="text-sm font-semibold text-green-600">
-
-                Placement Report
-
-              </p>
-
-              <h2 className="text-4xl font-black mt-2 text-slate-900">
-
-                96%
-
-              </h2>
-
-              <p className="text-slate-500">
-
-                Placement Percentage
-
-              </p>
-
-              <div className="mt-4 h-2 rounded-full bg-slate-200 overflow-hidden">
-
-                <div className="h-full w-[96%] bg-green-500"></div>
-
-              </div>
-
-              <div className="flex justify-between mt-4 text-sm">
-
-                <span>120 Recruiters</span>
-
-                <span className="font-semibold text-green-600">
-
-                  +8%
-
-                </span>
-
-              </div>
-
-            </div>
-
-            {/* Student Review */}
-            {/* <div ref={(el) => (cardsRef.current[1] = el)} className="absolute top-52 -right-8 bg-white rounded-2xl shadow-xl p-5 w-72">
-
-              <div className="flex items-center gap-3">
+            {/* ========== RIGHT IMAGE ========== */}
+            <div className="relative h-[570px]">
+
+              {/* Background Circle */}
+              <div
+                className="
+                  absolute
+                  w-[500px]
+                  h-[500px]
+                  rounded-full
+                  bg-blue-50
+                  right-0
+                  top-0
+                "
+              />
+
+
+              {/* College Image */}
+              <div
+                className="
+                  absolute
+                  right-0
+                  top-12
+                  w-[90%]
+                  h-[470px]
+                  rounded-[35px]
+                  overflow-hidden
+                "
+              >
 
                 <img
-                  src="https://randomuser.me/api/portraits/men/41.jpg"
-                  className="w-14 h-14 rounded-full"
-                  alt=""
+                  src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
+                  alt="Engineering College"
+                  className="w-full h-full object-cover"
                 />
 
-                <div>
-
-                  <h4 className="font-bold">
-
-                    Rahul Kumar
-
-                  </h4>
-
-                  <p className="text-sm text-slate-500">
-
-                    CSE • Final Year
-
-                  </p>
-
-                </div>
-
               </div>
 
-              <div className="text-yellow-500 mt-3 text-lg">
 
-                ★★★★★
+              {/* Rating Card */}
 
-              </div>
 
-              <p className="text-sm text-slate-600 mt-3 leading-6">
 
-                The coding culture is excellent. Seniors are very
-                supportive and companies like Microsoft, Amazon
-                and Atlassian visit regularly.
+              {/* Trending Colleges */}
 
-              </p>
 
-            </div> */}
 
-            {/* Hostel Card */}
-            <div ref={(el) => (cardsRef.current[2] = el)} className="absolute bottom-52 -right-10 bg-blue-600 text-white rounded-2xl p-5 w-64 shadow-xl">
+              {/* Hostel Card */}
 
-              <h3 className="font-bold text-lg">
 
-                Hostel Experience
 
-              </h3>
+              {/* Recruiters Card */}
 
-              <div className="text-yellow-300 text-xl mt-2">
-
-                ★★★★☆
-
-              </div>
-
-              <div className="mt-4 space-y-2 text-sm">
-
-                <div className="flex justify-between">
-
-                  <span>WiFi</span>
-
-                  <span>4.8/5</span>
-
-                </div>
-
-                <div className="flex justify-between">
-
-                  <span>Mess Food</span>
-
-                  <span>4.3/5</span>
-
-                </div>
-
-                <div className="flex justify-between">
-
-                  <span>Rooms</span>
-
-                  <span>4.6/5</span>
-
-                </div>
-
-                <div className="flex justify-between">
-
-                  <span>Safety</span>
-
-                  <span>4.9/5</span>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* Trending Card */}
-            <div ref={(el) => (cardsRef.current[3] = el)} className="absolute top-10 right-5 bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-5 w-60">
-
-              <p className="font-bold text-red-500">
-
-                🔥 Trending Colleges
-
-              </p>
-
-              <div className="mt-4 space-y-3">
-
-                {[
-                  "NIT Patna",
-                  "MIT Muzaffarpur",
-                  "BCE Bhagalpur",
-                  "Darbhanga CE",
-                ].map((college, index) => (
-                  <div
-                    key={college}
-                    className="flex items-center justify-between"
-                  >
-                    <span className="text-slate-700">
-
-                      {college}
-
-                    </span>
-
-                    <span className="text-blue-600 font-bold">
-
-                      #{index + 1}
-
-                    </span>
-                  </div>
-                ))}
-
-              </div>
-
-            </div>
-
-            {/* Recruiters */}
-            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-xl px-8 py-5 w-[90%]">
-
-              <p className="text-center text-slate-500 text-sm">
-
-                Top Recruiters
-
-              </p>
-
-              <div className="grid grid-cols-4 gap-4 mt-5 text-center text-sm font-semibold text-slate-700">
-
-                <div>Google</div>
-                <div>Microsoft</div>
-                <div>Amazon</div>
-                <div>Adobe</div>
-                <div>Oracle</div>
-                <div>TCS</div>
-                <div>Infosys</div>
-                <div>Accenture</div>
-
-              </div>
 
             </div>
 
           </div>
 
         </div>
+      </section>
 
-      </div>
 
-    </section>
+      {/* ================= STATS ================= */}
+      <section className="pb-16">
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            {stats.map((stat) => (
+
+              <div
+                key={stat.title}
+                className="
+                  flex items-center gap-4
+                  bg-white
+                  border border-slate-200
+                  rounded-2xl
+                  p-5
+                  shadow-sm
+                  hover:shadow-md
+                  transition
+                "
+              >
+
+                <div
+                  className="
+                    w-14 h-14
+                    rounded-full
+                    bg-blue-50
+                    text-blue-600
+                    flex items-center justify-center
+                    shrink-0
+                  "
+                >
+                  {stat.icon}
+                </div>
+
+
+                <div>
+
+                  <p className="text-2xl font-bold">
+                    {stat.number}
+                  </p>
+
+                  <p className="text-sm text-slate-500">
+                    {stat.title}
+                  </p>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* ================= WHY COLLEGENEST ================= */}
+      <section className="pb-20">
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+
+          {/* Section Heading */}
+          <div className="text-center mb-12">
+
+            <h2 className="text-4xl md:text-5xl font-bold">
+
+              Why Choose{" "}
+
+              <span className="text-blue-600">
+                CollegeNest?
+              </span>
+
+            </h2>
+
+            <div className="w-12 h-1 bg-blue-600 rounded-full mx-auto mt-4" />
+
+            <p className="mt-4 text-slate-500">
+              A smarter way to choose your engineering college
+            </p>
+
+          </div>
+
+
+          {/* Feature Cards */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            {features.map((feature) => (
+
+              <div
+                key={feature.title}
+                className="
+                  bg-white
+                  border border-slate-200
+                  rounded-2xl
+                  p-7
+                  hover:-translate-y-1
+                  hover:shadow-xl
+                  hover:border-blue-200
+                  transition-all
+                  duration-300
+                "
+              >
+
+                <div
+                  className="
+                    w-12 h-12
+                    rounded-full
+                    bg-blue-600
+                    text-white
+                    flex items-center justify-center
+                    mb-6
+                  "
+                >
+                  {feature.icon}
+                </div>
+
+
+                <h3 className="text-xl font-bold mb-2">
+                  {feature.title}
+                </h3>
+
+
+                <p className="text-slate-500 leading-6">
+                  {feature.description}
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
   );
-};
+}
 
 export default Hero;

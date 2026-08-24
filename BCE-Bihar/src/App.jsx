@@ -13,6 +13,7 @@ import Signup from './Components/pages/signup'
 import CollegeInfo from './Components/pages/Collegeinfo'
 import Counselling from './Components/pages/Councling'
 import ChatLive from './Components/pages/ChatLive'
+import { Home } from 'lucide-react'
 
 
 function App() {
