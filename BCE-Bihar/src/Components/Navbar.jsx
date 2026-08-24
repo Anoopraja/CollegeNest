@@ -1,39 +1,51 @@
-import { Link, NavLink } from "react-router-dom";
-import { useState } from "react";
-import authService, { AuthService } from "./appWrite/appwrite.js";
-import conf from "./appWrite/conf.js";
-import { LogOut } from "lucide-react";
-
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import authService from "./appWrite/appwrite.js";
 
 const Navbar = () => {
-  const [open, setOpen] = useState("");
+  const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
 
-  const menuHandler = () => {
-    if(!open){
-      const setOpen = ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdQVdpsxa7yZB6No3QXxaqy2BZUwi2shevtoISvWiuWwn-rRKwFm7qvh8&s=10")
-    }
-  }
+  const navigate = useNavigate();
 
-    const handleLogout = async () => {
+  // Check logged-in user
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const currentUser = await authService.getCurrentUser();
+        setUser(currentUser);
+      } catch (error) {
+        setUser(null);
+      }
+    };
+
+    getCurrentUser();
+  }, []);
+
+  // Logout
+  const handleLogout = async () => {
     try {
       await authService.logout();
+
+      setUser(null);       // UI immediately update karega
+      setOpen(false);
+
       navigate("/login");
+
       console.log("Logged out successfully");
     } catch (error) {
       console.log("Logout failed:", error);
     }
   };
+
   const Navlist = {
     path: [
       { name: "Home", path: "/" },
       { name: "College", path: "/college" },
-      // { name: "Reviews", path: "/reviews" },
-      { name: "Community", path: "/community" },
-      // { name: "Contact", path: "/contact" },
+      { name: "Contact", path: "/contact" },
       { name: "Counselling", path: "/counselling" },
     ],
-  }
-
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
@@ -42,19 +54,28 @@ const Navbar = () => {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-auto rounded-lg flex items-center justify-center text-white font-bold">
-            <img className="h-auto rounded-2xl" src="/logo.jpg" alt="Logo" />
+            <img
+              className="h-auto rounded-2xl"
+              src="/logo.jpg"
+              alt="Logo"
+            />
           </div>
 
           <div className="hidden sm:block">
-            <h1 className="font-bold text-gray-900">CollegeNest</h1>
-            <p className="text-xs text-gray-500">Engineering decision made easy</p>
+            <h1 className="font-bold text-gray-900">
+              CollegeNest
+            </h1>
+
+            <p className="text-xs text-gray-500">
+              Engineering decision made easy
+            </p>
           </div>
         </div>
 
-        {/* Menu */}
+        {/* Desktop Menu */}
         <ul className="hidden lg:flex items-center gap-8 text-gray-700 font-medium">
-          {Navlist.path.map((item, index) => (
-            <li key={index}>
+          {Navlist.path.map((item) => (
+            <li key={item.path}>
               <NavLink
                 className={({ isActive }) =>
                   `block px-3 py-2 transition ${isActive
@@ -69,113 +90,147 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
-        {open && (
-          <div className="lg:hidden absolute top-16 left-0 w-full bg-white border-t shadow-md">
-            <NavLink to="/"
-              onClick={() => setOpen(false)}
-              className="block px-6 py-3">
-              Home
-            </NavLink>
 
-            <NavLink to="/college"
-              onClick={() => setOpen(false)} className="block px-6 py-3">
-              College
-            </NavLink>
-
-            <NavLink to="/reviews"
-              onClick={() => setOpen(false)}
-              className="block px-6 py-3">
-              Reviews
-            </NavLink>
-
-            <NavLink to="/community"
-              onClick={() => setOpen(false)}
-              className="block px-6 py-3">
-              Community
-            </NavLink>
-
-            <NavLink to="/contact"
-              onClick={() => setOpen(false)}
-              className="block px-6 py-3">
-              Contact
-            </NavLink>
-            <NavLink to="/counselling"
-              onClick={() => setOpen(false)}
-              className="block px-6 py-3">
-              Counselling
-            </NavLink>
-
-            <div className="p-4 border-t">
-              <NavLink
-                to={"/login"}
-              >
-                <button
-                  className="w-full border py-2 rounded-lg mb-3">
-                  Login
-                </button>
-              </NavLink>
-              <NavLink
-                to={"/signup"}>
-                <button className="w-full bg-blue-700 text-white py-2 rounded-lg">
-                  Sign Up
-                </button>
-              </NavLink>
-              <button 
-              className="w-full bg-blue-700 text-white py-2 rounded-lg mt-3">
-                Logout
-              </button>
-            </div>
-          </div>)}
-
-        {/* Right */}
+        {/* Right Side */}
         <div className="flex items-center gap-3">
 
-          <NavLink
-            className={({ isActive }) =>
-              `block px-3 py-2 transition ${isActive
-                ? "text-blue-700 font-semibold"
-                : "text-gray-700 hover:text-blue-700"
-              }`
-            }
-            to="/login" className="hidden lg:block border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
-            Login
-          </NavLink>
+          {/* NOT LOGGED IN */}
+          {!user && (
+            <>
+              <NavLink
+                to="/login"
+                className="hidden lg:block border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100"
+              >
+                Login
+              </NavLink>
 
-          <NavLink to="/signup" className="lg:bg-blue-700 text-white px-5 py-2 rounded-lg lg:hover:bg-blue-800">
-            Sign Up
-          </NavLink>
-          <NavLink 
-          to="/signup" className="lg:bg-blue-700 text-white px-5 py-2 rounded-lg lg:hover:bg-blue-800">
-            Logout
-          </NavLink>
+              <NavLink
+                to="/signup"
+                className="hidden lg:block bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800"
+              >
+                Sign Up
+              </NavLink>
+            </>
+          )}
 
-            <NavLink to="/profile">
-              <img 
-              className="h-10 hover:opacity-75" src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png" alt="" />
-            </NavLink>
-          
-        
-          {/* mobile menu */}
+          {/* LOGGED IN */}
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="hidden lg:block bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700"
+            >
+              Logout
+            </button>
+
+
+          )}
+
+          {/* Profile */}
+          {user && (
+            <NavLink
+
+              to={user ? `/profile` : "/profile"}
+            >
+              <img
+                className="h-10 hover:opacity-75"
+                src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
+                alt="Profile"
+              />
+            </NavLink>)
+          } 
+
+          {/* Mobile Menu Button */}
           <div className="lg:hidden">
             <button
               onClick={() => setOpen(!open)}
-              className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
-              <img className="h-4 menu" src={open ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa-crgMstRhpFClNlu0smuBcSZysGDrkkHcGju2wQZ4Q&s" : "https://www.svgrepo.com/show/511065/menu-alt-02.svg"} alt="" />
-
+              className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100"
+            >
+              <img
+                className="h-4"
+                src={
+                  open
+                    ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa-crgMstRhpFClNlu0smuBcSZysGDrkkHcGju2wQZ4Q&s"
+                    : "https://www.svgrepo.com/show/511065/menu-alt-02.svg"
+                }
+                alt="Menu"
+              />
             </button>
-
-            {/* <div className="absolute top-16 left-0 w-full bg-white border-t shadow-md">
-              <img className="h-4" src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png" alt="" />
-            </div> */}
-
           </div>
-
-
-
-
         </div>
-
       </div>
+
+      {/* Mobile Menu */}
+      {open && (
+        <div className="lg:hidden absolute top-16 left-0 w-full bg-white border-t shadow-md">
+
+          <NavLink
+            to="/"
+            onClick={() => setOpen(false)}
+            className="block px-6 py-3"
+          >
+            Home
+          </NavLink>
+
+          <NavLink
+            to="/college"
+            onClick={() => setOpen(false)}
+            className="block px-6 py-3"
+          >
+            College
+          </NavLink>
+
+          <NavLink
+            to="/contact"
+            onClick={() => setOpen(false)}
+            className="block px-6 py-3"
+          >
+            Contact
+          </NavLink>
+
+          <NavLink
+            to="/counselling"
+            onClick={() => setOpen(false)}
+            className="block px-6 py-3"
+          >
+            Counselling
+          </NavLink>
+
+          <div className="p-4 border-t">
+
+            {/* NOT LOGGED IN */}
+            {!user && (
+              <>
+                <NavLink
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="block w-full border py-2 rounded-lg mb-3 text-center"
+                >
+                  Login
+                </NavLink>
+
+                <NavLink
+                  to="/signup"
+                  onClick={() => setOpen(false)}
+                  className="block w-full bg-blue-700 text-white py-2 rounded-lg text-center"
+                >
+                  Sign Up
+                </NavLink>
+              </>
+            )}
+
+            {/* LOGGED IN */}
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="w-full bg-red-600 text-white py-2 rounded-lg"
+              >
+                Logout
+              </button>
+              
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

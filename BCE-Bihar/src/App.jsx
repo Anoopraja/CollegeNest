@@ -26,12 +26,11 @@ function App() {
         <Route path='/college' element={<Colleges />} />
         <Route path="/college/:id" element={<CollegeInfo />} />
         <Route path='/community' element={<Community />} />
-        <Route path="/community/:id" element={<ChatLive />} />
+        {/* <Route path="/community/:id" element={<ChatLive />} /> */}
         <Route path='/contact' element={<Contact />} />
         <Route path='/reviews' element={<Reviews />} />
         <Route path='/counselling' element={<Counselling />} />
         <Route path='/profile' element={<Profile />} />
-       
       </Routes>
       <Footer />
     </>

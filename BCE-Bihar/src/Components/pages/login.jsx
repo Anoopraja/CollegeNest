@@ -15,14 +15,14 @@ function Login() {
   const login = async (event) => {
     event.preventDefault();
     try {
-        const session = await authService.login({ email: email.trim(), password });
-        setError("");
-        navigate("/");
+      const session = await authService.login({ email: email.trim(), password });
+      setError("");
+      navigate("/");
     } catch (error) {
-        console.error("LOGIN FAILED:", error);
-        setError(error.message || "Login failed");
+      console.error("LOGIN FAILED:", error);
+      setError(error.message || "Login failed");
     }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
