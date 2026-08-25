@@ -966,42 +966,6 @@ const College = [
     ]
   },
 
-  // {
-  //   id: 31,
-  //   name: "Government Engineering College Saran",
-  //   shortName: "GEC Saran",
-  //   slug: "gec-saran",
-  //   district: "Saran",
-  //   address: "Saran, Bihar",
-  //   location: "Saran, Bihar",
-  //   state: "Bihar",
-  //   established: 2019,
-  //   type: "Government",
-  //   ownership: "Government of Bihar",
-  //   university: "Bihar Engineering University",
-  //   approval: "AICTE",
-  //   website: "https://gecsaran.ac.in",
-  //   image: "/images/colleges/gec-saran.jpg",
-  //   logo: "/logos/gec-saran.png",
-  //   admission: "UGEAC (JEE Main)",
-  //   branches: [
-  //     "Computer Science & Engineering",
-  //     "Civil Engineering",
-  //     "Mechanical Engineering",
-  //     "Electrical Engineering",
-  //     "Electronics & Communication Engineering"
-  //   ],
-  //   facilities: [
-  //     "Hostel",
-  //     "Central Library",
-  //     "Laboratories",
-  //     "Computer Center",
-  //     "Sports",
-  //     "WiFi",
-  //     "Placement Cell"
-  //   ]
-  // },
-
   {
     id: 30,
     name: "Government Engineering College Sheikhpura",
