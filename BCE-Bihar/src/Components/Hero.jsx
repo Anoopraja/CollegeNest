@@ -122,8 +122,8 @@ function Hero() {
               {/* CTA Buttons */}
               <div className="flex flex-wrap gap-4 mt-8">
 
-                <NavLink 
-                to="/college">
+                <NavLink
+                  to="/college">
                   <button
 
                     className="
@@ -149,9 +149,9 @@ function Hero() {
                   </button>
                 </NavLink>
 
-                <NavLink to="/community"> 
-                <button
-                  className="
+                <NavLink to="/community">
+                  <button
+                    className="
                     flex items-center gap-3
                     px-7 py-4
                     rounded-xl
@@ -161,13 +161,13 @@ function Hero() {
                     font-semibold
                     transition
                   "
-                >
+                  >
 
-                  <Users size={20} />
+                    <Users size={20} />
 
-                  Join Community
+                    Join Community
 
-                </button>
+                  </button>
                 </NavLink>
 
               </div>
@@ -206,12 +206,8 @@ function Hero() {
                   "
                 />
 
+                <NavLink to="/college"> 
                 <button
-                  onClick={() => {
-                    if (name.trim() !== "") {
-                      navigate(`/college?search=${encodeURIComponent(name)}`);
-                    }
-                  }}
                   className="
                     bg-blue-600
                     hover:bg-blue-700
@@ -225,7 +221,7 @@ function Hero() {
                 >
                   Search
                 </button>
-
+                </NavLink>
               </div>
 
             </div>
