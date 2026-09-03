@@ -37,7 +37,7 @@ function Login() {
             Welcome Back
           </h1>
 
-          <p className="text-gray-500 text-sm mt-2">
+          <p className="text-gray-500 text-sm mt-2 text-center">
             login in to your CollegeNest Reviews account
           </p>
         </div>
@@ -73,7 +73,7 @@ function Login() {
               </button>
             </div>
 
-            <div>
+            <div className="overflow-hidden relative">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
@@ -84,7 +84,7 @@ function Login() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="relative left-85 bottom-6 -translate-y-1/2"
+                className="absolute right-4 top-1/2 -translate-y-1/2 "
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -118,9 +118,9 @@ function Login() {
         </div>
 
         {/* Google Login */}
-        <button className="w-full border border-gray-300 rounded-lg py-3 hover:bg-gray-100 transition">
+        {/* <button className="w-full border border-gray-300 rounded-lg py-3 hover:bg-gray-100 transition">
           Continue with Google
-        </button>
+        </button> */}
 
         {/* Signup */}
         <p className="text-center text-sm text-gray-600 mt-6">

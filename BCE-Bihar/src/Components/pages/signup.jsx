@@ -99,7 +99,7 @@ const Signup = () => {
               placeholder="Create a password"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
             />
-            <button
+           <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="relative left-85 bottom-6 -translate-y-1/2"
