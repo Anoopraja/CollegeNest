@@ -17,6 +17,7 @@
     "react": "^19.2.7",
     "react-countup": "^6.5.3",
     "react-dom": "^19.2.7",
+    "react-feather": "^2.0.10",
     "react-router-dom": "^7.18.1",
     "tailwindcss": "^4.3.2"
   },
