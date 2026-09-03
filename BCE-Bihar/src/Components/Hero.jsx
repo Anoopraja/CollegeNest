@@ -68,11 +68,11 @@ function Hero() {
     <main className="bg-white text-slate-950 overflow-hidden">
 
       {/* ================= HERO ================= */}
-      <section className="min-h-[calc(100vh-80px)]">
+      <section className="min-h-[calc(100vh-90px)]">
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-10 sm:px-6">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-10 sm:pr-6">
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center align-middle  ">
+          <div className="flex sm:flex-col lg:flex-row gap-10 h-auto items-center justify-between">
 
             {/* ========== LEFT CONTENT ========== */}
             <div>
@@ -110,7 +110,7 @@ function Hero() {
 
 
               {/* Description */}
-              <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600">
+              <p className="mt-7 w-auto leading-8 text-center text-slate-600">
 
                 CollegeNest helps students to find, compare and review
                 engineering colleges across Bihar and we are trying to catch whole country — all in
@@ -198,7 +198,7 @@ function Hero() {
                   placeholder="Search colleges by name, location or branch..."
                   className="
                     flex-1
-                    px-4
+                    
                     py-3
                     outline-none
                     w-auto

@@ -164,39 +164,25 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="lg:hidden absolute top-16 left-0 w-full bg-white border-t shadow-md">
+        <div className="lg:hidden absolute top-16 left-0 w-full  bg-white border-t shadow-md">
 
-          <NavLink
-            to="/"
-            onClick={() => setOpen(false)}
-            className="block px-6 py-3"
-          >
-            Home
-          </NavLink>
-
-          <NavLink
-            to="/college"
-            onClick={() => setOpen(false)}
-            className="block px-6 py-3"
-          >
-            College
-          </NavLink>
-
-          <NavLink
-            to="/contact"
-            onClick={() => setOpen(false)}
-            className="block px-6 py-3"
-          >
-            Contact
-          </NavLink>
-
-          <NavLink
-            to="/counselling"
-            onClick={() => setOpen(false)}
-            className="block px-6 py-3"
-          >
-            Counselling
-          </NavLink>
+          <ul className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
+         {Navlist.path.map((item) => (
+           <li key={item.path}>
+             <NavLink
+               className={({ isActive }) =>
+                 `block px-3 py-2 transition ${isActive
+                   ? "text-blue-700 font-semibold"
+                   : "text-gray-700 hover:text-blue-700"
+                 }`
+               }
+               to={item.path}
+             >
+               {item.name}
+             </NavLink>
+           </li>
+         ))}
+       </ul>
 
           <div className="p-4 border-t">
 
