@@ -110,7 +110,7 @@ function Hero() {
 
 
               {/* Description */}
-              <p className="mt-7 w-auto leading-8 text-center text-slate-600">
+              <p className="mt-7 max-w-[35rem] w-auto leading-8 text-center text-slate-600">
 
                 CollegeNest helps students to find, compare and review
                 engineering colleges across Bihar and we are trying to catch whole country — all in
@@ -177,6 +177,7 @@ function Hero() {
               <div
                 className="
                   mt-10
+                  z-3
                   max-w-2xl
                   flex items-center
                   bg-white
@@ -198,7 +199,7 @@ function Hero() {
                   placeholder="Search colleges by name, location or branch..."
                   className="
                     flex-1
-                    
+                    z-3
                     py-3
                     outline-none
                     w-auto
@@ -274,7 +275,7 @@ function Hero() {
                 <img
                   src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
                   alt="Engineering College"
-                  className="w-full h-auto object-cover"
+                  className="w-full h-auto"
                 />
 
               </div>
@@ -388,7 +389,6 @@ function Hero() {
             </p>
 
           </div>
-
 
           {/* Feature Cards */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
