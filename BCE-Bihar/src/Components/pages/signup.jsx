@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import authService from "../appWrite/appwrite.js";
+import { Eye, EyeOff } from "lucide-react";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +10,8 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
   const signup = async (event) => {
@@ -86,32 +89,42 @@ const Signup = () => {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Password
-            </label>
+
 
             <input
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              type="password"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
               placeholder="Create a password"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="relative left-85 bottom-6 -translate-y-1/2"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Confirm Password
-            </label>
-
             <input
+              type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              type="password"
-              placeholder="Confirm your password"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
+              placeholder="Create your Confirm password"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="relative left-85 bottom-6 -translate-y-1/2"
+            >
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           {/* Terms */}
@@ -137,8 +150,8 @@ const Signup = () => {
 
           {/* Sign Up Button */}
           <button
-          value={signup}
-          onChange={(e) => setSignup(e.target.value)}
+            value={signup}
+            onChange={(e) => setSignup(e.target.value)}
             type="submit"
             className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-medium transition"
           >
