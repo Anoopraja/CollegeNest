@@ -251,7 +251,7 @@ function Hero() {
                   -translate-y-1/2
                   left-1/2
                   top-1/2
-                bg-blue-50
+
                   right-0
                   top-0
                 "
@@ -266,7 +266,7 @@ function Hero() {
                   top-12
                   w-[90%]
                   h-[470px]
-                  rounded-[35px]
+                  rounded-2xl
                   overflow-hidden
                 "
               >
