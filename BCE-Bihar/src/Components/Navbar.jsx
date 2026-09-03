@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import authService from "./appWrite/appwrite.js";
 
@@ -7,6 +7,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
+    const location = useLocation();
 
   // Check logged-in user
   useEffect(() => {
@@ -20,7 +21,7 @@ const Navbar = () => {
     };
 
     getCurrentUser();
-  }, []);
+  }, [location.pathname]);
 
   // Logout
   const handleLogout = async () => {
@@ -31,6 +32,8 @@ const Navbar = () => {
       setOpen(false);
 
       navigate("/login");
+      serError(""); // Clear any previous error messages
+      
 
       console.log("Logged out successfully");
     } catch (error) {
