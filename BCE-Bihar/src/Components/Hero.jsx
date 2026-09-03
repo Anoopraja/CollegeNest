@@ -70,9 +70,9 @@ function Hero() {
       {/* ================= HERO ================= */}
       <section className="min-h-[calc(100vh-80px)]">
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-10 sm:px-6">
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 items-center align-middle  ">
 
             {/* ========== LEFT CONTENT ========== */}
             <div>
@@ -89,7 +89,7 @@ function Hero() {
 
 
               {/* Heading */}
-              <h1 className="mt-7 text-5xl md:text-6xl lg:text-[64px] font-bold leading-[1.08] tracking-tight">
+              <h1 className="mt-7 p-1 text-5xl md:text-6xl lg:text-[64px] font-bold leading-[1.08] tracking-tight max-sm:5xl min-sm:2xl">
 
                 Discover Better
                 <br />
@@ -201,6 +201,7 @@ function Hero() {
                     px-4
                     py-3
                     outline-none
+                    w-auto
                     text-slate-700
                     placeholder:text-slate-400
                   "
@@ -237,7 +238,20 @@ function Hero() {
                   w-[500px]
                   h-[500px]
                   rounded-full
-                  bg-blue-50
+                  sm:w-[600px]
+                  sm:h-[600px]
+                  lg:w-[700px]
+                  lg:h-[700px]
+                  2xl:w-[800px]
+                  2xl:h-[800px]
+                  bg-blue-300
+                  opacity-50
+                  blur-3xl
+                  -translate-x-1/2
+                  -translate-y-1/2
+                  left-1/2
+                  top-1/2
+                bg-blue-50
                   right-0
                   top-0
                 "
@@ -260,7 +274,7 @@ function Hero() {
                 <img
                   src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
                   alt="Engineering College"
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto object-cover"
                 />
 
               </div>

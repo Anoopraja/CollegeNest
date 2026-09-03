@@ -23,15 +23,16 @@ const Signup = () => {
     }
 
     try {
-      await authService.createAccount({
+       const userAccount = await authService.createAccount({
         email,
         password,
         name: fullName,
       });
       if (userAccount) {
-        return this.login({ email, password });
+        return authService.login({ email:email.trim(), password });
       }
-      // navigate("/");
+      setError("");
+      navigate("/");
     } catch (e) {
       console.error(e);
       setError("Signup failed. Please try again.");
@@ -142,11 +143,11 @@ const Signup = () => {
             </p>
           </div>
 
-          {error && (
+          {/* {error && (
             <p className="text-sm text-red-600">
               {error}
             </p>
-          )}
+          )} */}
 
           {/* Sign Up Button */}
           <button
