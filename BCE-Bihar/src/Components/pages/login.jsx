@@ -73,18 +73,19 @@ function Login() {
               </button>
             </div>
 
-            <div className="overflow-hidden relative">
+            <div className="relative w-full">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="h-[3.5rem] w-full border border-gray-300 rounded-lg px-4 pr-12 outline-none focus:border-blue-700"
+                placeholder="Create a password"
               />
+
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 "
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-blue-700"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>

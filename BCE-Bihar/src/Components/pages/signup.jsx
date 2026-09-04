@@ -23,13 +23,13 @@ const Signup = () => {
     }
 
     try {
-       const userAccount = await authService.createAccount({
+      const userAccount = await authService.createAccount({
         email,
         password,
         name: fullName,
       });
       if (userAccount) {
-        return authService.login({ email:email.trim(), password });
+        return authService.login({ email: email.trim(), password });
       }
       setError("");
       navigate("/");
@@ -89,41 +89,40 @@ const Signup = () => {
           </div>
 
           {/* Password */}
-          <div>
-
-
+          <div className="relative w-full">
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
+              className="h-[3.5rem] w-full border border-gray-300 rounded-lg px-4 pr-12 outline-none focus:border-blue-700"
               placeholder="Create a password"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
             />
-           <button
+
+            <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="relative left-85 bottom-6 -translate-y-1/2"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-blue-700"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
           {/* Confirm Password */}
-          <div>
+          <div className="relative w-full">
             <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter confirm password"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <button
+              type={showConfirmPassword ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="h-[3.5rem] w-full border border-gray-300 rounded-lg px-4 pr-12 outline-none focus:border-blue-700"
+              placeholder="Create a password"
+            />
+
+            <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="relative left-85 bottom-6 -translate-y-1/2"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-blue-700"
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
