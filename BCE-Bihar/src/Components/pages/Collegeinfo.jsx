@@ -1,171 +1,429 @@
+
 import { useParams } from "react-router-dom";
 import College from "../data/College";
-
-
 
 const CollegeInfo = () => {
   const { id } = useParams();
 
-
   const college = College.find((item) => item.id === Number(id));
 
-  const handleUpload = (e) => {
+  const handleUpload = (e) => { };
 
-  }
-
-  if (!College) {
+  if (!college) {
     return (
-      <div className="text-center py-20 text-2xl font-semibold">
-        College Not Found
+      <div className="min-h-[60vh] flex items-center justify-center px-6">
+        <div className="text-center">
+          <div className="text-6xl mb-5">🎓</div>
+          <h2 className="text-3xl font-bold text-gray-900">
+            College Not Found
+          </h2>
+          <p className="text-gray-500 mt-2">
+            The college you're looking for doesn't exist.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-10">
+    <section className="bg-white min-h-screen">
 
-      {/* Banner */}
-      <div className="rounded-3xl overflow-hidden shadow-lg">
-        <img
-          src={college.image}
-          alt={college.name}
-          className="w-full h-[350px] object-cover"
-        />
-      </div>
-
-      {/* Heading */}
-      <div className="mt-8">
-        <h1 className="text-4xl font-bold">{college.name}</h1>
-
-        <div className="flex flex-wrap gap-4 mt-4 text-gray-600">
-          <p>📍 {college.location}</p>
-          <p>⭐ {college.rating}/5</p>
-          <p>🏛️ {college.established}</p>
-          <p>🎓 {college.type}</p>
-        </div>
-      </div>
-
-      {/* About */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-semibold mb-4">
-          About College
-        </h2>
-
-        <p className="text-gray-700 leading-8">
-          {college.about}
-        </p>
-      </div>
-
-      {/* Details */}
-      <div className="grid md:grid-cols-2 gap-6 mt-10">
-
-        <div className="border rounded-2xl p-6 shadow">
-          <h3 className="text-xl font-semibold mb-4">
-            Basic Information
-          </h3>
-
-          <div className="space-y-3">
-            <p><strong>University:</strong> {college.university}</p>
-            <p><strong>Approval:</strong> {college.approval}</p>
-            <p><strong>Campus Size:</strong> {college.campus}</p>
-          </div>
-        </div>
-
-        <div className="border rounded-2xl p-6 shadow">
-          <h3 className="text-xl font-semibold mb-4">
-            Contact
-          </h3>
-
-          <div className="space-y-3">
-            <p>📞 91 + {college.phone}</p>
-            <p>✉️ {college.email}</p>
-            <a
-              href={college.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
-            >
-              🌐 {college.website}
-            </a>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Courses */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-semibold mb-5">
-          Courses Offered
-        </h2>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-          {college.branches.map((branch) => (
-            <div
-              key={branch}
-              className="border rounded-xl p-4 hover:shadow-md transition"
-            >
-              {branch}
-            </div>
-          ))}
-
-        </div>
-      </div>
-
-      {/* Facilities */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-semibold mb-5">
-          Facilities
-        </h2>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-          {college.facilities.map((facility) => (
-            <div
-              key={facility}
-              className="bg-gray-100 rounded-xl p-5 text-center"
-            >
-              {facility}
-            </div>
-          ))}
-
-        </div>
-      </div>
-      {/* campus Gallery */}
-      <section>
-        <div className="flex items-center justify-between m-8 ">
-          <div>
-            <h2 className="text-3xl font-bold">Campus Gallery</h2>
-            <p className="text-gray-500 mt-2">
-              Explore the college campus and facilities.
-            </p>
-          </div>
-          <button className="border px-5 py-2 rounded-lg hover:bg-gray-100 transition">
-            View All
-          </button>
-        </div>
-        <div className="p-5 gap-5 flex justify-start items-center content-center w-full h-50 bg-slate-100 rounded-2xl ">
-          
+      {/* Hero Banner */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+        <div className="relative h-[280px] sm:h-[380px] overflow-hidden rounded-3xl shadow-xl">
           <img
             src={college.image}
             alt={college.name}
-            className="w-50 object-cover rounded-3xl"
+            className="w-full h-full object-cover"
           />
-          <div className="p-5 gap-5 border-2 flex sm:flex-col justify-start items-center content-center w-60 h-30  bg-slate-100 rounded-2xl ">
-            <input
-              onChange={handleUpload}
-              alt="Upload Image"
-              type="file"
-              className="w-auto"
-              accept="image/png,image/jpeg,image/webp"
-            />
+
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/45" />
+
+          {/* Hero Content */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-white">
+            <div className="max-w-4xl">
+              <span className="inline-block bg-blue-600 px-4 py-1.5 rounded-full text-sm font-medium mb-3">
+                {college.shortName || "Engineering College"}
+              </span>
+
+              <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
+                {college.name}
+              </h1>
+
+              <div className="flex flex-wrap gap-3 sm:gap-5 mt-4 text-sm sm:text-base">
+                <span className="flex items-center gap-2">
+                  📍 {college.location}
+                </span>
+
+                <span className="flex items-center gap-2">
+                  ⭐ {college.rating}/5
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+        {/* Quick Info */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+            <p className="text-sm text-gray-500">Established</p>
+            <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+              {college.established}
+            </p>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+            <p className="text-sm text-gray-500">College Type</p>
+            <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+              {college.type}
+            </p>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+            <p className="text-sm text-gray-500">Rating</p>
+            <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+              {college.rating}/5
+            </p>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+            <p className="text-sm text-gray-500">Campus</p>
+            <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+              {college.campus}
+            </p>
           </div>
 
         </div>
 
-      </section>
+        {/* About */}
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+            <h2 className="text-3xl font-bold text-gray-900">
+              About College
+            </h2>
+          </div>
+
+          <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8">
+            <p className="text-gray-700 leading-8 text-[16px]">
+              {college.about}
+            </p>
+          </div>
+        </div>
+
+        {/* Information Cards */}
+        <div className="grid lg:grid-cols-2 gap-6 mt-10">
+
+          {/* Basic Information */}
+          <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
+                🏛️
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Basic Information
+                </h3>
+                <p className="text-sm text-gray-500">
+                  College details
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+
+              <div className="flex justify-between gap-4 border-b pb-3">
+                <span className="text-gray-500">University</span>
+                <span className="font-semibold text-gray-900 text-right">
+                  {college.university}
+                </span>
+              </div>
+
+              <div className="flex justify-between gap-4 border-b pb-3">
+                <span className="text-gray-500">Approval</span>
+                <span className="font-semibold text-gray-900 text-right">
+                  {college.approval}
+                </span>
+              </div>
+
+              <div className="flex justify-between gap-4">
+                <span className="text-gray-500">Campus Size</span>
+                <span className="font-semibold text-gray-900 text-right">
+                  {college.campus}
+                </span>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
+                📞
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Contact Information
+                </h3>
+                <p className="text-sm text-gray-500">
+                  Get in touch
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+
+              <div>
+                <p className="text-sm text-gray-500 mb-1">
+                  Phone
+                </p>
+
+                <p className="font-semibold text-gray-900">
+                  📞 +91 {college.phone}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-500 mb-1">
+                  Email
+                </p>
+
+                <p className="font-semibold text-gray-900 break-all">
+                  ✉️ {college.email}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-500 mb-1">
+                  Website
+                </p>
+
+                <a
+                  href={college.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 font-medium hover:underline break-all"
+                >
+                  🌐 {college.website}
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        {/* Courses */}
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">
+                Courses Offered
+              </h2>
+
+              <p className="text-gray-500 mt-1">
+                Engineering programs available at the college
+              </p>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {college.branches.map((branch) => (
+              <div
+                key={branch}
+                className="group border border-gray-200 rounded-2xl p-5 bg-white hover:border-blue-500 hover:shadow-lg transition-all duration-200"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-lg group-hover:bg-blue-600 group-hover:text-white transition">
+                    🎓
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-gray-900">
+                      {branch}
+                    </p>
+
+                    <p className="text-sm text-gray-500">
+                      Engineering Program
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Facilities */}
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">
+                Facilities
+              </h2>
+
+              <p className="text-gray-500 mt-1">
+                Facilities available on campus
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {college.facilities.map((facility) => (
+              <div
+                key={facility}
+                className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center hover:bg-blue-50 hover:border-blue-200 hover:shadow-md transition"
+              >
+                <div className="text-2xl mb-3">
+                  🏫
+                </div>
+
+                <p className="font-semibold text-gray-800">
+                  {facility}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Campus Gallery */}
+        <section className="mt-12">
+
+          {/* Gallery Header */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900">
+                  Campus Gallery
+                </h2>
+
+                <p className="text-gray-500 mt-1">
+                  Explore and share campus photos
+                </p>
+              </div>
+            </div>
+
+            <button className="border border-gray-300 px-5 py-2.5 rounded-xl font-medium text-gray-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition">
+              View All
+            </button>
+
+          </div>
+
+
+          {/* Gallery */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            {/* Existing Campus Image */}
+            <div className="group relative overflow-hidden rounded-2xl shadow-md h-[250px]">
+
+              <img
+                src={college.image}
+                alt={college.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+
+              {/* Image Overlay */}
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 pt-16">
+                <p className="text-white font-semibold">
+                  {college.name}
+                </p>
+
+                <p className="text-gray-200 text-sm">
+                  Campus View
+                </p>
+              </div>
+
+            </div>
+
+
+            {/* Upload Card */}
+            <label
+              htmlFor="campus-upload"
+              className="h-[250px] border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50 hover:bg-blue-100 hover:border-blue-500 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center p-6"
+            >
+
+              {/* Upload Icon */}
+              <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4">
+                <svg
+                  className="w-8 h-8 text-blue-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 014 8.9M12 12v9m0-9l-3 3m3-3l3 3"
+                  />
+                </svg>
+              </div>
+
+              <h3 className="text-lg font-semibold text-gray-900">
+                Upload Campus Photo
+              </h3>
+
+              <p className="text-sm text-gray-500 mt-2">
+                Share a photo of your college campus
+              </p>
+
+              <span className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
+                Choose Image
+              </span>
+
+              <input
+                id="campus-upload"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleUpload}
+                className="hidden"
+              />
+
+            </label>
+
+
+            {/* Empty Gallery Card */}
+            <div className="h-[250px] rounded-2xl bg-gray-50 border border-gray-200 flex flex-col items-center justify-center text-center p-6">
+
+              <div className="text-4xl mb-3">
+                📷
+              </div>
+
+              <h3 className="font-semibold text-gray-800">
+                More Photos Coming Soon
+              </h3>
+
+              <p className="text-sm text-gray-500 mt-2">
+                Upload photos to build the campus gallery.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+        ```
+
+
+      </div>
     </section>
   );
 };
 
 export default CollegeInfo;
+

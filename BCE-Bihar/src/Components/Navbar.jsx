@@ -147,6 +147,7 @@ const Navbar = () => {
               to="/profile/id:"
             >
               <img
+                // onClick={(e) => navigate("/")}  
                 className="h-10 hover:opacity-75"
                 src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
                 alt="Profile"

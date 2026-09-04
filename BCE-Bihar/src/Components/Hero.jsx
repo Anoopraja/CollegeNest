@@ -72,7 +72,7 @@ function Hero() {
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-10 sm:pr-6">
 
-          <div className="flex md:flex-col md:justify-content lg:flex-row gap-10 h-auto items-center justify-between">
+          <div className="flex md:flex-col md:justify-content sm:flex-row md:justify-center lg:flex-row gap-10 h-auto items-center justify-between">
 
             {/* ========== LEFT CONTENT ========== */}
             <div>
@@ -110,7 +110,7 @@ function Hero() {
 
 
               {/* Description */}
-              <p className="mt-7 max-w-[35rem] w-auto leading-8 text-center text-slate-600">
+              <p className="mt-7 max-w-[35rem] w-auto leading-8 text-center text-gradient-to-blue-600 text-slate-600 text-lg sm:text-xl md:text-lg lg:text-xl">
 
                 CollegeNest helps students to find, compare and review
                 engineering colleges across Bihar and we are trying to catch whole country — all in
@@ -230,85 +230,53 @@ function Hero() {
 
 
             {/* ========== RIGHT IMAGE ========== */}
-            <div className="relative h-[570px]">
 
-              {/* Background Circle */}
+            {/* ========== RIGHT IMAGE ========== */}
+            <div className="hidden md:flex relative w-full lg:w-1/2 h-[480px] lg:h-[570px] items-center justify-center mt-8 lg:mt-0">
+
+              {/* Background Glow */}
               <div
                 className="
-                  absolute
-                  w-[500px]
-                  h-[500px]
-                  rounded-full
-                  sm:w-[600px]
-                  sm:h-[600px]
-                  lg:w-[700px]
-                  lg:h-[700px]
-                  2xl:w-[800px]
-                  2xl:h-[800px]
-                  bg-blue-300
-                  opacity-50
-                  blur-3xl
-                  -translate-x-1/2
-                  -translate-y-1/2
-                  left-1/2
-                  top-1/2
-
-                  right-0
-                  top-0
-                "
-              />
-
-
-              {/* College Image */}
-              <div className="relative w-full lg:w-1/2 h-[320px] sm:h-[400px] md:h-[480px] lg:h-[570px] flex items-center justify-center">
-
-  {/* Background Circle */}
-  <div
-    className="
       absolute
-      w-[280px] h-[280px]
-      sm:w-[380px] sm:h-[380px]
+      w-[380px] h-[380px]
       md:w-[480px] md:h-[480px]
-      lg:w-[600px] lg:h-[600px]
-      xl:w-[700px] xl:h-[700px]
+      lg:w-[650px] lg:h-[650px]
       rounded-full
       bg-blue-300
-      opacity-50
+      opacity-40
       blur-3xl
       left-1/2
       top-1/2
       -translate-x-1/2
       -translate-y-1/2
     "
-  />
+              />
 
-  {/* College Image */}
-  <div
-    className="
+              {/* Image Container */}
+              <div
+                className="
       relative
-      w-[280px] h-[190px]
-      sm:w-[350px] sm:h-[230px]
-      md:w-[450px] md:h-[300px]
-      lg:w-[500px] lg:h-[330px]
-      xl:w-[560px] xl:h-[370px]
+      z-10
+      w-[90%]
+      max-w-[480px]
+      lg:max-w-[560px]
+      h-[310px]
+      lg:h-[370px]
       rounded-2xl
       overflow-hidden
-      shadow-xl
-      z-10
+      shadow-2xl
+      border-4
+      border-white
     "
-  >
-    <img
-      src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
-      alt="Bhagalpur Engineering College"
-      className="w-full h-full object-cover"
-    />
-  </div>
-
-</div>
-
+              >
+                <img
+                  src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
+                  alt="Bhagalpur Engineering College"
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
 
             </div>
-
           </div>
 
         </div>

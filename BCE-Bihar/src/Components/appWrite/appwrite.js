@@ -41,8 +41,8 @@ export class AuthService {
     try {
         try {
             await this.account.deleteSessions();
-        } catch (_) {
-            // no active session, ignore
+        } catch (e) {
+            console.error("Error deleting sessions:", e);
         }
 
         const login = await this.account.createEmailPasswordSession(email, password);
