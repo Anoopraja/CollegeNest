@@ -81,7 +81,7 @@ function Login() {
                 className="h-[3.5rem] w-full border border-gray-300 rounded-lg px-4 pr-12 outline-none focus:border-blue-700"
                 placeholder="Create a password"
               />
-
+              
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}

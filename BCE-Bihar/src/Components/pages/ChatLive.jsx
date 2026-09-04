@@ -2,10 +2,11 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 const branches = [
-  "1st-2nd year",
-  "3rd-4th year",
-  "5th-6th year",
-  "7th-8th year",
+  "CSE",
+  "ECE",
+  "EE",
+  "ME",
+  "CE",
 ];
 
 const ChatLive = () => {
