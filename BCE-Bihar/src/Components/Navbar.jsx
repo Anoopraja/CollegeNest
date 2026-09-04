@@ -7,7 +7,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
-    const location = useLocation();
+  const location = useLocation();
 
   // Check logged-in user
   useEffect(() => {
@@ -19,10 +19,22 @@ const Navbar = () => {
         setUser(null);
       }
     };
-
     getCurrentUser();
   }, [location.pathname]);
 
+  // const userAccount = async () => {
+  //   try {
+  //     const user = await this.account.get();
+  //     return user;
+  //   }
+  //   catch { err } {
+  //     console.error("kuchu puchu tum kaha ho", err);
+  //   }
+  // }
+
+  // if (!user) {
+  //   console.log("User is not logged in");
+  // }
   // Logout
   const handleLogout = async () => {
     try {
@@ -33,7 +45,7 @@ const Navbar = () => {
 
       navigate("/login");
       serError(""); // Clear any previous error messages
-      
+
 
       console.log("Logged out successfully");
     } catch (error) {
@@ -132,7 +144,7 @@ const Navbar = () => {
           {user && (
             <NavLink
 
-              to={user ? `/profile` : "/profile"}
+              to="/profile/id:"
             >
               <img
                 className="h-10 hover:opacity-75"
@@ -140,7 +152,7 @@ const Navbar = () => {
                 alt="Profile"
               />
             </NavLink>)
-          } 
+          }
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden">
@@ -167,23 +179,23 @@ const Navbar = () => {
         <div className="lg:hidden absolute top-16 left-0 w-full  bg-white border-t shadow-md">
 
           <ul className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
-         {Navlist.path.map((item) => (
-           <li key={item.path}>
-             <NavLink
-             onClick={() => setOpen(false)}
-               className={({ isActive }) =>
-                 `block px-3 py-2 transition ${isActive
-                   ? "text-blue-700 font-semibold"
-                   : "text-gray-700 hover:text-blue-700"
-                 }`
-               }
-               to={item.path}
-             >
-               {item.name}
-             </NavLink>
-           </li>
-         ))}
-       </ul>
+            {Navlist.path.map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-3 py-2 transition ${isActive
+                      ? "text-blue-700 font-semibold"
+                      : "text-gray-700 hover:text-blue-700"
+                    }`
+                  }
+                  to={item.path}
+                >
+                  {item.name}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
 
           <div className="p-4 border-t">
 
@@ -216,7 +228,7 @@ const Navbar = () => {
               >
                 Logout
               </button>
-              
+
             )}
           </div>
         </div>

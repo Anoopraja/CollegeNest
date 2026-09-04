@@ -31,7 +31,8 @@ function App() {
         <Route path='/contact' element={<Contact />} />
         <Route path='/reviews' element={<Reviews />} />
         <Route path='/counselling' element={<Counselling />} />
-        <Route path='/profile' element={<Profile />} />
+        <Route path='/chat' element={<ChatLive />} />
+        <Route path='/profile/:id' element={<Profile />} />
       </Routes>
       <Footer />
     </>

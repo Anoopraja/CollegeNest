@@ -151,11 +151,12 @@ const CollegeInfo = () => {
             alt={college.name}
             className="w-50 object-cover rounded-3xl"
           />
-          <div className="p-5 gap-5 border-2 flex justify-start items-center content-center w-60 h-30 bg-slate-100 rounded-2xl ">
+          <div className="p-5 gap-5 border-2 flex sm:flex-col justify-start items-center content-center w-60 h-30  bg-slate-100 rounded-2xl ">
             <input
               onChange={handleUpload}
               alt="Upload Image"
               type="file"
+              className="w-auto"
               accept="image/png,image/jpeg,image/webp"
             />
           </div>

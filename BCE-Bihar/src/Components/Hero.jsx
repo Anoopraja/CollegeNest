@@ -72,7 +72,7 @@ function Hero() {
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-10 sm:pr-6">
 
-          <div className="flex sm:flex-col lg:flex-row gap-10 h-auto items-center justify-between">
+          <div className="flex md:flex-col md:justify-content lg:flex-row gap-10 h-auto items-center justify-between">
 
             {/* ========== LEFT CONTENT ========== */}
             <div>
@@ -208,9 +208,9 @@ function Hero() {
                   "
                 />
 
-                <NavLink to="/college"> 
-                <button
-                  className="
+                <NavLink to="/college">
+                  <button
+                    className="
                     bg-blue-600
                     hover:bg-blue-700
                     text-white
@@ -220,9 +220,9 @@ function Hero() {
                     font-semibold
                     transition
                   "
-                >
-                  Search
-                </button>
+                  >
+                    Search
+                  </button>
                 </NavLink>
               </div>
 
@@ -260,39 +260,51 @@ function Hero() {
 
 
               {/* College Image */}
-              <div
-                className="
-                  absolute
-                  right-0
-                  top-12
-                  w-[90%]
-                  h-[470px]
-                  rounded-2xl
-                  overflow-hidden"
-              >
+              <div className="relative w-full lg:w-1/2 h-[320px] sm:h-[400px] md:h-[480px] lg:h-[570px] flex items-center justify-center">
 
-                <img
-                  src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
-                  alt="Engineering College"
-                  className="w-full h-auto"
-                />
+  {/* Background Circle */}
+  <div
+    className="
+      absolute
+      w-[280px] h-[280px]
+      sm:w-[380px] sm:h-[380px]
+      md:w-[480px] md:h-[480px]
+      lg:w-[600px] lg:h-[600px]
+      xl:w-[700px] xl:h-[700px]
+      rounded-full
+      bg-blue-300
+      opacity-50
+      blur-3xl
+      left-1/2
+      top-1/2
+      -translate-x-1/2
+      -translate-y-1/2
+    "
+  />
 
-              </div>
+  {/* College Image */}
+  <div
+    className="
+      relative
+      w-[280px] h-[190px]
+      sm:w-[350px] sm:h-[230px]
+      md:w-[450px] md:h-[300px]
+      lg:w-[500px] lg:h-[330px]
+      xl:w-[560px] xl:h-[370px]
+      rounded-2xl
+      overflow-hidden
+      shadow-xl
+      z-10
+    "
+  >
+    <img
+      src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
+      alt="Bhagalpur Engineering College"
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-
-              {/* Rating Card */}
-
-
-
-              {/* Trending Colleges */}
-
-
-
-              {/* Hostel Card */}
-
-
-
-              {/* Recruiters Card */}
+</div>
 
 
             </div>

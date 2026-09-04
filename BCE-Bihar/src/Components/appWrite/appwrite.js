@@ -12,6 +12,16 @@ export class AuthService {
         this.account = new Account(this.client);
     }
 
+    async gmailVerification() {
+        try{
+            const userVerification = await this.account.createVerification(ID.unique(), "collegenest.anooplofi.me/verify");
+            console.log("Gmail verification sent:", userVerification);
+            return userVerification;
+        }
+        catch(e){
+            console.error("sali gamil daal dalle", e);
+        }
+    }
     async createAccount({ email, password, name }) {
         try {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
@@ -42,13 +52,15 @@ export class AuthService {
         console.error("LOGIN ERROR:", error);
         throw error;
     }
+
 }
 
     async getCurrentUser() {
-        try {
-            return await this.account.get();
+        try { 
+            const userAccount = await this.account.get();
+            return userAccount;
         } catch (error) {
-            console.log("Appwrite serive :: getCurrentUser :: error", error);
+            console.log("kuchu puchu tum kaha ho", error);
         }
 
         return null;
@@ -64,6 +76,7 @@ export class AuthService {
             console.log("jaaa logout nhi hua", error);
         }
     }
+
 }
 
 const authService = new AuthService();
