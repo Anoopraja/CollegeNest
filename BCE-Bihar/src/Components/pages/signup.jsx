@@ -112,25 +112,25 @@ const Signup = () => {
           {/* Confirm Password */}
           <div>
             <input
-              type={showConfirmPassword ? "text" : "password"}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
-              placeholder="Create your Confirm password"
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-700"
-            />
-            <button
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter confirm password"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button
               type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              onClick={() => setShowPassword(!showPassword)}
               className="relative left-85 bottom-6 -translate-y-1/2"
             >
-              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
           {/* Terms */}
-          <div className="flex items-start gap-2">
+          {/* <div className="flex items-start gap-2">
             <input
+              
               type="checkbox"
               className="mt-1"
             />
@@ -141,7 +141,7 @@ const Signup = () => {
                 Terms & Conditions
               </span>
             </p>
-          </div>
+          </div> */}
 
           {/* {error && (
             <p className="text-sm text-red-600">

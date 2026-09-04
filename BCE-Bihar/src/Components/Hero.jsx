@@ -268,8 +268,7 @@ function Hero() {
                   w-[90%]
                   h-[470px]
                   rounded-2xl
-                  overflow-hidden
-                "
+                  overflow-hidden"
               >
 
                 <img
