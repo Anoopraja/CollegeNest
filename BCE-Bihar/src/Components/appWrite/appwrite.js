@@ -1,8 +1,8 @@
 import conf from "../appWrite/conf.js";
-import { Client, Account, ID } from "appwrite";
-
+import { Client, Account, ID, Databases } from "appwrite";
 export class AuthService {
     client = new Client();
+    // databases = new Databases(client);
     account;
 
     constructor() {
@@ -10,15 +10,55 @@ export class AuthService {
             .setEndpoint(conf.appwriteUrl)
             .setProject(conf.appwriteProjectId);
         this.account = new Account(this.client);
+        // this.storage = new Storage(this.client);
+        this.databases = new Databases(this.client);
+    }
+
+
+
+    async uploadCollegeImage(file) {
+        try {
+            const response = await this.storage.createFile(
+                "college-images",
+                ID.unique(),
+                file
+            );
+
+            return response;
+        } catch (error) {
+            console.error("Image upload failed:", error);
+            throw error;
+        }
+    }
+
+
+    async saveCollegeImage({ collegeId, imageUrl }) {
+        try {
+            const response = await this.databases.createDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteImageUpload,
+                ID.unique(),
+                {
+                    collegeID: Number(collegeId),
+                    imageUrl: imageUrl,
+                }
+            );
+
+            return response;
+        } catch (error) {
+            console.error("Failed to save image:", error);
+            throw error;
+        }
+
     }
 
     async gmailVerification() {
-        try{
+        try {
             const userVerification = await this.account.createVerification(ID.unique(), "collegenest.anooplofi.me/verify");
             console.log("Gmail verification sent:", userVerification);
             return userVerification;
         }
-        catch(e){
+        catch (e) {
             console.error("sali gamil daal dalle", e);
         }
     }
@@ -38,25 +78,25 @@ export class AuthService {
     }
 
     async login({ email, password }) {
-    try {
         try {
-            await this.account.deleteSessions();
-        } catch (e) {
-            console.error("Error deleting sessions:", e);
+            try {
+                await this.account.deleteSessions();
+            } catch (e) {
+                console.error("Error deleting sessions:", e);
+            }
+
+            const login = await this.account.createEmailPasswordSession(email, password);
+            console.log("LOGIN ho gya:", login);
+            return login;
+        } catch (error) {
+            console.error("LOGIN ERROR:", error);
+            throw error;
         }
 
-        const login = await this.account.createEmailPasswordSession(email, password);
-        console.log("LOGIN ho gya:", login);
-        return login;
-    } catch (error) {
-        console.error("LOGIN ERROR:", error);
-        throw error;
     }
 
-}
-
     async getCurrentUser() {
-        try { 
+        try {
             const userAccount = await this.account.get();
             return userAccount;
         } catch (error) {
@@ -68,7 +108,7 @@ export class AuthService {
 
     async logout() {
         try {
-            if (this.account){
+            if (this.account) {
                 const logout = await this.account.deleteSessions()
                 return logout;
             };
@@ -81,4 +121,6 @@ export class AuthService {
 
 const authService = new AuthService();
 
+// export const storage = new Storage(client);
 export default authService
+// export const databases = new Databases(client);

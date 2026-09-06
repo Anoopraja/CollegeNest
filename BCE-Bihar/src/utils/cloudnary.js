@@ -1,31 +1,56 @@
-import {v2 as cloudinary} from "cloudinary"
-import fs from "fs"
+// cloudinary.config({ 
+//   cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME, 
+//   api_key: import.meta.env.CLOUDINARY_API_KEY, 
+//   api_secret: import.meta.env.CLOUDINARY_API_SECRET,
+//   upload_preset: import.meta.env.CLOUDINARY_UPLOAD_PRESET
+// });
 
 
-cloudinary.config({ 
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET 
-});
 
-const uploadOnCloudinary = async (localFilePath) => {
-    try {
-        if (!localFilePath) return null
-        //upload the file on cloudinary
-        const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "auto"
-        })
-        // file has been uploaded successfull
-        //console.log("file is uploaded on cloudinary ", response.url);
-        fs.unlinkSync(localFilePath)
-        return response;
+// import { cloudinaryConfig } from "./cloudinaryconf.js";
 
-    } catch (error) {
-        fs.unlinkSync(localFilePath) // remove the locally saved temporary file as the upload operation got failed
-        return null;
+
+
+const uploadImage = async (file) => {
+
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
+  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+  // console.log("Cloud Name:", cloudName);
+  // console.log("Upload Preset:", uploadPreset);
+
+  if (!file) {
+    throw new Error("No file selected");
+  }
+
+
+  const formData = new FormData();
+
+  formData.append("file", file);
+  formData.append(
+    "upload_preset",
+    uploadPreset
+  );
+
+  
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    {
+      method: "POST",
+      body: formData,
     }
-}
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || "Upload failed");
+  }
 
 
 
-export {uploadOnCloudinary}
+  return data.secure_url;
+};
+
+export default uploadImage;

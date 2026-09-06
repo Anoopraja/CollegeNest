@@ -1,13 +1,69 @@
-
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import College from "../data/College";
+import uploadImage from "../../utils/cloudnary";
+
+import authService from "../appWrite/appwrite.js";
+// import saveCollegeImage from "../appWrite/appwrite.js";
+
+
+
 
 const CollegeInfo = () => {
   const { id } = useParams();
 
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [file, setFile] = useState(null);
+  const [title, setTitle] = useState('');
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = (e) => {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    // console.log("Selected file:", file);
+
+    setImage(file);
+
+  };
+
+ const handleUpload = async () => {
+  if (!image) {
+    alert("Pehle image select karo");
+    return;
+  }
+
+  try {
+    setUploading(true);
+
+    // 1. Upload image to Cloudinary
+    const imageUrl = await uploadImage(image);
+
+    // console.log("Cloudinary URL:", imageUrl);
+
+    // 2. Save Cloudinary URL in Appwrite Database
+    await authService.saveCollegeImage({
+      collegeId: college.id,
+      imageUrl: imageUrl,
+    });
+
+    // 3. Display image
+    setImageUrl(imageUrl);
+
+    alert("Image uploaded and saved!");
+  } catch (error) {
+    console.error("Upload error:", error);
+    alert(error.message);
+  } finally {
+    setUploading(false);
+  }
+};
   const college = College.find((item) => item.id === Number(id));
 
-  const handleUpload = (e) => { };
+
 
   if (!college) {
     return (
@@ -390,34 +446,44 @@ const CollegeInfo = () => {
                 id="campus-upload"
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
-                onChange={handleUpload}
+                onChange={handleFileChange}
                 className="hidden"
               />
+
+              <div>
+                <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium" onClick={handleUpload}>
+                  Upload
+                </button>
+
+                {/* {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt="Uploaded"
+                    width="200"
+                  />
+                )} */}
+              </div>
 
             </label>
 
 
             {/* Empty Gallery Card */}
             <div className="h-[250px] rounded-2xl bg-gray-50 border border-gray-200 flex flex-col items-center justify-center text-center p-6">
-
-              <div className="text-4xl mb-3">
-                📷
-              </div>
-
-              <h3 className="font-semibold text-gray-800">
-                More Photos Coming Soon
-              </h3>
-
-              <p className="text-sm text-gray-500 mt-2">
-                Upload photos to build the campus gallery.
-              </p>
-
+             
+             
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Uploaded"
+                  width="200"
+                />
+              )}
             </div>
 
           </div>
 
         </section>
-        ```
+
 
 
       </div>
