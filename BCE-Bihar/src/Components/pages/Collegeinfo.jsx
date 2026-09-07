@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import College from "../data/College";
 import uploadImage from "../../utils/cloudnary";
 // import { Database, Client, ID } from "appwrite";
@@ -17,22 +17,25 @@ const CollegeInfo = () => {
   const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
   // const [imageUrl, setImageUrl] = useState("");
-  // const [file, setFile] = useState(null);
+  const [file, setFile] = useState(null);
   // const [title, setTitle] = useState('');
   const [uploading, setUploading] = useState(false);
+  const navigate = useNavigate();
+
 
   const college = College.find((item) => item.id === Number(id));
 
-  const handleFileChange =  async (e) => {
+  const handleFileChange = async (e) => {
     try {
       const user = await authService.getCurrentUser();
       if (!user) {
-        alert("please login first");
+        setError("Please login first");
+        navigate("/login");
         return;
       }
-          console.log("Logged in user:", user);
+      console.log("Logged in user:", user);
 
-    }catch (e){
+    } catch (e) {
       alert("please login first")
     }
 
@@ -40,11 +43,11 @@ const CollegeInfo = () => {
 
     if (!file) return;
 
-    // console.log("Selected file:", file);
+    console.log("Selected file:", file);
 
     setImage(file);
 
-  };
+  }; ``
 
   const handleUpload = async () => {
 
@@ -209,7 +212,9 @@ const CollegeInfo = () => {
           <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
-                🏛️
+                <div className="w-full h-auto overflow-hidden">
+                  <img src={college.logo} alt={college.name} />
+                </div>
               </div>
 
               <div>
@@ -474,7 +479,7 @@ const CollegeInfo = () => {
               </h3>
 
               <p className="text-sm text-gray-500 mt-2">
-                Share a photo of your college campus
+                {image ? image.name : "No file chosen"}
               </p>
 
               <span className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">

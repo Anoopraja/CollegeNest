@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React from "react";
+// import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import authService from "../appWrite/appwrite.js";
@@ -22,6 +22,7 @@ function Login() {
       navigate("/");
     } catch (error) {
       console.error("LOGIN FAILED:", error);
+      navigate("/login");
       setError(error.message || "Login failed");
     }
   };
