@@ -1,4 +1,5 @@
 import conf from "../appWrite/conf.js";
+import { Query } from "appwrite";
 import { Client, Account, ID, Databases } from "appwrite";
 export class AuthService {
     client = new Client();
@@ -49,7 +50,35 @@ export class AuthService {
             console.error("Failed to save image:", error);
             throw error;
         }
+    }
 
+    // async createProfile(profileData) {
+    //     try {
+    //         return await this.databases.createDocument(
+    //             this.config.databaseId,
+    //             this.config.profileCollectionId,
+    //             ID.unique(),
+    //             profileData
+    //         );
+    //     } catch (error) {
+    //         console.error("Profile creation failed:", error);
+    //         throw error;
+    //     }
+    // }
+
+    async getCollegeImages(collegeId) {
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteImageUpload,
+                [
+                    Query.equal("collegeID", Number(collegeId))
+                ]
+            );
+        }
+        catch (error) {
+            console.error("mill nhi rha hai phutu")
+        }
     }
 
     async gmailVerification() {

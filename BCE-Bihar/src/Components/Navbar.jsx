@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import authService from "./appWrite/appwrite.js";
 
@@ -44,7 +44,7 @@ const Navbar = () => {
       setOpen(false);
 
       navigate("/login");
-      serError(""); // Clear any previous error messages
+      setError(""); // Clear any previous error messages
 
 
       console.log("Logged out successfully");

@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import College from '../data/College'
 import { NavLink } from 'react-router-dom'
 import CollegeInfo from './Collegeinfo'

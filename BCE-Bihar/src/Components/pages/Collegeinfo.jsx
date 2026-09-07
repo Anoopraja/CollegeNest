@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import College from "../data/College";
 import uploadImage from "../../utils/cloudnary";
-
+// import { Database, Client, ID } from "appwrite";
 import authService from "../appWrite/appwrite.js";
+// import getCollegeImages from "../appWrite/appwrite.js";
 // import saveCollegeImage from "../appWrite/appwrite.js";
 
 
@@ -12,13 +13,28 @@ import authService from "../appWrite/appwrite.js";
 const CollegeInfo = () => {
   const { id } = useParams();
 
+  // const [college, setCollege] = useState(null);
   const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
-  const [file, setFile] = useState(null);
-  const [title, setTitle] = useState('');
+  const [images, setImages] = useState([]);
+  // const [imageUrl, setImageUrl] = useState("");
+  // const [file, setFile] = useState(null);
+  // const [title, setTitle] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  const handleFileChange = (e) => {
+  const college = College.find((item) => item.id === Number(id));
+
+  const handleFileChange =  async (e) => {
+    try {
+      const user = await authService.getCurrentUser();
+      if (!user) {
+        alert("please login first");
+        return;
+      }
+          console.log("Logged in user:", user);
+
+    }catch (e){
+      alert("please login first")
+    }
 
     const file = e.target.files[0];
 
@@ -30,38 +46,51 @@ const CollegeInfo = () => {
 
   };
 
- const handleUpload = async () => {
-  if (!image) {
-    alert("Pehle image select karo");
-    return;
-  }
+  const handleUpload = async () => {
 
-  try {
-    setUploading(true);
+    if (!image) {
+      alert("Pehle image select karo");
+      return;
+    }
 
-    // 1. Upload image to Cloudinary
-    const imageUrl = await uploadImage(image);
+    try {
+      setUploading(true);
 
-    // console.log("Cloudinary URL:", imageUrl);
+      // 1. Upload image to Cloudinary
+      const imageUrl = await uploadImage(image);
 
-    // 2. Save Cloudinary URL in Appwrite Database
-    await authService.saveCollegeImage({
-      collegeId: college.id,
-      imageUrl: imageUrl,
-    });
+      // console.log("Cloudinary URL:", imageUrl);
 
-    // 3. Display image
-    setImageUrl(imageUrl);
+      // 2. Save Cloudinary URL in Appwrite Database
+      await authService.saveCollegeImage({
+        collegeId: college.id,
+        imageUrl: imageUrl,
+      });
 
-    alert("Image uploaded and saved!");
-  } catch (error) {
-    console.error("Upload error:", error);
-    alert(error.message);
-  } finally {
-    setUploading(false);
-  }
-};
-  const college = College.find((item) => item.id === Number(id));
+      // 3. Display image
+      setImageUrl(imageUrl);
+
+      alert("Image uploaded and saved!");
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert(error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  useEffect(() => {
+    const getImages = async () => {
+      try {
+        const response = await authService.getCollegeImages(id);
+        setImages(response.documents);
+      } catch (error) {
+        console.error("Images fetch failed:", error);
+      }
+    };
+
+    getImages();
+  }, [id]);
 
 
 
@@ -386,14 +415,12 @@ const CollegeInfo = () => {
 
             {/* Existing Campus Image */}
             <div className="group relative overflow-hidden rounded-2xl shadow-md h-[250px]">
-
               <img
                 src={college.image}
                 alt={college.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
 
-              {/* Image Overlay */}
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 pt-16">
                 <p className="text-white font-semibold">
                   {college.name}
@@ -403,8 +430,22 @@ const CollegeInfo = () => {
                   Campus View
                 </p>
               </div>
-
             </div>
+
+
+            {/* Uploaded Images */}
+            {images.map((image) => (
+              <div
+                key={image.$id}
+                className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300"
+              >
+                <img
+                  src={image.imageUrl}
+                  alt="College campus"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            ))}
 
 
             {/* Upload Card */}
@@ -412,8 +453,6 @@ const CollegeInfo = () => {
               htmlFor="campus-upload"
               className="h-[250px] border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50 hover:bg-blue-100 hover:border-blue-500 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center p-6"
             >
-
-              {/* Upload Icon */}
               <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4">
                 <svg
                   className="w-8 h-8 text-blue-600"
@@ -450,35 +489,17 @@ const CollegeInfo = () => {
                 className="hidden"
               />
 
-              <div>
-                <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium" onClick={handleUpload}>
-                  Upload
-                </button>
-
-                {/* {imageUrl && (
-                  <img
-                    src={imageUrl}
-                    alt="Uploaded"
-                    width="200"
-                  />
-                )} */}
-              </div>
-
+              <button
+                type="button"
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleUpload();
+                }}
+              >
+                Upload
+              </button>
             </label>
-
-
-            {/* Empty Gallery Card */}
-            <div className="h-[250px] rounded-2xl bg-gray-50 border border-gray-200 flex flex-col items-center justify-center text-center p-6">
-             
-             
-              {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt="Uploaded"
-                  width="200"
-                />
-              )}
-            </div>
 
           </div>
 
