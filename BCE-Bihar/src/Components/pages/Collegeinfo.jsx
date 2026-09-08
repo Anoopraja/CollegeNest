@@ -16,7 +16,7 @@ const CollegeInfo = () => {
   // const [college, setCollege] = useState(null);
   const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
-  // const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [file, setFile] = useState(null);
   // const [title, setTitle] = useState('');
   const [uploading, setUploading] = useState(false);

@@ -30,6 +30,7 @@ export class AuthService {
             console.error("Image upload failed:", error);
             throw error;
         }
+        
     }
 
 
