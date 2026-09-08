@@ -443,10 +443,12 @@ function Hero() {
               </p>
             </div>
 
-            <button className="flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
-              View All
-              <ArrowRight size={20} />
-            </button>
+            <NavLink to="/college">
+              <button className="flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
+                View All
+                <ArrowRight size={20} />
+              </button>
+            </NavLink>
           </div>
 
           {/* Cards */}
@@ -492,7 +494,7 @@ function Hero() {
                   </div>
 
                   {/* Branches */}
-                  <div className="h-auto sm:flex-col flex gap-2 mt-5">
+                  <div className="h-auto grid gap-2 mt-5">
                     {college.branches.map((branch) => (
                       <span
                         key={branch}
@@ -509,10 +511,11 @@ function Hero() {
                       {college.reviews} Reviews
                     </span>
 
-                    <button className="text-blue-600 font-semibold hover:text-blue-700">
-                      Read Reviews
-                    </button>
-
+                    <NavLink to={`/college/${college.id}`}>
+                      <button className="text-blue-600 font-semibold hover:text-blue-700">
+                        Read Reviews
+                      </button>
+                    </NavLink>
                   </div>
                 </div>
               </div>
