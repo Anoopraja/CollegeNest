@@ -17,6 +17,7 @@ const CollegeInfo = () => {
   const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
+  // const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   // const [title, setTitle] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -47,7 +48,9 @@ const CollegeInfo = () => {
 
     setImage(file);
 
-  }; ``
+    
+
+  };
 
   const handleUpload = async () => {
 
@@ -482,8 +485,9 @@ const CollegeInfo = () => {
                 {image ? image.name : "No file chosen"}
               </p>
 
-              <span className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
-                Choose Image
+              <span
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
+                {image ? "Change File" : "Choose File"}
               </span>
 
               <input
@@ -501,8 +505,9 @@ const CollegeInfo = () => {
                   e.preventDefault();
                   handleUpload();
                 }}
+                disabled={uploading}
               >
-                Upload
+                {uploading ? "Uploading..." : "Upload"}
               </button>
             </label>
 

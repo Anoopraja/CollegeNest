@@ -1,4 +1,5 @@
-import React from "react";
+// import React from "react";
+import college from "../Components/data/College.js"
 import { NavLink } from "react-router-dom";
 import {
   Search,
@@ -12,8 +13,9 @@ import {
   GraduationCap,
   UserRound,
   Building2,
+  Quote
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function Hero() {
 
@@ -64,6 +66,8 @@ function Hero() {
     },
   ];
 
+
+
   return (
     <main className="bg-white text-slate-950 overflow-hidden">
 
@@ -110,7 +114,7 @@ function Hero() {
 
 
               {/* Description */}
-              <p className="mt-7 max-w-[35rem] w-auto leading-8 text-center text-gradient-to-blue-600 text-slate-600 text-lg sm:text-xl md:text-lg lg:text-xl">
+              <p className="mt-7 max-w-[35rem] min-w-[20rem] leading-8 text-start text-gradient-to-blue-600 text-slate-600 text-lg sm:text-lg md:text-lg lg:text-xl">
 
                 CollegeNest helps students to find, compare and review
                 engineering colleges across Bihar and we are trying to catch whole country — all in
@@ -183,6 +187,7 @@ function Hero() {
                   bg-white
                   border border-slate-200
                   rounded-2xl
+                  w-auto
                   p-2
                   shadow-lg shadow-slate-200/50
                 "
@@ -196,6 +201,7 @@ function Hero() {
                 <input
                   type="text"
                   value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="Search colleges by name, location or branch..."
                   className="
                     flex-1
@@ -420,6 +426,100 @@ function Hero() {
 
         </div>
 
+      </section>
+      <section className="bg-[#f8fafc] py-20">
+        <div className="max-w-7xl mx-auto px-6">
+
+          {/* Heading */}
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <h2 className="text-4xl font-bold text-[#050b1f]">
+                Top Rated in{" "}
+                <span className="text-blue-600">Bihar</span>
+              </h2>
+
+              <p className="mt-3 text-gray-500 text-lg">
+                Based on verified student reviews
+              </p>
+            </div>
+
+            <button className="flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
+              View All
+              <ArrowRight size={20} />
+            </button>
+          </div>
+
+          {/* Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            {college.slice(0, 4).map((college) => (
+              <div
+                key={college.id}
+                className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300"
+              >
+
+                {/* Image */}
+                <div className="relative h-[260px] bg-gray-200">
+                  <img
+                    src={college.image}
+                    alt={college.name}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Rating */}
+                  <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-full shadow-md flex items-center gap-1">
+                    <Star
+                      size={17}
+                      fill="#fbbf24"
+                      className="text-yellow-400"
+                    />
+                    <span className="font-semibold">
+                      {college.rating}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+
+                  <h3 className="text-xl font-bold text-[#07112d]">
+                    {college.name}
+                  </h3>
+
+                  <div className="flex items-center gap-2 mt-3 text-gray-500">
+                    <MapPin size={17} />
+                    <span>{college.location}</span>
+                  </div>
+
+                  {/* Branches */}
+                  <div className="h-auto sm:flex-col flex gap-2 mt-5">
+                    {college.branches.map((branch) => (
+                      <span
+                        key={branch}
+                        className="px-3 py-1.5 bg-[#f1f5f9] text-gray-600 text-sm rounded-md font-medium"
+                      >
+                        {branch}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="border-t border-gray-100 mt-6 pt-5 flex items-center justify-between">
+
+                    <span className="text-gray-500 text-sm">
+                      {college.reviews} Reviews
+                    </span>
+
+                    <button className="text-blue-600 font-semibold hover:text-blue-700">
+                      Read Reviews
+                    </button>
+
+                  </div>
+                </div>
+              </div>
+            ))}
+
+          </div>
+        </div>
       </section>
 
     </main>
