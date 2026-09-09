@@ -1,20 +1,96 @@
-
 import React, { useEffect, useState } from "react";
 import authService from "../../appWrite/appwrite.js";
-
+import conf from "../../appWrite/conf.js";
 
 function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState(null);
+  // const [profile, setProfile] = useState(null);
 
-  // Custom profile information
   const [profile, setProfile] = useState({
     college: "",
     branch: "",
     year: "",
-    bio: "",
-    profileImage: "",
+    about: "",
+    // profileImage: "",
   });
+
+
+  const getProfileInfo = async () => {
+  try {
+    const currentUser = await authService.getCurrentUser();
+
+    const userInf = await authService.getUserInfo(currentUser.$id);
+
+    console.log("User Info:", userInf);
+
+    setProfile(userInf);
+
+    return userInf;
+  } catch (error) {
+    console.error("Error fetching profile info:", error);
+  }
+};
+  useEffect(() => {
+    getProfileInfo();
+  }, []);
+  const handleUpdateProfile = async () => {
+    try {
+      let existingProfile;
+
+      // 1. Check karo profile already database me hai ya nahi
+      try {
+        existingProfile = await authService.databases.getDocument(
+          conf.appwriteDatabaseId,
+          conf.appwriteUserInfo,
+          user.$id
+        );
+      } catch (error) {
+        if (error.code !== 404) {
+          throw error;
+        }
+
+        existingProfile = null;
+      }
+
+      // 2. Profile already hai → UPDATE
+      if (existingProfile) {
+        const updatedProfile =
+          await authService.databases.updateDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteUserInfo,
+            user.$id,
+            profile
+          );
+
+        setProfile(updatedProfile);
+
+        console.log("Profile updated:", updatedProfile);
+      }
+
+      // 3. Profile nahi hai → CREATE
+      else {
+        const newProfile =
+          await authService.databases.createDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteUserInfo,
+            user.$id,
+            profile
+          );
+
+        setProfile(newProfile);
+
+        console.log("Profile created:", newProfile);
+      }
+
+      setIsEditing(false);
+      alert("Profile updated successfully!");
+
+    } catch (error) {
+      console.error("Profile save/update failed:", error);
+      alert("Profile save failed!");
+    }
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -26,13 +102,13 @@ function Profile() {
         setUser(userAccount);
 
         // Temporary profile data
-        // Later ye Appwrite Database se aayega
+        // Later Appwrite Database se aayega
         setProfile({
-          college: "Shri Phanishwar Nath Renu Engineering College",
-          branch: "Computer Science & Engineering",
-          year: "3rd Year",
-          bio: "CSE student interested in web development and technology.",
-          profileImage: "",
+          college: "add college name" || profile.college,
+          branch: "add branch" || profile.branch,
+          year: "add Year" || profile.year,
+          about: "add about your self" || profile.about,
+
         });
       } catch (error) {
         console.error("User fetch failed:", error);
@@ -43,7 +119,6 @@ function Profile() {
     getUser();
   }, []);
 
-  // Loading
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -71,7 +146,6 @@ function Profile() {
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
 
           {/* Profile Image */}
-
           <img
             src={
               profile.profileImage ||
@@ -84,7 +158,6 @@ function Profile() {
           />
 
           <div className="text-center sm:text-left">
-
             <h1 className="text-2xl font-bold text-gray-900">
               {user.name || "No Name"}
             </h1>
@@ -98,7 +171,6 @@ function Profile() {
             </p>
 
             {/* College */}
-
             {profile.college && (
               <p className="text-sm text-gray-600 mt-2">
                 {profile.college}
@@ -106,20 +178,19 @@ function Profile() {
             )}
 
             {/* Branch + Year */}
-
             <p className="text-sm text-gray-500 mt-1">
               {profile.branch}
+
               {profile.branch && profile.year && " • "}
+
               {profile.year}
             </p>
-
           </div>
         </div>
 
         {/* ================= BASIC INFORMATION ================= */}
 
         <div className="mt-8">
-
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             Personal Information
           </h2>
@@ -127,7 +198,6 @@ function Profile() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
             {/* Name */}
-
             <div className="border rounded-xl p-4">
               <p className="text-sm text-gray-500">
                 Full Name
@@ -139,7 +209,6 @@ function Profile() {
             </div>
 
             {/* Email */}
-
             <div className="border rounded-xl p-4">
               <p className="text-sm text-gray-500">
                 Email
@@ -151,201 +220,156 @@ function Profile() {
             </div>
 
             {/* College */}
-
             <div className="border rounded-xl p-4">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 mb-2">
                 College
               </p>
 
-              <p className="font-medium text-gray-900 mt-1">
-                {profile.college || "Not added"}
-              </p>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={profile.college}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      college: e.target.value,
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-blue-600"
+                />
+              ) : (
+                <p className="font-medium text-gray-900">
+                  {profile.college || "Not added"}
+                </p>
+              )}
             </div>
 
             {/* Branch */}
-
             <div className="border rounded-xl p-4">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 mb-2">
                 Branch
               </p>
 
-              <p className="font-medium text-gray-900 mt-1">
-                {profile.branch || "Not added"}
-              </p>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={profile.branch}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      branch: e.target.value,
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-blue-600"
+                />
+              ) : (
+                <p className="font-medium text-gray-900">
+                  {profile.branch || "Not added"}
+                </p>
+              )}
             </div>
 
             {/* Year */}
-
             <div className="border rounded-xl p-4">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 mb-2">
                 Year
               </p>
 
-              <p className="font-medium text-gray-900 mt-1">
-                {profile.year || "Not added"}
-              </p>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={profile.year}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      year: e.target.value,
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-blue-600"
+                />
+              ) : (
+                <p className="font-medium text-gray-900">
+                  {profile.year || "Not added"}
+                </p>
+              )}
             </div>
-
           </div>
         </div>
 
         {/* ================= BIO ================= */}
 
         <div className="mt-6">
-
           <h2 className="text-lg font-semibold text-gray-900 mb-3">
             About
           </h2>
 
           <div className="border rounded-xl p-4">
 
-            <p className="text-gray-700 leading-relaxed">
-              {profile.bio || "No bio added yet."}
-            </p>
+            {isEditing ? (
+              <textarea
+                value={profile.about}
+                onChange={(e) =>
+                  setProfile({
+                    ...profile,
+                    about: e.target.value,
+                  })
+                }
+                rows="4"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-blue-600 resize-none"
+              />
+            ) : (
+              <p className="text-gray-700 leading-relaxed">
+                {profile.about || "No about added yet."}
+              </p>
+            )}
 
           </div>
         </div>
 
         {/* ================= ACCOUNT INFORMATION ================= */}
 
-        <div className="mt-8">
+       
 
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Account Information
-          </h2>
+        {/* ================= EDIT / SAVE BUTTON ================= */}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="mt-6 flex gap-3">
 
-            {/* Email Verification */}
-
-            <div className="border rounded-xl p-4">
-
-              <p className="text-sm text-gray-500">
-                Email Verification
-              </p>
-
-              <p
-                className={`font-medium mt-1 ${
-                  user.emailVerification
-                    ? "text-green-600"
-                    : "text-red-500"
-                }`}
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Edit Profile
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={handleUpdateProfile}
+                type="submit"
+                className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
               >
-                {user.emailVerification
-                  ? "Verified"
-                  : "Not Verified"}
-              </p>
+                Save Changes
+              </button>
 
-            </div>
-
-            {/* Phone */}
-
-            <div className="border rounded-xl p-4">
-
-              <p className="text-sm text-gray-500">
-                Phone
-              </p>
-
-              <p className="font-medium text-gray-900 mt-1">
-                {user.phone || "Not added"}
-              </p>
-
-            </div>
-
-            {/* Phone Verification */}
-
-            <div className="border rounded-xl p-4">
-
-              <p className="text-sm text-gray-500">
-                Phone Verification
-              </p>
-
-              <p
-                className={`font-medium mt-1 ${
-                  user.phoneVerification
-                    ? "text-green-600"
-                    : "text-gray-600"
-                }`}
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-5 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
               >
-                {user.phoneVerification
-                  ? "Verified"
-                  : "Not Verified"}
-              </p>
-
-            </div>
-
-            {/* Account Status */}
-
-            <div className="border rounded-xl p-4">
-
-              <p className="text-sm text-gray-500">
-                Account Status
-              </p>
-
-              <p className="font-medium text-green-600 mt-1">
-                {user.status ? "Active" : "Inactive"}
-              </p>
-
-            </div>
-
-            {/* Account Created */}
-
-            <div className="border rounded-xl p-4">
-
-              <p className="text-sm text-gray-500">
-                Account Created
-              </p>
-
-              <p className="font-medium text-gray-900 mt-1">
-                {formatDate(user.registration)}
-              </p>
-
-            </div>
-
-            {/* Last Login */}
-
-            <div className="border rounded-xl p-4">
-
-              <p className="text-sm text-gray-500">
-                Last Login
-              </p>
-
-              <p className="font-medium text-gray-900 mt-1">
-                {formatDate(user.accessedAt)}
-              </p>
-
-            </div>
-
-          </div>
-        </div>
-
-        {/* ================= USER ID ================= */}
-
-        <div className="mt-6 border rounded-xl p-4">
-
-          <p className="text-sm text-gray-500">
-            User ID
-          </p>
-
-          <p className="font-mono text-sm text-gray-900 mt-1 break-all">
-            {user.$id}
-          </p>
+                Cancel
+              </button>
+            </>
+          )}
 
         </div>
 
-        {/* ================= EDIT BUTTON ================= */}
-
-        <button
-          onClick={() => setIsEditing(!isEditing)}
-          className="mt-6 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          {isEditing ? "Cancel" : "Edit Profile"}
-        </button>
-
+      </div>
+      <div>
+        <p className="text-sm text-gray-400 mt-4 text-center">
+          🔒 **Your data is securely saved and protected.**
+        </p>
       </div>
     </div>
   );
 }
 
 export default Profile;
-

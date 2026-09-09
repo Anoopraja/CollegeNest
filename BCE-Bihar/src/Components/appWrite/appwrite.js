@@ -17,16 +17,19 @@ export class AuthService {
 
 
 
-    async uploadCollegeImage(file) {
-        try {
-            const response = await this.storage.createFile(
-                "college-images",
-                ID.unique(),
-                file
-            );
 
-            return response;
-        } catch (error) {
+    async updateProfileInfo(id, updatedData) {
+
+       try {
+        const updatedProfile = await this.databases.updateDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteUserInfo,
+            id,
+            updatedData
+        );
+        return updatedProfile;
+       }
+        catch (error) {
             console.error("Image upload failed:", error);
             throw error;
         }
@@ -123,6 +126,19 @@ export class AuthService {
             throw error;
         }
 
+    }
+    async getUserInfo(id){
+        try {
+            const userInfo = await this.databases.getDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteUserInfo,
+                id
+            );
+            return userInfo;
+        } catch (error) {
+            console.error("Failed to get user info:", error);
+            throw error;
+        }
     }
 
     async getCurrentUser() {
