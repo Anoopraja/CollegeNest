@@ -121,7 +121,7 @@ const CollegeInfo = () => {
 
       const newReview = await authService.uploadReview({
         collegeId: Number(college.id),
-        userId: user.id,
+        userId: user.$id,
         rating: Number(rating),
         review: reviewText.trim(),
       });
@@ -732,8 +732,8 @@ const CollegeInfo = () => {
                         <span
                           key={star}
                           className={`text-lg sm:text-xl ${star <= Number(review.rating)
-                              ? "text-yellow-400"
-                              : "text-gray-200"
+                            ? "text-yellow-400"
+                            : "text-gray-200"
                             }`}
                         >
                           ★
