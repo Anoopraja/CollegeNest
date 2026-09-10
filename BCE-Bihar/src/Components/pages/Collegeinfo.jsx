@@ -39,7 +39,7 @@ const CollegeInfo = () => {
         navigate("/login");
         return;
       }
-      console.log("Logged in user:", user);
+      // console.log("Logged in user:", user);
 
     } catch (e) {
       alert("please login first")
@@ -49,7 +49,7 @@ const CollegeInfo = () => {
 
     if (!file) return;
 
-    console.log("Selected file:", file);
+    // console.log("Selected file:", file);
 
     setImage(file);
 
@@ -144,7 +144,7 @@ const CollegeInfo = () => {
     const getData = async () => {
       try {
         const reviewResponse = await authService.getCollegeReviews(id);
-        console.log("REVIEW RESPONSE:", reviewResponse);
+        // console.log("REVIEW RESPONSE:", reviewResponse);
         setReviews(reviewResponse || []);
         return reviewResponse;
         ;

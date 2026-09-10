@@ -23,7 +23,7 @@ function Profile() {
 
     const userInf = await authService.getUserInfo(currentUser.$id);
 
-    console.log("User Info:", userInf);
+    // console.log("User Info:", userInf);
 
     setProfile(userInf);
 
@@ -67,7 +67,7 @@ function Profile() {
 
         setProfile(updatedProfile);
 
-        console.log("Profile updated:", updatedProfile);
+        // console.log("Profile updated:", updatedProfile);
       }
 
       // 3. Profile nahi hai → CREATE
@@ -82,7 +82,7 @@ function Profile() {
 
         setProfile(newProfile);
 
-        console.log("Profile created:", newProfile);
+        // console.log("Profile created:", newProfile);
       }
 
       setIsEditing(false);
@@ -99,7 +99,7 @@ function Profile() {
       try {
         const userAccount = await authService.getCurrentUser();
 
-        console.log("PROFILE USER:", userAccount);
+        // console.log("PROFILE USER:", userAccount);
 
         setUser(userAccount);
 
