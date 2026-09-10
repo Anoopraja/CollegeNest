@@ -4,6 +4,7 @@ import College from "../data/College";
 import uploadImage from "../../utils/cloudnary";
 // import { Database, Client, ID } from "appwrite";
 import authService from "../appWrite/appwrite.js";
+// import conf from "../appWrite/conf.js"
 // import getCollegeImages from "../appWrite/appwrite.js";
 // import saveCollegeImage from "../appWrite/appwrite.js";
 
@@ -23,6 +24,10 @@ const CollegeInfo = () => {
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
 
+  const [reviews, setReviews] = useState([]);
+  const [reviewText, setReviewText] = useState("");
+  const [rating, setRating] = useState(5);
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   const college = College.find((item) => item.id === Number(id));
 
@@ -48,8 +53,6 @@ const CollegeInfo = () => {
 
     setImage(file);
 
-    
-
   };
 
   const handleUpload = async () => {
@@ -61,7 +64,6 @@ const CollegeInfo = () => {
 
     try {
       setUploading(true);
-
       // 1. Upload image to Cloudinary
       const imageUrl = await uploadImage(image);
 
@@ -98,6 +100,62 @@ const CollegeInfo = () => {
     getImages();
   }, [id]);
 
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!reviewText.trim()) {
+      alert("Please write a review");
+      return;
+    }
+
+    try {
+      setSubmittingReview(true);
+
+      const user = await authService.getCurrentUser();
+
+      if (!user) {
+        alert("Please login first");
+        navigate("/login");
+        return;
+      }
+
+      const newReview = await authService.uploadReview({
+        collegeId: Number(college.id),
+        userId: user.id,
+        rating: Number(rating),
+        review: reviewText.trim(),
+      });
+
+      setReviews((prev) => [newReview, ...prev]);
+
+      setReviewText("");
+      setRating(5);
+
+      alert("Review submitted successfully!");
+    } catch (error) {
+      console.error("Review submit error:", error);
+      alert(error.message);
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const reviewResponse = await authService.getCollegeReviews(id);
+        console.log("REVIEW RESPONSE:", reviewResponse);
+        setReviews(reviewResponse || []);
+        return reviewResponse;
+        ;
+
+      } catch (error) {
+        console.error("Data fetch failed:", error);
+      }
+    };
+
+    getData();
+  }, [id]);
 
 
   if (!college) {
@@ -391,6 +449,8 @@ const CollegeInfo = () => {
           </div>
         </div>
 
+
+
         {/* Campus Gallery */}
         <section className="mt-12">
 
@@ -486,7 +546,7 @@ const CollegeInfo = () => {
               </p>
 
               <span
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
                 {image ? "Change File" : "Choose File"}
               </span>
 
@@ -513,6 +573,229 @@ const CollegeInfo = () => {
 
           </div>
 
+        </section>
+        {/* Reviews Section */}
+        <section className="mt-12">
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">
+                Student Reviews
+              </h2>
+
+              <p className="text-gray-500 mt-1">
+                Share your experience about this college
+              </p>
+            </div>
+          </div>
+
+          {/* Write Review */}
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-8 mb-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-5">
+              Write a Review
+            </h3>
+
+            <form onSubmit={handleReviewSubmit}>
+
+              {/* Rating */}
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Rating
+                </label>
+
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      className={`text-2xl transition ${star <= rating
+                        ? "text-yellow-400"
+                        : "text-gray-300"
+                        }`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Review */}
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Your Review
+                </label>
+
+                <textarea
+                  value={reviewText}
+                  onChange={(e) => setReviewText(e.target.value)}
+                  placeholder="Share your experience with this college..."
+                  rows="5"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                />
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={submittingReview}
+                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition disabled:opacity-50"
+              >
+                {submittingReview ? "Submitting..." : "Submit Review"}
+              </button>
+
+            </form>
+          </div>
+
+          {/* Reviews List */}
+          <div className="space-y-4">
+
+
+
+
+            {reviews.map((review) => {
+              return (
+                <div
+                  key={review.$id}
+                  className="
+        w-full
+        bg-white
+        border border-gray-200
+        rounded-2xl
+        p-5 sm:p-6
+        shadow-sm
+        hover:shadow-lg
+        hover:border-blue-200
+        transition-all duration-300
+      "
+                >
+                  {/* Header */}
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-5">
+
+                    {/* User Info */}
+                    <div className="flex items-center gap-3 min-w-0">
+
+                      {/* Avatar */}
+                      <div
+                        className="
+              w-11 h-11
+              sm:w-12 sm:h-12
+              shrink-0
+              rounded-full
+              bg-blue-50
+              border border-blue-100
+              flex items-center justify-center
+              text-blue-600
+              font-bold
+              text-lg
+            "
+                      >
+                        {review.userName
+                          ? review.userName.charAt(0).toUpperCase()
+                          : "U"}
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="font-semibold text-gray-900 truncate">
+                          {review.userName || "Anonymous User"}
+                        </p>
+
+                        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+                          Student Review
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Date */}
+                    <span
+                      className="
+            text-xs sm:text-sm
+            text-gray-400
+            whitespace-nowrap
+            sm:pt-1
+          "
+                    >
+                      {new Date(review.$createdAt).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`text-lg sm:text-xl ${star <= Number(review.rating)
+                              ? "text-yellow-400"
+                              : "text-gray-200"
+                            }`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+
+                    <span
+                      className="
+            text-sm
+            font-semibold
+            text-gray-700
+            bg-gray-50
+            border border-gray-200
+            px-2.5 py-1
+            rounded-full
+          "
+                    >
+                      {review.rating}/5
+                    </span>
+                  </div>
+
+                  {/* Review */}
+                  <div
+                    className="
+          border-l-4 border-blue-500
+          bg-gray-50
+          rounded-r-xl
+          px-4 sm:px-5
+          py-4
+        "
+                  >
+                    <p
+                      className="
+            text-sm sm:text-base
+            text-gray-700
+            leading-7
+            break-words
+          "
+                    >
+                      {review.review}
+                    </p>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
+                    <span className="text-xs text-gray-400">
+                      Verified Review
+                    </span>
+
+                    <span className="text-xs text-gray-400">
+                      #{review.$id.slice(-6)}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+
+
+
+
+          </div>
         </section>
 
 

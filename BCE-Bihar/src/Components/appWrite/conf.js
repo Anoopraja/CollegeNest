@@ -6,6 +6,7 @@ const conf = {
     appwriteBucketId: String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
     appwriteImageUpload: String(import.meta.env.VITE_APPWRITE_IMAGE_UPLOAD),
     appwriteUserInfo: String(import.meta.env.VITE_APPWRITE_USER_DATA),
+    appwriteUserReview: String(import.meta.env.VITE_APPWRITE_USER_REVIEW),  
 };
 // there was a name issue with the import.meta.env.VITE_APPWRITE_URL, it was later fixed in debugging video
 // console.log("APPWRITE CONFIG:", conf);

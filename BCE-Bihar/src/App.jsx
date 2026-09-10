@@ -3,7 +3,7 @@ import Footer from './Components/Footer'
 import Hero from './Components/Hero'
 import Community from './Components/pages/Community'
 import Contact from './Components/pages/Contact'
-import Reviews from './Components/pages/Review'
+
 import Colleges from './Components/pages/College'
 import Profile from './Components/pages/User/userProfile'
 
@@ -27,9 +27,8 @@ function App() {
         <Route path='/college' element={<Colleges />} />
         <Route path="/college/:id" element={<CollegeInfo />} />
         <Route path='/community' element={<Community />} />
-        {/* <Route path="/community/:id" element={<ChatLive />} /> */}
+        <Route path="/community/:id" element={<ChatLive />} />
         <Route path='/contact' element={<Contact />} />
-        <Route path='/reviews' element={<Reviews />} />
         <Route path='/counselling' element={<Counselling />} />
         <Route path='/chat' element={<ChatLive />} />
         <Route path='/profile/:id' element={<Profile />} />

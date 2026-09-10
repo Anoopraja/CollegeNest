@@ -33,7 +33,7 @@ const posts = [
   },
 ];
 
-const branch = ["1st-2nd year", "3rd-4th year", "5th-6th year", "7th-8th year"];
+const branch = ["CSE", "ECE", "ME", "CE", "EE"];
 
 const Community = () => {
   return (

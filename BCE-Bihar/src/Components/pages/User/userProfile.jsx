@@ -12,6 +12,7 @@ function Profile() {
     branch: "",
     year: "",
     about: "",
+    name: "",
     // profileImage: "",
   });
 
@@ -60,7 +61,8 @@ function Profile() {
             conf.appwriteDatabaseId,
             conf.appwriteUserInfo,
             user.$id,
-            profile
+            profile,
+
           );
 
         setProfile(updatedProfile);

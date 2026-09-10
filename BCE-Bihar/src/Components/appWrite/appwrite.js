@@ -20,20 +20,20 @@ export class AuthService {
 
     async updateProfileInfo(id, updatedData) {
 
-       try {
-        const updatedProfile = await this.databases.updateDocument(
-            conf.appwriteDatabaseId,
-            conf.appwriteUserInfo,
-            id,
-            updatedData
-        );
-        return updatedProfile;
-       }
+        try {
+            const updatedProfile = await this.databases.updateDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteUserInfo,
+                id,
+                updatedData
+            );
+            return updatedProfile;
+        }
         catch (error) {
             console.error("Image upload failed:", error);
             throw error;
         }
-        
+
     }
 
 
@@ -84,24 +84,22 @@ export class AuthService {
             console.error("mill nhi rha hai phutu")
         }
     }
-
-    async gmailVerification() {
-        try {
-            const userVerification = await this.account.createVerification(ID.unique(), "collegenest.anooplofi.me/verify");
-            console.log("Gmail verification sent:", userVerification);
-            return userVerification;
-        }
-        catch (e) {
-            console.error("sali gamil daal dalle", e);
-        }
-    }
+    // async gmailVerification() {
+    //     try {
+    //         const userVerification = await this.account.createVerification(ID.unique(), "collegenest.anooplofi.me/verify");
+    //         console.log("Gmail verification sent:", userVerification);
+    //         return userVerification;
+    //     }
+    //     catch (e) {
+    //         console.error("sali gamil daal dalle", e);
+    //     }
+    // }
     async createAccount({ email, password, name }) {
         try {
             const userAccount = await this.account.create(ID.unique(), email, password, name);
             if (userAccount) {
                 // call another method
                 return this.login({ email, password });
-                console.log("Account created:", userAccount);
             } else {
                 return userAccount;
             }
@@ -127,7 +125,70 @@ export class AuthService {
         }
 
     }
-    async getUserInfo(id){
+
+    async uploadReview({
+        collegeId,
+        userId,
+        rating,
+        review
+    }) {
+        try {
+            const response = await this.databases.createDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteUserReview,
+                ID.unique(),
+                {
+                    userId: userId,
+                    collegeId: Number(collegeId),
+                    rating: Number(rating),
+                    review: review,
+                }
+            );
+
+            return response;
+        } catch (error) {
+            console.error("Failed to upload review:", error);
+            throw error;
+        }
+    }
+
+
+    async getUserReviews(userId) {
+        try {
+            const response = await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteUserReview,
+                [
+                    Query.equal("userId", userId)
+                ]
+            );
+
+            return response.documents;
+        } catch (error) {
+            console.error("Failed to get user reviews:", error);
+            throw error;
+        }
+    }
+
+    async getCollegeReviews(collegeId) {
+        try {
+            const response = await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteUserReview,
+                [
+                    Query.equal("collegeId", Number(collegeId))
+                ]
+            );
+
+            return response.documents;
+        } catch (error) {
+            console.error("Failed to get college reviews:", error);
+            throw error;
+        }
+    }
+
+
+    async getUserInfo(id) {
         try {
             const userInfo = await this.databases.getDocument(
                 conf.appwriteDatabaseId,

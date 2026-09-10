@@ -57,8 +57,10 @@ const Navbar = () => {
     path: [
       { name: "Home", path: "/" },
       { name: "College", path: "/college" },
-      { name: "Contact", path: "/contact" },
+      // { name: "Contact", path: "/contact" },
       { name: "Counselling", path: "/counselling" },
+      { name: "Community", path: "/community" },
+
     ],
   };
 
