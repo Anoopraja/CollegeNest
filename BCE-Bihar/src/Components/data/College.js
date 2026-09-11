@@ -457,7 +457,8 @@ const College = [
       "Hostel",
       "Library",
       "Sports",
-      "Labs"
+      "Labs",
+      "wifi"
     ]
   },
 

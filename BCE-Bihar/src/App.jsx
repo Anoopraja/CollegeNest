@@ -6,6 +6,7 @@ import Contact from './Components/pages/Contact'
 
 import Colleges from './Components/pages/College'
 import Profile from './Components/pages/User/userProfile'
+import AdminProfile from './Components/pages/User/userAdminProfile'
 
 import { Route, Routes } from 'react-router-dom'
 import Login from './Components/pages/login'
@@ -13,7 +14,6 @@ import Signup from './Components/pages/signup'
 import CollegeInfo from './Components/pages/Collegeinfo'
 import Counselling from './Components/pages/Councling'
 import ChatLive from './Components/pages/ChatLive'
-import { Home } from 'lucide-react'
 
 
 function App() {
@@ -32,6 +32,7 @@ function App() {
         <Route path='/counselling' element={<Counselling />} />
         <Route path='/chat' element={<ChatLive />} />
         <Route path='/profile/:id' element={<Profile />} />
+        <Route path='/admin' element={<AdminProfile />} />
       </Routes>
       <Footer />
     </>

@@ -151,7 +151,8 @@ const Signup = () => {
           {/* Sign Up Button */}
           <button
             value={signup}
-            onChange={(e) => setSignup(e.target.value)}
+            onChange={(e) => setSignup(e.target.value)
+            }
             type="submit"
             className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-medium transition"
           >

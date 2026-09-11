@@ -110,6 +110,7 @@ function Profile() {
           branch: "add branch" || profile.branch,
           year: "add Year" || profile.year,
           about: "add about your self" || profile.about,
+          name: "add name" || profile.name,
 
         });
       } catch (error) {
@@ -152,7 +153,7 @@ function Profile() {
             src={
               profile.profileImage ||
               `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                user.name || "User"
+                profile.name || "User"
               )}&background=2563eb&color=fff&size=150`
             }
             alt={user.name || "User"}
@@ -201,13 +202,27 @@ function Profile() {
 
             {/* Name */}
             <div className="border rounded-xl p-4">
-              <p className="text-sm text-gray-500">
-                Full Name
+              <p className="text-sm text-gray-500 mb-2">
+                Name
               </p>
 
-              <p className="font-medium text-gray-900 mt-1">
-                {user.name || "Not available"}
-              </p>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={profile.name}
+                  onChange={(e) =>
+                    setProfile({
+                      ...profile,
+                      name: e.target.value,
+                    })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-blue-600"
+                />
+              ) : (
+                <p className="font-medium text-gray-900">
+                  {profile.name || "Not added"}
+                </p>
+              )}
             </div>
 
             {/* Email */}

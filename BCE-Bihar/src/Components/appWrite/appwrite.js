@@ -1,6 +1,6 @@
 import conf from "../appWrite/conf.js";
 import { Query } from "appwrite";
-import { Client, Account, ID, Databases } from "appwrite";
+import { Client, Account, ID, Databases  } from "appwrite";
 export class AuthService {
     client = new Client();
     // databases = new Databases(client);
@@ -130,7 +130,8 @@ export class AuthService {
         collegeId,
         userId,
         rating,
-        review
+        review,
+        student_name,
     }) {
         try {
             const response = await this.databases.createDocument(
@@ -142,6 +143,7 @@ export class AuthService {
                     collegeId: Number(collegeId),
                     rating: Number(rating),
                     review: review,
+                    student_name: (student_name),
                 }
             );
 

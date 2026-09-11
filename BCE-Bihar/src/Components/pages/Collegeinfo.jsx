@@ -15,6 +15,9 @@ const CollegeInfo = () => {
   const { id } = useParams();
 
   // const [college, setCollege] = useState(null);
+
+  const [studentName, setStudentName] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
   const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
@@ -26,10 +29,12 @@ const CollegeInfo = () => {
 
   const [reviews, setReviews] = useState([]);
   const [reviewText, setReviewText] = useState("");
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState();
   const [submittingReview, setSubmittingReview] = useState(false);
 
   const college = College.find((item) => item.id === Number(id));
+
+
 
   const handleFileChange = async (e) => {
     try {
@@ -124,12 +129,14 @@ const CollegeInfo = () => {
         userId: user.$id,
         rating: Number(rating),
         review: reviewText.trim(),
+        student_name: user.name,
       });
 
       setReviews((prev) => [newReview, ...prev]);
 
       setReviewText("");
       setRating(5);
+      setStudentName(user.name || "Anonymous User");
 
       alert("Review submitted successfully!");
     } catch (error) {
@@ -505,7 +512,8 @@ const CollegeInfo = () => {
             {images.map((image) => (
               <div
                 key={image.$id}
-                className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300"
+                onClick={() => setSelectedImage(image.imageUrl)}
+                className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in"
               >
                 <img
                   src={image.imageUrl}
@@ -514,6 +522,26 @@ const CollegeInfo = () => {
                 />
               </div>
             ))}
+            {selectedImage && (
+              <div
+                onClick={() => setSelectedImage(null)}
+                className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+              >
+                <img
+                  src={selectedImage}
+                  alt="College campus"
+                  onClick={(e) => e.stopPropagation()}
+                  className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                />
+
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="absolute top-5 right-5 text-white text-3xl hover:text-gray-300"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
 
 
             {/* Upload Card */}
@@ -692,14 +720,14 @@ const CollegeInfo = () => {
               text-lg
             "
                       >
-                        {review.userName
-                          ? review.userName.charAt(0).toUpperCase()
+                        {review.name
+                          ? review.name.charAt(0).toUpperCase()
                           : "U"}
                       </div>
 
                       <div className="min-w-0">
                         <p className="font-semibold text-gray-900 truncate">
-                          {review.userName || "Anonymous User"}
+                          {review.student_name || "Anonymous User"}
                         </p>
 
                         <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
