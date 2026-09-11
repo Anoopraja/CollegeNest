@@ -5,6 +5,7 @@ import authService from "./appWrite/appwrite.js";
 const Navbar = () => {
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();

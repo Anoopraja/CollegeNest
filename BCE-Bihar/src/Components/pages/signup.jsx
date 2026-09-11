@@ -29,9 +29,9 @@ const Signup = () => {
         name: fullName,
       });
       if (userAccount) {
-        return authService.login({ email: email.trim(), password });
+        authService.login({ email: email.trim(), password });
       }
-      setError("");
+      // setError("");
       navigate("/");
     } catch (e) {
       console.error(e);
