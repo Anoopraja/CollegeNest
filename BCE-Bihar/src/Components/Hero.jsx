@@ -1,6 +1,4 @@
-// import React from "react";
-import college from "../Components/data/College.js"
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Search,
   ArrowRight,
@@ -10,521 +8,578 @@ import {
   MapPin,
   Scale,
   TrendingUp,
-  GraduationCap,
-  UserRound,
   Building2,
-  Quote
 } from "lucide-react";
-// import { useNavigate } from "react-router-dom";
+
+/**
+ * GSAP + ScrollTrigger are loaded from cdnjs at runtime (they aren't part
+ * of the artifact's bundled library set). In your real project, install
+ * them instead:
+ *   npm install gsap
+ *   import gsap from "gsap";
+ *   import { ScrollTrigger } from "gsap/ScrollTrigger";
+ *   gsap.registerPlugin(ScrollTrigger);
+ * and delete the loadScript/useEffect script-injection block below.
+ */
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.body.appendChild(s);
+  });
+}
+
+/**
+ * ─────────────────────────────────────────────────────────────
+ *  DROP-IN NOTES FOR YOUR CODEBASE
+ *  This file is self-contained so it previews on its own.
+ *  In your real project:
+ *   1. Replace the <a> tags with <NavLink to="..."> from
+ *      "react-router-dom" (kept as <a> here only so the
+ *      preview renders without a router installed).
+ *   2. Replace the `college` mock array below with your
+ *      `import college from "../Components/data/College.js"`.
+ *   3. The `name` state was missing in the original file (the
+ *      search input referenced `name`/`setName` with no
+ *      useState) — that's fixed here.
+ * ─────────────────────────────────────────────────────────────
+ */
+
+const college = [
+  {
+    id: 1,
+    name: "Muzaffarpur Institute of Technology",
+    shortName: "MIT Muzaffarpur",
+    slug: "mit-muzaffarpur",
+    district: "Muzaffarpur",
+    address: "Muzaffarpur, Bihar",
+    location: "Muzaffarpur, Bihar",
+    state: "Bihar",
+    established: 1954,
+    type: "Government",
+    ownership: "Government of Bihar",
+    university: "Bihar Engineering University",
+    approval: "AICTE",
+    campus: "50+ Acres",
+    website: "https://mitmuzaffarpur.org",
+    email: "principal@mitmuzaffarpur.org",
+    phone: "+91-0621-2262442",
+    image: "https://i0.wp.com/www.mitmuzaffarpur.org/wp-content/uploads/2018/05/img-3.jpg?fit=450%2C270&ssl=1",
+    logo: "https://www.mitmuzaffarpur.org/wp-content/uploads/2026/08/mit-logo.jpg",
+    rating: 4.6,
+    admission: "BCECE UGEAC",
+    about: "One of the oldest engineering institutes in Bihar offering UG and PG programmes. Muzaffarpur Institute of Technology (MIT), Muzaffarpur is a premier institution of eastern India for technical education. It is under administrative control of department of Science, Technology and Technical Education and wholly funded by Govt. of Bihar. Established in 1954, MIT is one of the oldest technical institute in India working with moto ॥ सर्वोपरि कर्मः ॥ i.e. [Work is above everything else]. The foundation stone was laid by the first prime minister of India, Pandit Jawaharlal Nehru.MIT came into existence on 25th September 1954, just seven years after independence of India. It was inaugurated by Sri C.P.N. Sinha, then governor of East Punjab. Initially it was started with Civil Engineering descipline with a batch of 45 students as 1954-55 batch with the name 'College of Civil Engineering, Muzaffarpur'.It is affiliated to Aryabhatta Knowlege University, Patna and offers undergraduate programs in engineering and pharmacy with postgraduate specialisation in Machine design and thermal engineering. The institute also caters to the research and development activities of the state of Bihar.",
+    branches: [
+      "Computer Science & Engineering",
+      "Information Technology",
+      "Mechanical Engineering",
+      "Civil Engineering",
+      "Electrical Engineering",
+      "Electronics & Communication Engineering",
+      "Leather Technology"
+    ],
+    facilities: [
+      "Boys Hostel",
+      "Girls Hostel",
+      "Central Library",
+      "WiFi",
+      "Sports",
+      "Auditorium",
+      "Canteen",
+      "Placement Cell"
+    ]
+  },
+
+  {
+    id: 2,
+    name: "Bhagalpur College of Engineering",
+    shortName: "BCE Bhagalpur",
+    slug: "bce-bhagalpur",
+    district: "Bhagalpur",
+    address: "Sabour, Bhagalpur, Bihar",
+    location: "Bhagalpur",
+    established: "1960",
+    type: "Government",
+    ownership: "Government of Bihar",
+    university: "Bihar Engineering University",
+    approval: "AICTE",
+    campus: "114 Acres",
+    website: "https://www.bcebhagalpur.ac.in",
+    email: "principal@bcebhagalpur.ac.in",
+    phone: "0641-2451063",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZzLVIb2-R0aln_D8hVuPnXBao-3EY3Pi47tCf_WjLUw&s=10",
+    logo: "https://res-console.cloudinary.com/wt32d4lg/thumbnails/transform/v1/image/upload/Y19maWxsLGhfMjAwLHdfMjAw/v1/a2NlaGM4ZGN5amE0bmRreHN5cDg=/template_primary",
+    rating: 4.5,
+    admission: "BCECE UGEAC (JEE Main)",
+    about: "One of Bihar's oldest engineering colleges with a fully residential campus.Bhagalpur College of Engineering (B.C.E) Bhagalpur is one of the oldest and prestigious institute of Bihar in the field of technical education. Established in 1960, the institute continuously serving the nation and state in the field of research and innovation in technical field. This institute is fully funded and administered by ministry of Science, Technology and Technical Education Department, government of Bihar. The institute works with the motto '' योग: कर्मसु कौशलम्'' अर्थात् योग से कर्मों में कुश्लाता आती है। “i.e. yoga is excellence at work.The institute is affiliated to Bihar Engineering University (BEU), Patna. It offers undergraduate programs in Computer Science & Engineering (CSE), Civil Engineering (CE), Electronics and communication Engineering (ECE), Electrical Engineering (EE), Mechanical Engineering (ME) with post-graduation (PG) program in MICRO ELECTRONICS AND VLSI TECHNOLOGY.Institute is located in Bhagalpur on the bank of holy river Ganga with the campus area of around 114 acres. The campus is covered with greenery and natural beauty. The campus also provides excellent amenities for sports and other recreational facilities to students and faculties. Institute is fully residential for students, faculties and all its staff.The alumni have distinguished themselves through their achievements in and contributions to industry, academics, research, business, government and social domains. The institute continues to work closely with the alumni to enhance its activities through interactions in academic and research programs as well as to mobilize financial support",
+    branches: [
+      "CSE",
+      "Civil",
+      "Mechanical",
+      "Electrical",
+      "ECE",
+      "ME",
+      "Basic Sciences",
+      "Humanities",
+      "Mathematics and Computing",
+    ],
+    facilities: [
+      "Hostels",
+      "Central Library",
+      "Sports Complex",
+      "Laboratories",
+      "Placement Cell",
+      "WiFi"
+    ]
+  },
+
+  {
+    id: 3,
+    name: "Bakhtiyarpur College of Engineering",
+    shortName: "BCE Bakhtiyarpur",
+    slug: "bakhtiyarpur-college-of-engineering",
+    district: "Patna",
+    established: 2016,
+    type: "Government",
+    ownership: "Government of Bihar",
+    university: "Bihar Engineering University",
+    approval: "AICTE",
+    website: "https://bcebakhtiyarpur.ac.in/",
+    email: "principal@bcebakhtiyarpur.org",
+    phone: "9835092066",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzrMbv4NchJQsmmUTaiUS9wKpVJZeHfv7j5G3IsSC3W2pEBjdsfSuhgBk8&s=10",
+    logo: "https://bcebakhtiyarpur.ac.in/wp-content/uploads/2024/05/logo-bced-f.png",
+    rating: 4.3,
+    campus: "10 Acres",
+    about: "Bakhtiyarpur College of Engineering, BCE affiliated with Bihar Engineering University, stands as a sought-after destination for engineering studies in Bihar. The institute is one of the 38 government engineering colleges established in each district of Bihar by the Department of Science Technology and Technical Education, Government of Bihar. It started its first academic session in 2016 from the old campus of the Indian Institute of Technology (IIT), Patna, at Patliputra Colony. It was shifted to Bakhtiyarpur town of Patna district in the year 2020 with a state-of-the-art infrastructure conducive to a healthy academic environment.",
+    branches: [
+      "CSE",
+      "CSE(IOT)",
+      "Fire and Technology & Safety Engineering",
+      "Applied Science & Humanities",
+      "Civil",
+      "Mechanical",
+      "Electrical",
+      "ECE"
+
+    ],
+
+    facilities: [
+      "Modern Labs",
+      "Hostel",
+      "Library",
+      "Sports",
+      "Placement Cell"
+    ]
+  },
+
+  {
+    id: 4,
+    name: "Gaya College of Engineering",
+    shortName: "GCE Gaya",
+    slug: "gce-gaya",
+    district: "Gaya",
+    address: "Sri Krishna Nagar, P.O. Nagari Yana, Via Buniyadganj, Gaya, Bihar - 823003",
+    location: "Gaya, Bihar",
+    established: 1981,
+    type: "Government",
+    ownership: "Government of Bihar",
+    university: "Bihar Engineering University",
+    approval: "AICTE",
+
+    campus: "87 Acres",
+
+    website: "https://www.gcegaya.ac.in",
+    email: "principal@gcegaya.ac.in",
+    phone: "8877969565",
+
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmv8ShCTf8k20q0zW2xsT6Ix1dHvulXF9UOgVtGMdztsAfvkqwzZ3BB0-i&s=10",
+
+    logo: "https://www.gcegaya.ac.in/wp-content/themes/theme-college/assets/img/logo.jpg",
+
+    rating: 4.2,
+
+    admission: "BCECE / UGEAC",
+
+    about:
+      "Gaya College of Engineering (GCE Gaya) is a government engineering college managed by the Department of Science and Technology, Government of Bihar. The institution has its roots in 1981 and the present GCE campus was inaugurated in 2008. It is approved by AICTE and affiliated with Bihar Engineering University. The college is located in Gaya and has an 87-acre campus.",
+
+    branches: [
+      "Civil Engineering",
+      "Computer Science & Engineering",
+      "Electrical & Electronics Engineering",
+      "Mechanical Engineering",
+      "Architecture"
+    ],
+
+    postgraduateBranches: [
+      "Structural Engineering",
+      "VLSI",
+      "Cyber Security",
+      "Manufacturing Engineering"
+    ],
+
+    facilities: [
+      "Hostel",
+      "Central Library",
+      "Computer Center",
+      "Laboratories",
+      "Sports Facilities",
+      "Medical Facilities",
+      "Gymnasium",
+      "WiFi",
+      "Bank",
+      "Guest House",
+      "Student Clubs",
+      "Workshop"
+    ]
+  },
+];
 
 function Hero() {
+  const [name, setName] = useState("");
 
+  const mainRef = useRef(null);
+  const line1Ref = useRef(null);
+  const line2Ref = useRef(null);
+  const subRef = useRef(null);
+  const ctaRef = useRef(null);
+  const searchBarRef = useRef(null);
+  const badgeRef = useRef(null);
+  const imageWrapRef = useRef(null);
+  const glowRef = useRef(null);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    let ctx;
+
+    async function init() {
+      try {
+        if (!window.gsap) {
+          await loadScript(
+            "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+          );
+        }
+        if (!window.ScrollTrigger) {
+          await loadScript(
+            "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+          );
+        }
+      } catch (e) {
+        return; // fail quietly, page still works without animation
+      }
+
+      const gsap = window.gsap;
+      const ScrollTrigger = window.ScrollTrigger;
+      if (!gsap || !ScrollTrigger) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      if (reduceMotion) return; // respect user preference, skip all motion
+
+      ctx = gsap.context(() => {
+        // ── Hero: one orchestrated page-load reveal ──────────────
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        tl.from(badgeRef.current, { opacity: 0, y: -10, duration: 0.5 })
+          .from(
+            [line1Ref.current, line2Ref.current],
+            { opacity: 0, y: 28, duration: 0.7, stagger: 0.12 },
+            "-=0.2"
+          )
+          .from(subRef.current, { opacity: 0, y: 16, duration: 0.6 }, "-=0.35")
+          .from(
+            ctaRef.current ? ctaRef.current.children : [],
+            { opacity: 0, y: 14, duration: 0.5, stagger: 0.1 },
+            "-=0.3"
+          )
+          .from(searchBarRef.current, { opacity: 0, y: 14, duration: 0.5 }, "-=0.3")
+          .from(
+            imageWrapRef.current,
+            { opacity: 0, scale: 0.94, duration: 0.8 },
+            "-=0.9"
+          )
+          .from(
+            glowRef.current,
+            { opacity: 0, scale: 0.7, duration: 1.1 },
+            "-=0.9"
+          );
+
+        // Gentle parallax drift on the hero photo while scrolling —
+        // a small, single depth cue rather than a repeated hover trick.
+        gsap.to(imageWrapRef.current, {
+          y: 28,
+          ease: "none",
+          scrollTrigger: {
+            trigger: mainRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+          },
+        });
+
+        // ── Stats: scoreboard-style count-up as it enters view ───
+        const statEls = gsap.utils.toArray(".stat-number");
+        statEls.forEach((el) => {
+          const raw = el.getAttribute("data-value") || "";
+          const numeric = parseFloat(raw.replace(/[^0-9.]/g, "")) || 0;
+          const suffix = raw.replace(/[0-9.]/g, ""); // keeps +, %, etc.
+          const counter = { val: 0 };
+          gsap.to(counter, {
+            val: numeric,
+            duration: 1.4,
+            ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true },
+            onUpdate: () => {
+              const isDecimal = raw.includes(".");
+              const display = isDecimal
+                ? counter.val.toFixed(1)
+                : Math.round(counter.val).toLocaleString();
+              el.textContent = display + suffix;
+            },
+          });
+        });
+        gsap.from(".stat-card", {
+          opacity: 0,
+          y: 20,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power2.out",
+          scrollTrigger: { trigger: ".stat-card", start: "top 88%", once: true },
+        });
+
+        // ── Why choose: rows alternate in from left/right, echoing
+        // the "compare two sides" idea behind the feature itself ──
+        gsap.utils.toArray(".feature-row").forEach((row, i) => {
+          gsap.from(row, {
+            opacity: 0,
+            x: i % 2 === 0 ? -36 : 36,
+            duration: 0.7,
+            ease: "power3.out",
+            scrollTrigger: { trigger: row, start: "top 85%", once: true },
+          });
+        });
+
+        // ── Top rated: cards deal in like results being revealed ─
+        gsap.utils.toArray(".college-card").forEach((card, i) => {
+          gsap.from(card, {
+            opacity: 0,
+            y: 34,
+            rotate: i % 2 === 0 ? -3 : 3,
+            duration: 0.7,
+            delay: (i % 4) * 0.08,
+            ease: "power3.out",
+            scrollTrigger: { trigger: card, start: "top 90%", once: true },
+          });
+        });
+      }, mainRef);
+    }
+
+    init();
+    return () => ctx && ctx.revert();
+  }, []);
 
   const stats = [
-    {
-      icon: <Building2 size={26} />,
-      number: "38+",
-      title: "Colleges in Bihar (BEU)",
-    },
-    {
-      icon: <Users size={26} />,
-      number: "10,000+",
-      title: "Students & Alumni",
-    },
-    {
-      icon: <MessageCircle size={26} />,
-      number: "5,000+",
-      title: "Reviews & Insights",
-    },
-    {
-      icon: <TrendingUp size={26} />,
-      number: "100%",
-      title: "Student Focused",
-    },
+    { icon: <Building2 size={24} />, number: "38+", title: "Colleges in Bihar (BEU)" },
+    { icon: <Users size={24} />, number: "10,000+", title: "Students & alumni" },
+    { icon: <MessageCircle size={24} />, number: "5,000+", title: "Reviews & insights" },
+    { icon: <TrendingUp size={24} />, number: "100%", title: "Student-focused" },
   ];
 
   const features = [
-    {
-      icon: <Search size={25} />,
-      title: "Honest Reviews",
-      description: "Real student experiences and insights",
-    },
-    {
-      icon: <Scale size={25} />,
-      title: "Easy Comparison",
-      description: "Compare colleges based on rating, facilities & more",
-    },
-    {
-      icon: <MapPin size={25} />,
-      title: "College Information",
-      description: "All essential details in one place",
-    },
-    {
-      icon: <Users size={25} />,
-      title: "Active Community",
-      description: "Connect with students and alumni",
-    },
+    { icon: <Search size={22} />, title: "Honest reviews", description: "Real student experiences and insights." },
+    { icon: <Scale size={22} />, title: "Easy comparison", description: "Compare colleges by rating, facilities & more." },
+    { icon: <MapPin size={22} />, title: "College information", description: "All the essential details in one place." },
+    { icon: <Users size={22} />, title: "Active community", description: "Connect with students and alumni." },
   ];
 
-
-
   return (
-    <main className="bg-white text-slate-950 overflow-hidden">
-
+    <main ref={mainRef} className="bg-white text-slate-900">
       {/* ================= HERO ================= */}
-      <section className="min-h-[calc(100vh-90px)]">
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 pb-10 sm:pr-6">
-
-          <div className="flex md:flex-col md:justify-content sm:flex-row md:justify-center lg:flex-row gap-10 h-auto items-center justify-between">
-
-            {/* ========== LEFT CONTENT ========== */}
-            <div>
-
-              {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 px-5 py-2.5 rounded-full text-sm font-semibold">
-
-                {/* <span className="text-lg">🔥</span> */}
-                <h1>GenZ on Top</h1>
-
-                {/* India's Trusted College Review Platform */}
-
-              </div>
-
-
-              {/* Heading */}
-              <h1 className="mt-7 p-1 text-5xl md:text-6xl lg:text-[64px] font-bold leading-[1.08] tracking-tight max-sm:5xl min-sm:2xl">
-
-                Discover Better
-                <br />
-
-                Colleges.{" "}
-
-                <span className="text-blue-600">
-                  Build
-                </span>
-
-                <br />
-
-                <span className="text-blue-600">
-                  Brighter Futures.
-                </span>
-
-              </h1>
-
-
-              {/* Description */}
-              <p className="mt-7 max-w-[35rem] min-w-[20rem] leading-8 text-start text-gradient-to-blue-600 text-slate-600 text-lg sm:text-lg md:text-lg lg:text-xl">
-
-                CollegeNest helps students to find, compare and review
-                engineering colleges across Bihar and we are trying to catch whole country — all in
-                one place.
-
-              </p>
-
-
-              {/* CTA Buttons */}
-              <div className="flex flex-wrap gap-4 mt-8">
-
-                <NavLink
-                  to="/college">
-                  <button
-
-                    className="
-                    flex items-center gap-3
-                    bg-blue-600
-                    hover:bg-blue-700
-                    text-white
-                    px-7 py-4
-                    rounded-xl
-                    font-semibold
-                    transition
-                    shadow-lg shadow-blue-600/20
-                  "
-                  >
-
-                    <Search size={20}
-                    />
-
-                    Explore Colleges
-
-                    <ArrowRight size={19} />
-
-                  </button>
-                </NavLink>
-
-                <NavLink to="/community">
-                  <button
-                    className="
-                    flex items-center gap-3
-                    px-7 py-4
-                    rounded-xl
-                    border border-slate-300
-                    hover:border-blue-600
-                    hover:text-blue-600
-                    font-semibold
-                    transition
-                  "
-                  >
-
-                    <Users size={20} />
-
-                    Join Community
-
-                  </button>
-                </NavLink>
-
-              </div>
-
-
-              {/* Search */}
-              <div
-                className="
-                  mt-10
-                  z-3
-                  max-w-2xl
-                  flex items-center
-                  bg-white
-                  border border-slate-200
-                  rounded-2xl
-                  w-auto
-                  p-2
-                  shadow-lg shadow-slate-200/50
-                "
-              >
-
-                <Search
-                  size={23}
-                  className="ml-4 text-slate-400"
-                />
-
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Search colleges by name, location or branch..."
-                  className="
-                    flex-1
-                    z-3
-                    py-3
-                    outline-none
-                    w-auto
-                    text-slate-700
-                    placeholder:text-slate-400
-                  "
-                />
-
-                <NavLink to="/college">
-                  <button
-                    className="
-                    bg-blue-600
-                    hover:bg-blue-700
-                    text-white
-                    px-7
-                    py-3.5
-                    rounded-xl
-                    font-semibold
-                    transition
-                  "
-                  >
-                    Search
-                  </button>
-                </NavLink>
-              </div>
-
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-16">
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+          {/* ========== LEFT CONTENT ========== */}
+          <div className="w-full lg:w-1/2">
+            <div
+              ref={badgeRef}
+              className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 px-4 py-2 rounded-full text-sm font-semibold"
+            >
+              GenZ on Top
             </div>
 
+            <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight">
+              <span ref={line1Ref} className="block">Discover better colleges.</span>
+              <span ref={line2Ref} className="block">
+                Build <span className="text-blue-600">brighter futures.</span>
+              </span>
+            </h1>
 
-            {/* ========== RIGHT IMAGE ========== */}
+            <p ref={subRef} className="mt-6 max-w-md text-lg text-slate-600 leading-7">
+              CollegeNest helps students find, compare and review
+              engineering colleges across Bihar — and we're working on
+              covering the whole country next.
+            </p>
 
-            {/* ========== RIGHT IMAGE ========== */}
-            <div className="hidden md:flex relative w-full lg:w-1/2 h-[480px] lg:h-[570px] items-center justify-center mt-8 lg:mt-0">
+            <div ref={ctaRef} className="flex flex-wrap gap-4 mt-8">
+              <a href="/college">
+                <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-xl font-semibold transition shadow-lg shadow-blue-600/20">
+                  <Search size={19} />
+                  Explore colleges
+                  <ArrowRight size={18} />
+                </button>
+              </a>
+              <a href="/community">
+                <button className="flex items-center gap-2 px-6 py-3.5 rounded-xl border border-slate-300 hover:border-blue-600 hover:text-blue-600 font-semibold transition">
+                  <Users size={19} />
+                  Join community
+                </button>
+              </a>
+            </div>
 
-              {/* Background Glow */}
-              <div
-                className="
-      absolute
-      w-[380px] h-[380px]
-      md:w-[480px] md:h-[480px]
-      lg:w-[650px] lg:h-[650px]
-      rounded-full
-      bg-blue-300
-      opacity-40
-      blur-3xl
-      left-1/2
-      top-1/2
-      -translate-x-1/2
-      -translate-y-1/2
-    "
+            {/* Search */}
+            <div
+              ref={searchBarRef}
+              className="mt-8 max-w-xl flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm"
+            >
+              <Search size={20} className="ml-3 text-slate-400 shrink-0" />
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Search colleges by name, location or branch..."
+                className="flex-1 py-3 px-3 outline-none w-full text-slate-700 placeholder:text-slate-400"
               />
-
-              {/* Image Container */}
-              <div
-                className="
-      relative
-      z-10
-      w-[90%]
-      max-w-[480px]
-      lg:max-w-[560px]
-      h-[310px]
-      lg:h-[370px]
-      rounded-2xl
-      overflow-hidden
-      shadow-2xl
-      border-4
-      border-white
-    "
-              >
-                <img
-                  src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
-                  alt="Bhagalpur Engineering College"
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-
+              <a href="/college" className="shrink-0">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 sm:px-6 py-3 rounded-xl font-semibold transition">
+                  Search
+                </button>
+              </a>
             </div>
           </div>
 
-        </div>
-      </section>
-
-
-      {/* ================= STATS ================= */}
-      <section className="pb-16">
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            {stats.map((stat) => (
-
-              <div
-                key={stat.title}
-                className="
-                  flex items-center gap-4
-                  bg-white
-                  border border-slate-200
-                  rounded-2xl
-                  p-5
-                  shadow-sm
-                  hover:shadow-md
-                  transition
-                "
-              >
-
-                <div
-                  className="
-                    w-14 h-14
-                    rounded-full
-                    bg-blue-50
-                    text-blue-600
-                    flex items-center justify-center
-                    shrink-0
-                  "
-                >
-                  {stat.icon}
-                </div>
-
-
-                <div>
-
-                  <p className="text-2xl font-bold">
-                    {stat.number}
-                  </p>
-
-                  <p className="text-sm text-slate-500">
-                    {stat.title}
-                  </p>
-
-                </div>
-
-              </div>
-
-            ))}
-
+          {/* ========== RIGHT IMAGE ========== */}
+          <div className="hidden md:flex relative w-full lg:w-1/2 items-center justify-center" style={{ height: 420 }}>
+            <div
+              ref={glowRef}
+              className="absolute rounded-full bg-blue-200 opacity-50 blur-3xl"
+              style={{ width: 420, height: 420 }}
+            />
+            <div
+              ref={imageWrapRef}
+              className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white w-full"
+              style={{ maxWidth: 480, height: 320 }}
+            >
+              <img
+                src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
+                alt="Bhagalpur Engineering College campus"
+                className="w-full h-full object-cover object-center"
+              />
+            </div>
           </div>
-
         </div>
-
       </section>
-
 
       {/* ================= WHY COLLEGENEST ================= */}
       <section className="pb-20">
-
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-
-          {/* Section Heading */}
           <div className="text-center mb-12">
-
-            <h2 className="text-4xl md:text-5xl font-bold">
-
-              Why Choose{" "}
-
-              <span className="text-blue-600">
-                CollegeNest?
-              </span>
-
+            <h2 className="text-3xl sm:text-4xl font-bold">
+              Why choose <span className="text-blue-600">CollegeNest?</span>
             </h2>
-
-            <div className="w-12 h-1 bg-blue-600 rounded-full mx-auto mt-4" />
-
             <p className="mt-4 text-slate-500">
               A smarter way to choose your engineering college
             </p>
-
           </div>
 
-          {/* Feature Cards */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
             {features.map((feature) => (
-
               <div
                 key={feature.title}
-                className="
-                  bg-white
-                  border border-slate-200
-                  rounded-2xl
-                  p-7
-                  hover:-translate-y-1
-                  hover:shadow-xl
-                  hover:border-blue-200
-                  transition-all
-                  duration-300
-                "
+                className="feature-row bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg hover:border-blue-200 transition"
               >
-
-                <div
-                  className="
-                    w-12 h-12
-                    rounded-full
-                    bg-blue-600
-                    text-white
-                    flex items-center justify-center
-                    mb-6
-                  "
-                >
+                <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center mb-5">
                   {feature.icon}
                 </div>
-
-
-                <h3 className="text-xl font-bold mb-2">
-                  {feature.title}
-                </h3>
-
-
-                <p className="text-slate-500 leading-6">
+                <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
+                <p className="text-slate-500 leading-6 text-sm sm:text-base">
                   {feature.description}
                 </p>
-
               </div>
-
             ))}
-
           </div>
-
         </div>
-
       </section>
-      <section className="bg-[#f8fafc] py-20">
-        <div className="max-w-7xl mx-auto px-6">
 
-          {/* Heading */}
-          <div className="flex items-end justify-between mb-10">
+      {/* ================= TOP RATED ================= */}
+      <section className="bg-slate-50 py-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-10 gap-4">
             <div>
-              <h2 className="text-4xl font-bold text-[#050b1f]">
-                Top Rated in{" "}
-                <span className="text-blue-600">Bihar</span>
+              <h2 className="text-3xl sm:text-4xl font-bold">
+                Top rated in <span className="text-blue-600">Bihar</span>
               </h2>
-
-              <p className="mt-3 text-gray-500 text-lg">
+              <p className="mt-3 text-slate-500">
                 Based on verified student reviews
               </p>
             </div>
-
-            <NavLink to="/college">
+            <a href="/college" className="shrink-0">
               <button className="flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
-                View All
-                <ArrowRight size={20} />
+                View all
+                <ArrowRight size={18} />
               </button>
-            </NavLink>
+            </a>
           </div>
 
-          {/* Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {college.slice(0, 4).map((college) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {college.map((c) => (
               <div
-                key={college.id}
-                className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300"
+                key={c.id}
+                className="college-card bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition"
               >
-
-                {/* Image */}
-                <div className="relative h-[260px] bg-gray-200">
-                  <img
-                    src={college.image}
-                    alt={college.name}
-                    className="w-full h-full object-cover"
-                  />
-
-                  {/* Rating */}
-                  <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-full shadow-md flex items-center gap-1">
-                    <Star
-                      size={17}
-                      fill="#fbbf24"
-                      className="text-yellow-400"
-                    />
-                    <span className="font-semibold">
-                      {college.rating}
-                    </span>
+                <div className="relative" style={{ height: 180 }}>
+                  <img src={c.image} alt={c.name} className="w-full h-full object-cover" />
+                  <div className="absolute top-3 right-3 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-1">
+                    <Star size={15} fill="#fbbf24" className="text-yellow-400" />
+                    <span className="font-semibold text-sm">{c.rating}</span>
                   </div>
                 </div>
 
-                {/* Content */}
-                <div className="p-6">
-
-                  <h3 className="text-xl font-bold text-[#07112d]">
-                    {college.name}
-                  </h3>
-
-                  <div className="flex items-center gap-2 mt-3 text-gray-500">
-                    <MapPin size={17} />
-                    <span>{college.location}</span>
+                <div className="p-5">
+                  <h3 className="text-lg font-bold leading-snug">{c.name}</h3>
+                  <div className="flex items-center gap-1.5 mt-2 text-slate-500 text-sm">
+                    <MapPin size={15} />
+                    <span>{c.location}</span>
                   </div>
 
-                  {/* Branches */}
-                  <div className="h-auto grid gap-2 mt-5">
-                    {college.branches.map((branch) => (
+                  <div className="flex flex-wrap gap-1.5 mt-4">
+                    {c.branches.map((branch) => (
                       <span
                         key={branch}
-                        className="px-3 py-1.5 bg-[#f1f5f9] text-gray-600 text-sm rounded-md font-medium"
+                        className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs rounded-md font-medium"
                       >
                         {branch}
                       </span>
                     ))}
                   </div>
 
-                  <div className="border-t border-gray-100 mt-6 pt-5 flex items-center justify-between">
-
-                    <span className="text-gray-500 text-sm">
-                      {college.reviews} Reviews
-                    </span>
-
-                    <NavLink to={`/college/${college.id}`}>
-                      <button className="text-blue-600 font-semibold hover:text-blue-700">
-                        Read Reviews
+                  <div className="border-t border-slate-100 mt-5 pt-4 flex items-center justify-between">
+                    <span className="text-slate-500 text-xs">{c.reviews} reviews</span>
+                    <a href={`/college/${c.id}`}>
+                      <button className="text-blue-600 font-semibold text-sm hover:text-blue-700">
+                        Read reviews
                       </button>
-                    </NavLink>
+                    </a>
                   </div>
                 </div>
               </div>
             ))}
-
           </div>
         </div>
       </section>
-
     </main>
   );
 }
