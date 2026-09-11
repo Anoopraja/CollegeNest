@@ -1,6 +1,13 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import authService from "./appWrite/appwrite.js";
+import {
+  House,
+  User,
+  Users,
+  University,
+  Square,
+} from "lucide-react";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -20,8 +27,11 @@ const Navbar = () => {
         setUser(null);
       }
     };
+
     getCurrentUser();
   }, [location.pathname]);
+
+
 
   // const userAccount = async () => {
   //   try {
@@ -151,7 +161,7 @@ const Navbar = () => {
             >
               <img
                 // onClick={(e) => navigate("/")}  
-                className="h-10 hover:opacity-75"
+                className="h-10 hover:opacity-75 hidden lg:block rounded-full "
                 src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
                 alt="Profile"
               />
@@ -159,7 +169,7 @@ const Navbar = () => {
           }
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden">
+          {/* <div className="lg:hidden">
             <button
               onClick={() => setOpen(!open)}
               className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100"
@@ -174,69 +184,103 @@ const Navbar = () => {
                 alt="Menu"
               />
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {open && (
-        <div className="lg:hidden absolute top-16 left-0 w-full  bg-white border-t shadow-md">
+      {/* Mobile Bottom Navigation */}
 
-          <ul className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100">
-            {Navlist.path.map((item) => (
-              <li key={item.path}>
-                <NavLink
-                  onClick={() => setOpen(false)}
-                  className={({ isActive }) =>
-                    `block px-3 py-2 transition ${isActive
-                      ? "text-blue-700 font-semibold"
-                      : "text-gray-700 hover:text-blue-700"
-                    }`
-                  }
-                  to={item.path}
-                >
-                  {item.name}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-4px_15px_rgba(0,0,0,0.08)]">
+  <div className="h-16 flex items-center justify-around px-1">
 
-          <div className="p-4 border-t">
+    {/* Home */}
+    <NavLink
+      to="/"
+      className={({ isActive }) =>
+        `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
+          isActive
+            ? "text-blue-700 font-semibold"
+            : "text-gray-500"
+        }`
+      }
+    >
+      <House size={22} />
+    </NavLink>
 
-            {/* NOT LOGGED IN */}
-            {!user && (
-              <>
-                <NavLink
-                  to="/login"
-                  onClick={() => setOpen(false)}
-                  className="block w-full border py-2 rounded-lg mb-3 text-center"
-                >
-                  Login
-                </NavLink>
+    {/* College */}
+    <NavLink
+      to="/college"
+      className={({ isActive }) =>
+        `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
+          isActive
+            ? "text-blue-700 font-semibold"
+            : "text-gray-500"
+        }`
+      }
+    >
+      <University size={22} />
+    </NavLink>
 
-                <NavLink
-                  to="/signup"
-                  onClick={() => setOpen(false)}
-                  className="block w-full bg-blue-700 text-white py-2 rounded-lg text-center"
-                >
-                  Sign Up
-                </NavLink>
-              </>
-            )}
+    {/* Community */}
+    <NavLink
+      to="/community"
+      className={({ isActive }) =>
+        `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
+          isActive
+            ? "text-blue-700 font-semibold"
+            : "text-gray-500"
+        }`
+      }
+    >
+      <Users size={22} />
+    </NavLink>
 
-            {/* LOGGED IN */}
-            {user && (
-              <button
-                onClick={handleLogout}
-                className="w-full bg-red-600 text-white py-2 rounded-lg"
-              >
-                Logout
-              </button>
+    {/* Counselling */}
+    <NavLink
+      to="/counselling"
+      className={({ isActive }) =>
+        `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
+          isActive
+            ? "text-blue-700 font-semibold"
+            : "text-gray-500"
+        }`
+      }
+    >
+      <Square size={22} />
+    </NavLink>
 
-            )}
-          </div>
-        </div>
-      )}
+    {/* Profile */}
+    {user ? (
+      <NavLink
+        to={`/profile/id:${user.name}`}
+        className={({ isActive }) =>
+          `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
+            isActive
+              ? "text-blue-700 font-semibold"
+              : "text-gray-500"
+          }`
+        }
+      >
+        <User size={22} />
+      </NavLink>
+    ) : (
+      <NavLink
+        to="/login"
+        className={({ isActive }) =>
+          `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
+            isActive
+              ? "text-blue-700 font-semibold"
+              : "text-gray-500"
+          }`
+        }
+      >
+      </NavLink>
+    )}
+
+  </div>
+</nav>
+
+
     </nav>
   );
 };

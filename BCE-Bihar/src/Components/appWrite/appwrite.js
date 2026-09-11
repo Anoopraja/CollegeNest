@@ -1,6 +1,6 @@
 import conf from "../appWrite/conf.js";
 import { Query } from "appwrite";
-import { Client, Account, ID, Databases  } from "appwrite";
+import { Client, Account, ID, Databases } from "appwrite";
 export class AuthService {
     client = new Client();
     // databases = new Databases(client);
@@ -10,11 +10,31 @@ export class AuthService {
         this.client
             .setEndpoint(conf.appwriteUrl)
             .setProject(conf.appwriteProjectId);
+
         this.account = new Account(this.client);
+
+        const promise = this.account.createVerification({
+            url: "https://collegenest.anooplofi.me/verify"
+        });
+
+        promise.then(function (response) {
+            console.log(response); // Success
+        }, function (error) {
+            console.log(error); // Failure
+        });
         // this.storage = new Storage(this.client);
         this.databases = new Databases(this.client);
     }
 
+
+    verifyEmail(userId, secret) {
+        return this.account.updateVerification(userId, secret);
+    }
+    async createVerification(url) {
+        return await this.account.createVerification({
+            url: url
+        });
+    }
 
 
 

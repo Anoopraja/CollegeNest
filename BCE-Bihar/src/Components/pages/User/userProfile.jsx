@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import authService from "../../appWrite/appwrite.js";
+import { useNavigate } from "react-router-dom";
 import conf from "../../appWrite/conf.js";
 
 function Profile() {
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  // const [open, setOpen] = useState(false);
   // const [profile, setProfile] = useState(null);
 
   const [profile, setProfile] = useState({
@@ -18,23 +21,41 @@ function Profile() {
 
 
   const getProfileInfo = async () => {
-  try {
-    const currentUser = await authService.getCurrentUser();
+    try {
+      const currentUser = await authService.getCurrentUser();
 
-    const userInf = await authService.getUserInfo(currentUser.$id);
+      const userInf = await authService.getUserInfo(currentUser.$id);
 
-    // console.log("User Info:", userInf);
+      // console.log("User Info:", userInf);
 
-    setProfile(userInf);
+      setProfile(userInf);
 
-    return userInf;
-  } catch (error) {
-    console.error("Error fetching profile info:", error);
-  }
-};
+      return userInf;
+    } catch (error) {
+      console.error("Error fetching profile info:", error);
+    }
+  };
   useEffect(() => {
     getProfileInfo();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+
+      setUser(null);
+
+      console.log("Logged out successfully");
+
+      
+      navigate("/login");
+
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed. Please try again.");
+    }
+  };
+
   const handleUpdateProfile = async () => {
     try {
       let existingProfile;
@@ -345,7 +366,7 @@ function Profile() {
 
         {/* ================= ACCOUNT INFORMATION ================= */}
 
-       
+
 
         {/* ================= EDIT / SAVE BUTTON ================= */}
 
@@ -375,6 +396,14 @@ function Profile() {
                 Cancel
               </button>
             </>
+          )}
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+            >
+              Logout
+            </button>
           )}
 
         </div>

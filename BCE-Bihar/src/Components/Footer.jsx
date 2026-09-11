@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-slate-950 text-slate-400 mt-12">
+    <footer className="bg-slate-950 text-slate-400 mt-12 hidden lg:block">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* ================= MAIN FOOTER ================= */}

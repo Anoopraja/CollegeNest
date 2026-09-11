@@ -14,6 +14,7 @@ import Signup from './Components/pages/signup'
 import CollegeInfo from './Components/pages/Collegeinfo'
 import Counselling from './Components/pages/Councling'
 import ChatLive from './Components/pages/ChatLive'
+import VerifyEmail from './Components/pages/userVerification/userVerification'
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path='/chat' element={<ChatLive />} />
         <Route path='/profile/:id' element={<Profile />} />
         <Route path='/admin' element={<AdminProfile />} />
+        <Route path="/verify" element={<VerifyEmail />} />
       </Routes>
       <Footer />
     </>
