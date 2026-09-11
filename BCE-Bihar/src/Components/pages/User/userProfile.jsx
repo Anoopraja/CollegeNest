@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import authService from "../../appWrite/appwrite.js";
 import { useNavigate } from "react-router-dom";
 import conf from "../../appWrite/conf.js";
@@ -7,6 +7,7 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [confetti, setConfetti] = useState([]);
   // const [open, setOpen] = useState(false);
   // const [profile, setProfile] = useState(null);
 
@@ -54,6 +55,24 @@ function Profile() {
       console.error("Logout failed:", error);
       alert("Logout failed. Please try again.");
     }
+  };
+
+  // Fires a quick burst of theme-colored confetti from the save button.
+  const launchConfetti = () => {
+    const colors = ["#2563eb", "#60a5fa", "#93c5fd", "#1d4ed8", "#bfdbfe"];
+    const pieces = Array.from({ length: 28 }, (_, i) => ({
+      id: `${Date.now()}-${i}`,
+      left: 50 + (Math.random() * 60 - 30),
+      tx: Math.random() * 200 - 100,
+      rot: Math.random() * 720 - 360,
+      duration: 900 + Math.random() * 600,
+      delay: Math.random() * 100,
+      size: 6 + Math.random() * 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }));
+
+    setConfetti(pieces);
+    setTimeout(() => setConfetti([]), 1700);
   };
 
   const handleUpdateProfile = async () => {
@@ -107,6 +126,7 @@ function Profile() {
       }
 
       setIsEditing(false);
+      launchConfetti();
       alert("Profile updated successfully!");
 
     } catch (error) {
@@ -143,6 +163,15 @@ function Profile() {
     getUser();
   }, []);
 
+  // Profile completeness, used to fill the ring around the avatar.
+  const completion = useMemo(() => {
+    const fields = ["name", "college", "branch", "year", "about"];
+    const filled = fields.filter(
+      (key) => profile[key] && profile[key].trim().length > 0
+    ).length;
+    return Math.round((filled / fields.length) * 100);
+  }, [profile]);
+
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -162,24 +191,77 @@ function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 relative overflow-hidden">
+      <style>{`
+        @keyframes confetti-burst {
+          0% {
+            transform: translate(-50%, 0) translate(0, 0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(-50%, 0) translate(var(--tx), -160px) rotate(var(--rot));
+            opacity: 0;
+          }
+        }
+        @keyframes ring-pop {
+          0% { transform: scale(0.9); }
+          60% { transform: scale(1.05); }
+          100% { transform: scale(1); }
+        }
+      `}</style>
+
+      {/* Confetti layer */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-50 flex justify-center">
+        {confetti.map((p) => (
+          <span
+            key={p.id}
+            className="absolute rounded-sm"
+            style={{
+              left: `${p.left}%`,
+              bottom: 0,
+              width: p.size,
+              height: p.size,
+              backgroundColor: p.color,
+              "--tx": `${p.tx}px`,
+              "--rot": `${p.rot}deg`,
+              animation: `confetti-burst ${p.duration}ms ease-out ${p.delay}ms forwards`,
+            }}
+          />
+        ))}
+      </div>
+
       <div className="max-w-4xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
 
         {/* ================= PROFILE HEADER ================= */}
 
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
 
-          {/* Profile Image */}
-          <img
-            src={
-              profile.profileImage ||
-              `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                profile.name || "User"
-              )}&background=2563eb&color=fff&size=150`
-            }
-            alt={user.name || "User"}
-            className="w-24 h-24 rounded-full object-cover"
-          />
+          {/* Profile Image with completeness ring */}
+          <div className="flex flex-col items-center gap-2">
+            <div
+              className="relative w-24 h-24 rounded-full p-1 transition-transform duration-500"
+              style={{
+                background: `conic-gradient(#2563eb ${completion * 3.6}deg, #e5e7eb 0deg)`,
+                animation: "ring-pop 500ms ease-out",
+              }}
+            >
+              <div className="w-full h-full rounded-full bg-white p-1">
+                <img
+                  src={
+                    profile.profileImage ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      profile.name || "User"
+                    )}&background=2563eb&color=fff&size=150`
+                  }
+                  alt={user.name || "User"}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </div>
+            </div>
+            <span className="text-xs font-medium text-blue-600">
+              {completion}% complete
+            </span>
+          </div>
 
           <div className="text-center sm:text-left">
             <h1 className="text-2xl font-bold text-gray-900">
