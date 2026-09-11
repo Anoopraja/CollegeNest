@@ -378,7 +378,7 @@ const College = [
   email: "principalgecvaishali@gmail.com",
   phone: "06229-297002",
 
-  image: "",
+  image: "https://gecvmechanical.weebly.com/uploads/1/4/0/4/140402453/img-20220110-094924_orig.jpg",
   logo: "https://www.gecvaishali.ac.in/wp-content/uploads/2026/03/logo-1.png",
 
   rating: 4.2,
