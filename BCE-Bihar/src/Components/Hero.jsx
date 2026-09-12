@@ -11,16 +11,6 @@ import {
   Building2,
 } from "lucide-react";
 
-/**
- * GSAP + ScrollTrigger are loaded from cdnjs at runtime (they aren't part
- * of the artifact's bundled library set). In your real project, install
- * them instead:
- *   npm install gsap
- *   import gsap from "gsap";
- *   import { ScrollTrigger } from "gsap/ScrollTrigger";
- *   gsap.registerPlugin(ScrollTrigger);
- * and delete the loadScript/useEffect script-injection block below.
- */
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     if (document.querySelector(`script[src="${src}"]`)) return resolve();
@@ -45,6 +35,20 @@ function loadScript(src) {
  *   3. The `name` state was missing in the original file (the
  *      search input referenced `name`/`setName` with no
  *      useState) — that's fixed here.
+ *
+ *  WHY THE INTRO NO LONGER WAITS ON GSAP
+ *  GSAP + ScrollTrigger are fetched from a CDN, so there's a real
+ *  network delay before the page-load reveal used to fire — on a
+ *  slow connection the hero would sit fully visible (unanimated)
+ *  for a beat, then suddenly reset and animate. The intro reveal
+ *  (badge, headline, subtext, CTAs, search bar, image, glow) is
+ *  now plain CSS `@keyframes`, so it plays the instant the DOM
+ *  paints, with no dependency on the script finishing its download.
+ *  GSAP + ScrollTrigger still drive everything that's inherently
+ *  scroll-linked and can't run at load time anyway: the hero image
+ *  parallax, the stat count-up, the alternating feature rows, and
+ *  the college-card deal-in — those still enhance progressively
+ *  once the script arrives.
  * ─────────────────────────────────────────────────────────────
  */
 
@@ -243,14 +247,7 @@ function Hero() {
   const [name, setName] = useState("");
 
   const mainRef = useRef(null);
-  const line1Ref = useRef(null);
-  const line2Ref = useRef(null);
-  const subRef = useRef(null);
-  const ctaRef = useRef(null);
-  const searchBarRef = useRef(null);
-  const badgeRef = useRef(null);
   const imageWrapRef = useRef(null);
-  const glowRef = useRef(null);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia(
@@ -283,31 +280,11 @@ function Hero() {
       if (reduceMotion) return; // respect user preference, skip all motion
 
       ctx = gsap.context(() => {
-        // ── Hero: one orchestrated page-load reveal ──────────────
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-        tl.from(badgeRef.current, { opacity: 0, y: -10, duration: 0.5 })
-          .from(
-            [line1Ref.current, line2Ref.current],
-            { opacity: 0, y: 28, duration: 0.7, stagger: 0.12 },
-            "-=0.2"
-          )
-          .from(subRef.current, { opacity: 0, y: 16, duration: 0.6 }, "-=0.35")
-          .from(
-            ctaRef.current ? ctaRef.current.children : [],
-            { opacity: 0, y: 14, duration: 0.5, stagger: 0.1 },
-            "-=0.3"
-          )
-          .from(searchBarRef.current, { opacity: 0, y: 14, duration: 0.5 }, "-=0.3")
-          .from(
-            imageWrapRef.current,
-            { opacity: 0, scale: 0.94, duration: 0.8 },
-            "-=0.9"
-          )
-          .from(
-            glowRef.current,
-            { opacity: 0, scale: 0.7, duration: 1.1 },
-            "-=0.9"
-          );
+        // Note: the hero's page-load reveal (badge, headline, subtext,
+        // CTAs, search bar, image, glow) now runs as plain CSS
+        // animation so it fires the instant the page paints instead
+        // of waiting on this script to finish downloading. Everything
+        // below is scroll-linked and genuinely needs GSAP.
 
         // Gentle parallax drift on the hero photo while scrolling —
         // a small, single depth cue rather than a repeated hover trick.
@@ -399,40 +376,79 @@ function Hero() {
 
   return (
     <main ref={mainRef} className="bg-white text-slate-900">
+      <style>{`
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heroFadeScale {
+          from { opacity: 0; transform: scale(0.94); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes heroGlowIn {
+          from { opacity: 0; transform: scale(0.7); }
+          to { opacity: 0.5; transform: scale(1); }
+        }
+        .hero-in {
+          opacity: 0;
+          animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .hero-in-scale {
+          opacity: 0;
+          animation: heroFadeScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .hero-in-glow {
+          opacity: 0;
+          animation: heroGlowIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-in, .hero-in-scale, .hero-in-glow {
+            animation: none;
+            opacity: 1;
+            transform: none;
+          }
+        }
+      `}</style>
+
       {/* ================= HERO ================= */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-16">
         <div className="flex flex-col lg:flex-row items-center gap-12">
           {/* ========== LEFT CONTENT ========== */}
           <div className="w-full lg:w-1/2">
             <div
-              ref={badgeRef}
-              className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 px-4 py-2 rounded-full text-sm font-semibold"
+              className="hero-in inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-600 px-4 py-2 rounded-full text-sm font-semibold"
+              style={{ animationDelay: "0ms" }}
             >
               GenZ on Top
             </div>
 
             <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight">
-              <span ref={line1Ref} className="block">Discover better colleges.</span>
-              <span ref={line2Ref} className="block">
+              <span className="hero-in block" style={{ animationDelay: "90ms" }}>
+                Discover better colleges.
+              </span>
+              <span className="hero-in block" style={{ animationDelay: "170ms" }}>
                 Build <span className="text-blue-600">brighter futures.</span>
               </span>
             </h1>
 
-            <p ref={subRef} className="mt-6 max-w-md text-lg text-slate-600 leading-7">
+            <p
+              className="hero-in mt-6 max-w-md text-lg text-slate-600 leading-7"
+              style={{ animationDelay: "300ms" }}
+            >
               CollegeNest helps students find, compare and review
               engineering colleges across Bihar — and we're working on
               covering the whole country next.
             </p>
 
-            <div ref={ctaRef} className="flex flex-wrap gap-4 mt-8">
-              <a href="/college">
+            <div className="flex flex-wrap gap-4 mt-8">
+              <a href="/college" className="hero-in" style={{ animationDelay: "390ms" }}>
                 <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-xl font-semibold transition shadow-lg shadow-blue-600/20">
                   <Search size={19} />
                   Explore colleges
                   <ArrowRight size={18} />
                 </button>
               </a>
-              <a href="/community">
+              <a href="/community" className="hero-in" style={{ animationDelay: "460ms" }}>
                 <button className="flex items-center gap-2 px-6 py-3.5 rounded-xl border border-slate-300 hover:border-blue-600 hover:text-blue-600 font-semibold transition">
                   <Users size={19} />
                   Join community
@@ -442,8 +458,8 @@ function Hero() {
 
             {/* Search */}
             <div
-              ref={searchBarRef}
-              className="mt-8 max-w-xl flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm"
+              className="hero-in mt-8 max-w-xl flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm"
+              style={{ animationDelay: "530ms" }}
             >
               <Search size={20} className="ml-3 text-slate-400 shrink-0" />
               <input
@@ -464,14 +480,13 @@ function Hero() {
           {/* ========== RIGHT IMAGE ========== */}
           <div className="hidden md:flex relative w-full lg:w-1/2 items-center justify-center" style={{ height: 420 }}>
             <div
-              ref={glowRef}
-              className="absolute rounded-full bg-blue-200 opacity-50 blur-3xl"
-              style={{ width: 420, height: 420 }}
+              className="hero-in-glow absolute rounded-full bg-blue-200 blur-3xl"
+              style={{ width: 420, height: 420, animationDelay: "120ms" }}
             />
             <div
               ref={imageWrapRef}
-              className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white w-full"
-              style={{ maxWidth: 480, height: 320 }}
+              className="hero-in-scale relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white w-full"
+              style={{ maxWidth: 480, height: 320, animationDelay: "180ms" }}
             >
               <img
                 src="https://beu-bih.ac.in/backend/1747412737507-bhagalpur-engineering-college-bihar-campus-admission.jpg"
