@@ -138,7 +138,7 @@ const Colleges = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="mb-8 flex space-x-3 sm:space-x-4 sticky top-[6rem] z-30 bg-blur-sm backdrop-blur-md bg-white/80 border border-gray-200 rounded-xl px-4 py-3 sm:px-5 sm:py-4 shadow-sm"
+            className="mb-8 flex space-x-3 sm:space-x-4 sticky top-[6rem] z-30 border border-blue-200 rounded-full px-4 py-3 sm:px-5 sm:py-4 shadow-sm backdrop-blur-md"
           >
             <input
               value={search}
@@ -148,11 +148,11 @@ const Colleges = () => {
               inputMode="search"
               enterKeyHint="search"
               placeholder="Search for colleges..."
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
+              className="w-full px-4 py-2.5  rounded-full outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
             />
             <button
               type="submit"
-              className="cn-press shrink-0 rounded-lg bg-blue-700 px-4 sm:px-5 text-white hover:bg-blue-800 font-medium"
+              className="cn-press shrink-0 rounded-full bg-blue-700 px-4 sm:px-5 text-white hover:bg-blue-800 font-medium"
             >
               Search
             </button>

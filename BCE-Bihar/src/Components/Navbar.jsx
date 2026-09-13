@@ -190,95 +190,86 @@ const Navbar = () => {
 
       {/* Mobile Bottom Navigation */}
 
-     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-4px_15px_rgba(0,0,0,0.08)]">
-  <div className="h-16 flex items-center justify-around px-1">
+      {/* Mobile Bottom Navigation */}
+      <nav className="lg:hidden fixed bottom-3 left-0 right-0 z-50 px-4">
+        <div className="mx-auto max-w-md h-16 backdrop-blur-md bg-blur-2xl rounded-full px-3 flex items-center justify-around shadow-2xl border border-blue-400">
 
-    {/* Home */}
-    <NavLink
-      to="/"
-      className={({ isActive }) =>
-        `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
-          isActive
-            ? "text-blue-700 font-semibold"
-            : "text-gray-500"
-        }`
-      }
-    >
-      <House size={22} />
-    </NavLink>
+          {/* Home */}
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
+                ? "bg-blue-500 text-white"
+                : "text-black hover:text-white"
+              }`
+            }
+          >
+            <House size={25} strokeWidth={2.2} />
+          </NavLink>
 
-    {/* College */}
-    <NavLink
-      to="/college"
-      className={({ isActive }) =>
-        `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
-          isActive
-            ? "text-blue-700 font-semibold"
-            : "text-gray-500"
-        }`
-      }
-    >
-      <University size={22} />
-    </NavLink>
+          {/* Colleges */}
+          <NavLink
+            to="/college"
+            className={({ isActive }) =>
+              `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
+                ? "bg-blue-500 text-white"
+                : "text-black hover:text-white"}`
+            }
+          >
+            <University size={24} strokeWidth={2.2} />
+          </NavLink>
 
-    {/* Community */}
-    <NavLink
-      to="/community"
-      className={({ isActive }) =>
-        `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
-          isActive
-            ? "text-blue-700 font-semibold"
-            : "text-gray-500"
-        }`
-      }
-    >
-      <Users size={22} />
-    </NavLink>
+          {/* Community */}
+          <NavLink
+            to="/community"
+            className={({ isActive }) =>
+              `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
+                ? "bg-blue-500 text-white"
+                : "text-black hover:text-white"}`
+            }
+          >
+            <Users size={24} strokeWidth={2.2} />
+          </NavLink>
 
-    {/* Counselling */}
-    <NavLink
-      to="/counselling"
-      className={({ isActive }) =>
-        `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
-          isActive
-            ? "text-blue-700 font-semibold"
-            : "text-gray-500"
-        }`
-      }
-    >
-      <Square size={22} />
-    </NavLink>
+          {/* Counselling */}
+          <NavLink
+            to="/counselling"
+            className={({ isActive }) =>
+              `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
+                ? "bg-blue-500 text-white"
+                : "text-black hover:text-white"}`
+            }
+          >
+            <Square size={23} strokeWidth={2.2} />
+          </NavLink>
 
-    {/* Profile */}
-    {user ? (
-      <NavLink
-        to={`/profile/id:${user.name}`}
-        className={({ isActive }) =>
-          `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
-            isActive
-              ? "text-blue-700 font-semibold"
-              : "text-gray-500"
-          }`
-        }
-      >
-        <User size={22} />
-      </NavLink>
-    ) : (
-      <NavLink
-        to="/login"
-        className={({ isActive }) =>
-          `flex flex-col items-center justify-center gap-1 w-full h-full transition ${
-            isActive
-              ? "text-blue-700 font-semibold"
-              : "text-gray-500"
-          }`
-        }
-      >
-      </NavLink>
-    )}
+          {/* Profile */}
+          {user ? (
+            <NavLink
+              to={`/profile/id:${user.name}`}
+              className={({ isActive }) =>
+                `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
+                  ? "bg-blue-500 text-white"
+                  : "text-black hover:text-white"}`
+              }
+            >
+              <User size={24} strokeWidth={2.2} />
+            </NavLink>
+          ) : (
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
+                  ? "bg-blue-500 text-white"
+                  : "text-black hover:text-white"}`
+              }
+            >
+              <User size={24} strokeWidth={2.2} />
+            </NavLink>
+          )}
 
-  </div>
-</nav>
+        </div>
+      </nav>
 
 
     </nav>
