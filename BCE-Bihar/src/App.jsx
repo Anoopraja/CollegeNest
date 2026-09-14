@@ -14,6 +14,7 @@ import Signup from './Components/pages/signup'
 import CollegeInfo from './Components/pages/Collegeinfo'
 import Counselling from './Components/pages/Councling'
 import ChatLive from './Components/pages/ChatLive'
+import Roadmap from './Components/pages/Roadmap'
 import VerifyEmail from './Components/pages/userVerification/userVerification'
 
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/community/:id" element={<ChatLive />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/counselling' element={<Counselling />} />
+        <Route path='/roadmap' element={<Roadmap />} />
         <Route path='/chat' element={<ChatLive />} />
         <Route path='/profile/:id' element={<Profile />} />
         <Route path='/admin' element={<AdminProfile />} />

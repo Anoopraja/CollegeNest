@@ -6,7 +6,7 @@ import {
   User,
   Users,
   University,
-  Square,
+  Book,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -69,7 +69,8 @@ const Navbar = () => {
       { name: "Home", path: "/" },
       { name: "College", path: "/college" },
       // { name: "Contact", path: "/contact" },
-      { name: "Counselling", path: "/counselling" },
+      // { name: "Counselling", path: "/counselling" },
+      {name: "Roadmap", path: "/roadmap"},
       { name: "Community", path: "/community" },
 
     ],
@@ -192,7 +193,9 @@ const Navbar = () => {
 
       {/* Mobile Bottom Navigation */}
       <nav className="lg:hidden fixed bottom-3 left-0 right-0 z-50 px-4">
-        <div className="mx-auto max-w-md h-16 backdrop-blur-md bg-blur-2xl rounded-full px-3 flex items-center justify-around shadow-2xl border border-blue-400">
+        <div 
+
+        className="mx-auto max-w-2xl h-16 backdrop-blur-md bg-blur-2xl rounded-full px-3 flex items-center justify-around shadow-2xl border border-blue-200">
 
           {/* Home */}
           <NavLink
@@ -232,7 +235,7 @@ const Navbar = () => {
           </NavLink>
 
           {/* Counselling */}
-          <NavLink
+          {/* <NavLink
             to="/counselling"
             className={({ isActive }) =>
               `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
@@ -241,6 +244,26 @@ const Navbar = () => {
             }
           >
             <Square size={23} strokeWidth={2.2} />
+          </NavLink> */}
+          {/* <NavLink
+            to="/counselling"
+            className={({ isActive }) =>
+              `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
+                ? "bg-blue-500 text-white"
+                : "text-black hover:text-white"}`
+            }
+          >
+            <Book size={23} strokeWidth={2.2} />
+          </NavLink> */}
+          <NavLink
+            to="/roadmap"
+            className={({ isActive }) =>
+              `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
+                ? "bg-blue-500 text-white"
+                : "text-black hover:text-white"}`
+            }
+          >
+            <Book size={23} strokeWidth={2.2} />
           </NavLink>
 
           {/* Profile */}
