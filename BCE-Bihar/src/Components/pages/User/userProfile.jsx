@@ -8,6 +8,9 @@ function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [confetti, setConfetti] = useState([]);
+  const [isVerified, setIsVerified] = useState(false);
+  const [sendingVerification, setSendingVerification] = useState(false);
+
   // const [open, setOpen] = useState(false);
   // const [profile, setProfile] = useState(null);
 
@@ -21,14 +24,42 @@ function Profile() {
   });
 
 
+  
+
+
+
+  const handleVerifyEmail = async () => {
+        if (sendingVerification) return;
+
+        try {
+          setSendingVerification(true);
+
+          await authService.createVerification(
+            "https://collegenest.anooplofi.me/verify"
+          );
+
+          alert("Verification email sent. Please check your Gmail.");
+
+        } catch (error) {
+          console.error(error);
+
+          if (error.code === 429) {
+            alert("Too many requests. Please wait before requesting another email.");
+          } else {
+            alert(error.message || "Failed to send verification email.");
+          }
+
+        } finally {
+          setSendingVerification(false);
+        }
+      };
   const getProfileInfo = async () => {
     try {
       const currentUser = await authService.getCurrentUser();
+      setIsVerified(currentUser.emailVerification);
 
       const userInf = await authService.getUserInfo(currentUser.$id);
-
-      // console.log("User Info:", userInf);
-
+      // console.log("User Info:", currentUser.emailVerification);
       setProfile(userInf);
 
       return userInf;
@@ -48,7 +79,7 @@ function Profile() {
 
       console.log("Logged out successfully");
 
-      
+
       navigate("/login");
 
     } catch (error) {
@@ -260,6 +291,17 @@ function Profile() {
             </div>
             <span className="text-xs font-medium text-blue-600">
               {completion}% complete
+            </span>
+            <span>
+              {isVerified ? (
+                <span className="text-xs font-medium text-green-600">
+                  Verified
+                </span>
+              ) : (
+                <span className="text-xs font-medium text-red-600">
+                  Not Verified
+                </span>
+              )}
             </span>
           </div>
 
@@ -487,13 +529,23 @@ function Profile() {
               Logout
             </button>
           )}
+           <div>
+          <button
+            onClick={handleVerifyEmail}
+            disabled={sendingVerification}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg disabled:opacity-50"
+          >
+            {sendingVerification ? "Sending..." : "Verify Email"}
+          </button>
+        </div>
 
         </div>
+       
 
       </div>
       <div>
         <p className="text-sm text-gray-400 mt-4 text-center">
-          🔒 **Your data is securely saved and protected.**
+          🔒 *Your data is securely saved and protected.*
         </p>
       </div>
     </div>

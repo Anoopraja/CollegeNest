@@ -134,7 +134,7 @@ const Colleges = () => {
         }
       `}</style>
 
-      <div className="max-w-7xl mx-auto px-6 py-5 z-51">
+      <div className="max-w-7xl mx-auto pb-16 px-6 py-5 z-51">
 
           <form
             onSubmit={handleSubmit}

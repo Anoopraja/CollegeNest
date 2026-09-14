@@ -42,28 +42,7 @@ const roadmapData = {
             ],
         },
 
-        skills: [
-            {
-                title: "Programming",
-                items: ["C / C++", "Python", "JavaScript Basics"],
-            },
-            {
-                title: "Development",
-                items: ["HTML", "CSS", "Git & GitHub"],
-            },
-            {
-                title: "Database",
-                items: ["SQL", "Database Fundamentals"],
-            },
-            {
-                title: "Problem Solving",
-                items: ["Basic DSA", "Logic Building", "100+ Problems"],
-            },
-            {
-                title: "computer Networking",
-                items: ["Networking Basics", "Protocols", "OSI Model"],
-            },
-        ],
+        
 
         gate: [
             {
@@ -147,24 +126,6 @@ const roadmapData = {
             ],
         },
 
-        skills: [
-            {
-                title: "Programming",
-                items: ["C", "Python Basics", "Problem Solving"],
-            },
-            {
-                title: "Electronics",
-                items: ["Digital Electronics", "Analog Basics", "Circuits"],
-            },
-            {
-                title: "Embedded",
-                items: ["Arduino", "Microcontrollers", "Sensors"],
-            },
-            {
-                title: "Tools",
-                items: ["Git & GitHub", "Circuit Simulation"],
-            },
-        ],
 
         gate: [
             {
@@ -248,24 +209,6 @@ const roadmapData = {
             ],
         },
 
-        skills: [
-            {
-                title: "Design",
-                items: ["Engineering Drawing", "AutoCAD", "3D CAD"],
-            },
-            {
-                title: "Programming",
-                items: ["C Basics", "Python Basics"],
-            },
-            {
-                title: "Core",
-                items: ["Manufacturing", "Materials", "Mechanics"],
-            },
-            {
-                title: "Professional",
-                items: ["Technical Communication", "Documentation"],
-            },
-        ],
 
         gate: [
             {
@@ -349,24 +292,7 @@ const roadmapData = {
             ],
         },
 
-        skills: [
-            {
-                title: "Design",
-                items: ["AutoCAD", "Engineering Drawing", "Basic CAD"],
-            },
-            {
-                title: "Core",
-                items: ["Surveying", "Construction", "Materials"],
-            },
-            {
-                title: "Technology",
-                items: ["Excel", "Basic Data Analysis"],
-            },
-            {
-                title: "Professional",
-                items: ["Technical Writing", "Communication"],
-            },
-        ],
+
 
         gate: [
             {
@@ -700,133 +626,9 @@ function Roadmap() {
 
 
                 {/* ================= 02 SKILLS ================= */}
-                <div className="relative h-auto pb-20 mt-6">
+                
 
-                    {/* Background overlay */}
-                    {expandedSkill && (
-                        <div
-                            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
-                            onClick={() => setExpandedSkill(null)}
-                        />
-                    )}
-
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-                        {roadmap.skills.map((skill) => {
-
-                            const isExpanded = expandedSkill === skill.title;
-
-                            return (
-                                <div
-                                    key={skill.title}
-                                    onClick={() => {
-                                        if (!isExpanded) {
-                                            setExpandedSkill(skill.title);
-                                        }
-                                    }}
-                                    className={`
-    bg-white border border-gray-200 rounded-2xl p-5
-
-    ${isExpanded
-                                            ? `
-                fixed
-                z-50
-                top-1/2
-                left-1/2
-                -translate-x-1/2
-                -translate-y-1/2
-                w-[90vw]
-                lg:w-[50vw]
-                max-h-[80vh]
-                overflow-y-auto
-                shadow-2xl
-                animate-popOut
-              `
-                                            : `
-                relative
-                cursor-pointer
-                hover:border-blue-300
-                hover:shadow-md
-                animate-popIn
-                duration-200
-              `
-                                        }
-`}
-                                >
-
-                                    {/* Header */}
-                                    <div className="flex items-start justify-between">
-
-                                        <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                                            <Code2 size={22} />
-                                        </div>
-
-                                        {/* Cross */}
-                                        {isExpanded && (
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setExpandedSkill(null);
-                                                }}
-                                                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition"
-                                            >
-                                                <X size={20} />
-                                            </button>
-                                        )}
-
-                                    </div>
-
-                                    {/* Title */}
-                                    <h3 className="font-bold text-lg mt-4">
-                                        {skill.title}
-                                    </h3>
-
-                                    {/* Collapsed */}
-                                    {!isExpanded && (
-                                        <p className="mt-2 text-sm text-gray-500">
-                                            {skill.items.length} skills to learn
-                                        </p>
-                                    )}
-
-                                    {/* Expanded */}
-                                    {isExpanded && (
-                                        <div className="mt-6">
-
-                                            <p className="text-gray-500 text-sm mb-5">
-                                                Skills you should learn in this section:
-                                            </p>
-
-                                            <div className="grid sm:grid-cols-2 gap-3">
-
-                                                {skill.items.map((item) => (
-
-                                                    <div
-                                                        key={item}
-                                                        className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3"
-                                                    >
-                                                        <CheckCircle2
-                                                            size={18}
-                                                            className="text-blue-600 shrink-0"
-                                                        />
-
-                                                        <span className="text-sm text-gray-700">
-                                                            {item}
-                                                        </span>
-                                                    </div>
-
-                                                ))}
-
-                                            </div>
-
-                                        </div>
-                                    )}
-
-                                </div>
-                            );
-                        })}
-
-                    </div>
-                </div>
+                   
 
 
                 {/* ================= 03 GATE ================= */}

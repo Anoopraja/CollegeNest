@@ -16,11 +16,13 @@ import Counselling from './Components/pages/Councling'
 import ChatLive from './Components/pages/ChatLive'
 import Roadmap from './Components/pages/Roadmap'
 import VerifyEmail from './Components/pages/userVerification/userVerification'
+import ScrollToTop from './scrollTop'
 
 
 function App() {
   return (
     <>
+    <ScrollToTop />
      <Navbar />
       <Routes>
         <Route path='/login' element={<Login />} />
