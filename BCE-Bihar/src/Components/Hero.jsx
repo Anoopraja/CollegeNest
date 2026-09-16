@@ -509,9 +509,9 @@ function Hero() {
         {/* ========================================= */}
 
         <section className="relative min-h-[calc(100vh-80px)] flex items-center">
-          <div className="max-w-7xl mx-auto w-full px-5 sm:px-8 lg:px-10 py-16 lg:py-24">
+          <div className="max-w-7xl mx-auto w-full px-5 sm:px-8 lg:px-10 py-10 lg:py-10">
 
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 justify-center items-center">
 
 
               {/* LEFT */}
@@ -660,7 +660,7 @@ function Hero() {
 
               {/* RIGHT IMAGE */}
 
-              <div className="relative">
+              <div className="relative hidden lg:block">
 
                 <div
                   ref={imageWrapRef}

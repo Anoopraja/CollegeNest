@@ -15,6 +15,8 @@ import CollegeInfo from './Components/pages/Collegeinfo'
 import Counselling from './Components/pages/Councling'
 import ChatLive from './Components/pages/ChatLive'
 import Roadmap from './Components/pages/Roadmap'
+import Syllabus from './Components/pages/Syllabus'
+import Skills from './Components/pages/Skills'
 import VerifyEmail from './Components/pages/userVerification/userVerification'
 import ScrollToTop from './scrollTop'
 
@@ -35,10 +37,12 @@ function App() {
         <Route path='/contact' element={<Contact />} />
         <Route path='/counselling' element={<Counselling />} />
         <Route path='/roadmap' element={<Roadmap />} />
+        <Route path='/skills' element={<Skills />} />
+        <Route path='/syllabus' element={<Syllabus />} />
         <Route path='/chat' element={<ChatLive />} />
         <Route path='/profile/:id' element={<Profile />} />
         <Route path='/admin' element={<AdminProfile />} />
-        <Route path="/verify" element={<VerifyEmail />} />
+        {/* <Route path="/verify" element={<VerifyEmail />} /> */}
       </Routes>
       <Footer />
     </>

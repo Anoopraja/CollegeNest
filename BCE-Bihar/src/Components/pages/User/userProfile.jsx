@@ -257,7 +257,7 @@ function Profile() {
                     )}
                   </div>
 
-                  <p className="mt-1 break-all text-sm text-gray-500">
+                  <p className="mt-1 break-all mt-10 text-sm text-gray-500">
                     {user.email}
                   </p>
 

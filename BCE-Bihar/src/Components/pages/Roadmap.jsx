@@ -14,7 +14,7 @@ const Roadmap = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 pb-25 pt-5 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 px-4 py-15 sm:px-6 lg:px-8">
 
       {/* ================= HEADER ================= */}
       <div className="max-w-6xl mx-auto">
@@ -68,7 +68,7 @@ const Roadmap = () => {
 
           {/* ================= SYLLABUS ================= */}
           <div
-            onClick={() => navigate("/roadmap/syllabus")}
+            onClick={() => navigate("/syllabus")}
             className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
           >
             {/* Icon + Arrow */}
@@ -117,7 +117,7 @@ const Roadmap = () => {
 
           {/* ================= SKILLS ================= */}
           <div
-            onClick={() => navigate("/roadmap/skills")}
+            onClick={() => navigate("/skills")}
             className="group cursor-pointer rounded-2xl border border-gray-200 bg-white p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
           >
             {/* Icon + Arrow */}
