@@ -35,7 +35,7 @@ const branch = ["CSE", "ECE", "ME", "CE", "EE"];
 
 const Community = () => {
   return (
-    <section className="bg-slate-50 min-h-screen py-8 sm:py-12">
+    <section className="bg-slate-50 mb-10 min-h-screen py-8 sm:py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Branch Navigation */}

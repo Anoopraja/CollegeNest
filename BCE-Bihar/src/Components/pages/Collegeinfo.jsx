@@ -182,7 +182,7 @@ const CollegeInfo = () => {
   }
 
   return (
-    <section className="bg-white min-h-screen">
+    <section className="bg-white pb-10 min-h-screen">
 
       {/* Hero Banner */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6">

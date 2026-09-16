@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import authService from "../appWrite/appwrite.js";
 import { Eye, EyeOff } from "lucide-react";
+// import { VerifyEmail } from "../pages/userVerification/userVerification.jsx";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -32,6 +33,9 @@ const Signup = () => {
         authService.login({ email: email.trim(), password });
       }
       // setError("");
+      await authService.sendVerification();
+      VerifyEmail();
+
       navigate("/");
     } catch (e) {
       console.error(e);
