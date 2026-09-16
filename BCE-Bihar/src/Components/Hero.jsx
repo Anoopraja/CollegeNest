@@ -511,7 +511,7 @@ function Hero() {
         <section className="relative min-h-[calc(100vh-80px)] flex items-center">
           <div className="max-w-7xl mx-auto w-full px-5 sm:px-8 lg:px-10 py-10 lg:py-10">
 
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 justify-center items-center">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 justify-center items-start ">
 
 
               {/* LEFT */}
@@ -535,7 +535,9 @@ function Hero() {
                   className="hero-in text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.05]"
                   style={{ animationDelay: "0.12s" }}
                 >
-                  Discover better colleges.
+                  Discover Your Colleges.
+                  <br />
+                  Choose the Right Path.
                   <span className="block text-blue-600 mt-2">
                     Build brighter futures.
                   </span>
