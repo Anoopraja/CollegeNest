@@ -109,7 +109,7 @@ const WhereToStudy = () => {
               type="button"
               className="mt-5 text-sm font-semibold text-blue-600"
             >
-              Explore →
+              Explore -→
             </button>
           </div>
 
