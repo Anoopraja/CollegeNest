@@ -7,6 +7,8 @@ import {
   Clock3,
   Award,
 } from "lucide-react";
+import WhereToStudy from "./WhereToStudy";
+
 
 const syllabusData = {
   1: {
@@ -457,6 +459,7 @@ const Syllabus = () => {
           </div>
         )}
       </section>
+      <WhereToStudy />
     </main>
   );
 };

@@ -37,19 +37,19 @@ const skillDomains = [
       "Frontend",
       "Backend",
       "Full Stack",
-    //   "HTML",
-    //   "CSS",
-    //   "JavaScript",
-    //   "TypeScript",
-    //   "React",
-    //   "Next.js",
-    //   "Node.js",
-    //   "Express",
-    //   "REST APIs",
-    //   "PostgreSQL",
-    //   "MongoDB",
-    //   "Git",
-    //   "Deployment",
+      //   "HTML",
+      //   "CSS",
+      //   "JavaScript",
+      //   "TypeScript",
+      //   "React",
+      //   "Next.js",
+      //   "Node.js",
+      //   "Express",
+      //   "REST APIs",
+      //   "PostgreSQL",
+      //   "MongoDB",
+      //   "Git",
+      //   "Deployment",
     ],
     careers: [
       "Frontend Developer",
@@ -57,6 +57,7 @@ const skillDomains = [
       "Full Stack Developer",
       "Web Engineer",
     ],
+    playlist: ["https://www.youtube.com/playlist?list=PLMYMBJaozz3k", "https://www.youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige", "https://www.youtube.com/playlist?list=PLu71SKxNbfoBGh_8p_NS-ZAh6v7HhYqHW"],
   },
 
   {
@@ -66,16 +67,16 @@ const skillDomains = [
     description:
       "Create Android and iOS applications using modern mobile development technologies.",
     skills: [
-    //   "Android",
-    //   "iOS",
+      //   "Android",
+      //   "iOS",
       "Java",
       "Kotlin",
       "Dart",
       "Flutter",
       "React Native",
       "Firebase",
-    //   "REST APIs",
-    //   "Mobile UI",
+      //   "REST APIs",
+      //   "Mobile UI",
       "App Architecture",
     ],
     careers: [
@@ -85,6 +86,7 @@ const skillDomains = [
       "React Native Developer",
       "Mobile Engineer",
     ],
+     playlist: ["https://www.youtube.com/playlist?list=PLMYMBJaozz3k",],
   },
 
   {
@@ -847,6 +849,19 @@ const Skills = () => {
                   ))}
                 </div>
               </div>
+              <div className="mt-8 pt-7 border-t border-gray-100 flex flex-wrap gap-2">
+                {selectedDomain.playlist.map((playlist) => (
+                  <a
+                    href={playlist}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 transition"
+                  >
+                    Watch Playlist
+                  </a>
+                ))}
+              </div>
 
               {/* Career Opportunities */}
 
@@ -874,7 +889,6 @@ const Skills = () => {
                   ))}
                 </div>
               </div>
-
               {/* Learning Order */}
 
               <div className="mt-8 pt-7 border-t border-gray-100">

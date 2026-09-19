@@ -39,7 +39,7 @@ const Community = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Branch Navigation */}
-        <div className="mb-12">
+        {/* <div className="mb-12">
           <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
             {branch.map((item) => (
               <NavLink
@@ -57,7 +57,7 @@ const Community = () => {
               </NavLink>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Hero */}
         <div className="text-center max-w-3xl mx-auto mb-12">

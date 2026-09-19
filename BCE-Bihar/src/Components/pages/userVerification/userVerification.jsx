@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import authService from "../../appWrite/appwrite";
 
@@ -7,7 +7,7 @@ function VerifyEmail() {
     const navigate = useNavigate();
     const [message, setMessage] = useState("Verifying...");
 
-    useEffect(() => {
+    // useEffect(() => {
         const userId = searchParams.get("userId");
         const secret = searchParams.get("secret");
 
@@ -28,7 +28,7 @@ function VerifyEmail() {
                 console.error(error);
                 setMessage("Verification failed or link expired.");
             });
-    }, []);
+    // }, []);
 
     return (
         <div className="min-h-screen flex items-center justify-center">
