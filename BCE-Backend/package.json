@@ -1,0 +1,21 @@
+{
+  "name": "bce-backend",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Anoop prajapati",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^18.0.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.10.1",
+    "nodemon": "^3.1.14"
+  }
+}
