@@ -199,7 +199,7 @@ const Colleges = () => {
 
                 <NavLink to={`/college/${item.id}`}>
                   <button className="cn-press mt-6 w-full py-2 rounded-xl bg-blue-600 text-white hover:bg-slate-800">
-                    View Details
+                    View Detail
                   </button>
                 </NavLink>
               </div>
