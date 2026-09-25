@@ -22,7 +22,19 @@ const writeReviewByCollegeId = async (req,res)=>{
     }
 }
 
+const getReviewById = async (req,res)=>{
+    const { collegeId } = req.params
+    const reviewById = await Review.find({ collegeId })
+    return res.status(200).json({
+        success:true,
+        message:"ye rha apka falane college ka review",
+        data: reviewById
+    })
+
+}
+
 export {
+    getReviewById,
     writeReviewByCollegeId,
 }
 
