@@ -3,14 +3,18 @@ import userRoute from "./Routes/user.route.js"
 import collegeRoute from "./Routes/college.route.js"
 import reviewRoute from "./Routes/review.route.js"
 import cookieParser from "cookie-parser"
+import cors from "cors"
+import imageRoute from "./Routes/image.route.js"
 
 const app = express()
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.use("/user", userRoute)
 app.use("/college", collegeRoute)
 app.use("/review",reviewRoute)
+app.use("/image", imageRoute)
 
 
 export default app;

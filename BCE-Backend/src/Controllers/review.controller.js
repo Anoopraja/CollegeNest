@@ -32,7 +32,7 @@ const getAllReview = async (req,res)=>{
 
 const getReviewById = async (req, res) => {
     const { collegeId } = req.params
-    const reviewById = await Review.find({ collegeId })
+    const reviewById = await Review.find({ collegeId }).populate("userId", "username");
     return res.status(200).json({
         success: true,
         message: "ye rha apka falane college ka review",

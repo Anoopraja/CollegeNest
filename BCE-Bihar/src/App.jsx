@@ -17,7 +17,6 @@ import ChatLive from './Components/pages/ChatLive'
 import Roadmap from './Components/pages/Roadmap'
 import Syllabus from './Components/pages/Syllabus'
 import Skills from './Components/pages/Skills'
-import VerifyEmail from './Components/pages/userVerification/userVerification'
 import ScrollToTop from './scrollTop'
 import WhereToStudy from './Components/pages/WhereToStudy'
 
@@ -44,7 +43,6 @@ function App() {
         <Route path='/profile/:id' element={<Profile />} />
         <Route path='/admin' element={<AdminProfile />} />
         <Route path='/wheretostudy' element={<WhereToStudy />} />
-        {/* <Route path="/verify" element={<VerifyEmail />} /> */}
       </Routes>
       <Footer />
     </>

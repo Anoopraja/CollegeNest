@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import authService from "../appWrite/appwrite.js";
+import api from "../api/api.js";
 import { Eye, EyeOff } from "lucide-react";
 // import { VerifyEmail } from "../pages/userVerification/userVerification.jsx";
 
@@ -24,22 +24,13 @@ const Signup = () => {
     }
 
     try {
-      const userAccount = await authService.createAccount({
-        email,
-        password,
-        name: fullName,
-      });
-      if (userAccount) {
-        authService.login({ email: email.trim(), password });
-      }
-      // setError("");
-      await authService.sendVerification();
-      VerifyEmail();
-
+      const username = fullName.trim().toLowerCase().replace(/[^a-z0-9_]+/g, "_").replace(/^_|_$/g, "");
+      await api.post("/user/register", { username, gmail: email.trim(), password });
+      await api.post("/user/login", { gmail: email.trim(), password });
       navigate("/");
     } catch (e) {
       console.error(e);
-      setError("Signup failed. Please try again.");
+      setError(e.response?.data?.message || "Signup failed. Please try again.");
     }
   }
 

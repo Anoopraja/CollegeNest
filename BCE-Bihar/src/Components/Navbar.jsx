@@ -1,6 +1,6 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import authService from "./appWrite/appwrite.js";
+import api from "./api/api.js";
 import {
   House,
   User,
@@ -21,8 +21,8 @@ const Navbar = () => {
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
-        const currentUser = await authService.getCurrentUser();
-        setUser(currentUser);
+        const { data } = await api.get("/user/me");
+        setUser(data.user);
       } catch (error) {
         setUser(null);
       }
@@ -49,7 +49,7 @@ const Navbar = () => {
   // Logout
   const handleLogout = async () => {
     try {
-      await authService.logout();
+      await api.post("/user/logout");
 
       setUser(null);       // UI immediately update karega
       setOpen(false);

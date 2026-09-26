@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 // import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import authService from "../appWrite/appwrite.js";
+import api from "../api/api.js";
 import { Eye, EyeOff } from "react-feather";
 
 
@@ -17,13 +17,13 @@ function Login() {
   const login = async (event) => {
     event.preventDefault();
     try {
-      const session = await authService.login({ email: email.trim(), password });
+      await api.post("/user/login", { gmail: email.trim(), password });
       setError("");
       navigate("/");
     } catch (error) {
       console.error("LOGIN FAILED:", error);
       navigate("/login");
-      setError(error.message || "Login failed");
+      setError(error.response?.data?.message || "Login failed");
     }
   };
 
