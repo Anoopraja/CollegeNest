@@ -2,9 +2,9 @@ import express from "express";
 import userRoute from "./Routes/user.route.js"
 import collegeRoute from "./Routes/college.route.js"
 import reviewRoute from "./Routes/review.route.js"
+import imageRoute from "./Routes/image.route.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
-import imageRoute from "./Routes/image.route.js"
 
 const app = express()
 app.use(express.json());
