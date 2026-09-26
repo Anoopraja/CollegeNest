@@ -49,7 +49,7 @@ function Profile() {
       const currentUser = data.user;
 
       if (!currentUser) {
-        navigate("/login");
+        navigate("/user/login");
         return;
       }
 
@@ -194,7 +194,7 @@ function Profile() {
     try {
       await api.post("/user/logout");
 
-      navigate("/login");
+      navigate("/user/login");
     } catch (error) {
       console.error("Logout failed:", error);
 
