@@ -127,8 +127,8 @@ const userLogin = async (req, res) => {
         // TOKEN COOKIE ME SAVE
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
@@ -160,9 +160,9 @@ const updateProfile = async (req, res) => {
         const updateData = req.body;
 
         const user = await User.findByIdAndUpdate(
-           { _id: id },
-    updateData,
-    { returnDocument: "after" }
+            { _id: id },
+            updateData,
+            { returnDocument: "after" }
         );
 
         if (!user) {
@@ -223,16 +223,18 @@ const getCurrentUser = async (req, res) => {
             return res.status(401).json({ success: false, message: "User not found" });
         }
 
-        return res.status(200).json({ success: true, user: {
-            id: user._id,
-            username: user.username,
-            email: user.gmail,
-            college: user.college,
-            branch: user.branch,
-            year: user.year,
-            bio: user.bio,
-            profileImage: user.profileImage
-        }});
+        return res.status(200).json({
+            success: true, user: {
+                id: user._id,
+                username: user.username,
+                email: user.gmail,
+                college: user.college,
+                branch: user.branch,
+                year: user.year,
+                bio: user.bio,
+                profileImage: user.profileImage
+            }
+        });
     } catch (error) {
         return res.status(401).json({ success: false, message: "Invalid session" });
     }
