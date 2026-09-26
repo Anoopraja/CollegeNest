@@ -7,6 +7,11 @@ const imageSchema = new mongoose.Schema(
             required: true
         },
 
+        collegeId: {
+            type: String,
+            required: true
+        },
+
         publicId: {
             type: String,
             required: true
@@ -15,7 +20,7 @@ const imageSchema = new mongoose.Schema(
         uploadedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: false
         }
     },
     {

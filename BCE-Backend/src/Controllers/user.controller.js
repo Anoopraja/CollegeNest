@@ -160,9 +160,9 @@ const updateProfile = async (req, res) => {
         const updateData = req.body;
 
         const user = await User.findByIdAndUpdate(
-            id,
-            updateData,
-            { new: true }
+           { _id: id },
+    updateData,
+    { returnDocument: "after" }
         );
 
         if (!user) {
@@ -210,4 +210,32 @@ const userLogout = async (req, res) => {
     }
 }
 
-export { registerUser, getAllUser, userLogin, userLogout, getUserById, updateProfile }
+const getCurrentUser = async (req, res) => {
+    try {
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ success: false, message: "Not authenticated" });
+        }
+
+        const { userId } = jwt.verify(token, process.env.SECRET_KEY);
+        const user = await User.findById(userId).select("-password");
+        if (!user) {
+            return res.status(401).json({ success: false, message: "User not found" });
+        }
+
+        return res.status(200).json({ success: true, user: {
+            id: user._id,
+            username: user.username,
+            email: user.gmail,
+            college: user.college,
+            branch: user.branch,
+            year: user.year,
+            bio: user.bio,
+            profileImage: user.profileImage
+        }});
+    } catch (error) {
+        return res.status(401).json({ success: false, message: "Invalid session" });
+    }
+};
+
+export { registerUser, getAllUser, userLogin, userLogout, getUserById, updateProfile, getCurrentUser }
