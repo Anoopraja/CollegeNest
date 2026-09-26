@@ -47,22 +47,22 @@ const Navbar = () => {
   //   console.log("User is not logged in");
   // }
   // Logout
-  const handleLogout = async () => {
-    try {
-      await api.post("/user/logout");
+  // const handleLogout = async () => {
+  //   try {
+  //     await api.post("/user/logout");
 
-      setUser(null);       // UI immediately update karega
-      setOpen(false);
+  //     setUser(null);       // UI immediately update karega
+  //     setOpen(false);
 
-      navigate("/user/login");
-      setError(""); // Clear any previous error messages
+  //     navigate("/user/login");
+  //     setError(""); // Clear any previous error messages
 
 
-      console.log("Logged out successfully");
-    } catch (error) {
-      console.log("Logout failed:", error);
-    }
-  };
+  //     console.log("Logged out successfully");
+  //   } catch (error) {
+  //     console.log("Logout failed:", error);
+  //   }
+  // };
 
   const Navlist = {
     path: [
@@ -145,7 +145,9 @@ const Navbar = () => {
           {/* LOGGED IN */}
           {user && (
             <button
-              onClick={handleLogout}
+            
+              // onClick={handleLogout}
+              to="/user/logout"
               className="hidden lg:block bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700"
             >
               Logout
