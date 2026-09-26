@@ -27,8 +27,8 @@ function App() {
     <ScrollToTop />
      <Navbar />
       <Routes>
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
+        <Route path='/user/login' element={<Login />} />
+        <Route path='/user/register' element={<Signup />} />
         <Route index element={<Hero />} />
         <Route path='/college' element={<Colleges />} />
         <Route path="/college/:id" element={<CollegeInfo />} />
