@@ -14,7 +14,7 @@ app.use(cors({ origin: "https://collegenest.anooplofi.me", credentials: true }))
 
 app.use("/user", userRoute)
 app.use("/college", collegeRoute)
-app.use("/review",reviewRoute)
+app.use("/review",reviewRoute)  
 app.use("/image", imageRoute)
 
 

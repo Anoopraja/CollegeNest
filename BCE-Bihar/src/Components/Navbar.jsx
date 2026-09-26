@@ -54,7 +54,7 @@ const Navbar = () => {
       setUser(null);       // UI immediately update karega
       setOpen(false);
 
-      navigate("/login");
+      navigate("/user/login");
       setError(""); // Clear any previous error messages
 
 
