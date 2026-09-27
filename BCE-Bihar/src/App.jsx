@@ -17,6 +17,10 @@ import ChatLive from './Components/pages/ChatLive'
 import Roadmap from './Components/pages/Roadmap'
 import Syllabus from './Components/pages/Syllabus'
 import Skills from './Components/pages/Skills'
+<<<<<<< Updated upstream
+=======
+// import VerifyEmail from './Components/pages/userVerification/userVerification'
+>>>>>>> Stashed changes
 import ScrollToTop from './scrollTop'
 import WhereToStudy from './Components/pages/WhereToStudy'
 
