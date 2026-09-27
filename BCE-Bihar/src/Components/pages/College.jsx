@@ -3,10 +3,6 @@ import api from "../api/api.js";
 // import College from "../data/College";
 import { NavLink } from "react-router-dom";
 
-// =========================
-// LOAD GSAP
-// =========================
-
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     if (document.querySelector(`script[src="${src}"]`)) {
@@ -23,11 +19,6 @@ function loadScript(src) {
   });
 }
 
-
-// =========================
-// COLLEGES COMPONENT
-// =========================
-
 const Colleges = () => {
 
   const [search, setSearch] = useState("");
@@ -39,10 +30,6 @@ const Colleges = () => {
   const gridRef = useRef(null);
   const debounceRef = useRef(null);
 
-
-  // =========================
-  // GET COLLEGES FROM BACKEND
-  // =========================
 
   useEffect(() => {
 
@@ -454,7 +441,7 @@ const Colleges = () => {
                 {/* DETAIL */}
 
                 <NavLink
-                  to={`/college/${item._id}`}
+                  to={`/college/${item.slug}`}
                 >
 
                   <button

@@ -3,10 +3,12 @@ import Review from "../Models/review.model.js"
 
 const writeReviewByCollegeId = async (req, res) => {
     try {
-        const { rating, review, userId, collegeId } = req.body
+        const { username, rating, review, userId, collegeId } = req.body
         const addReview = await Review.create({
-            rating, review, userId, collegeId
+            username, rating, review, userId, collegeId
         })
+               console.log("REVIEW BODY:", req.body);
+
 
         return res.status(201).json({
             success: true,
@@ -21,11 +23,11 @@ const writeReviewByCollegeId = async (req, res) => {
         })
     }
 }
-const getAllReview = async (req,res)=>{
+const getAllReview = async (req, res) => {
     cosnt = await Review.find()
     return res.status(200).json({
-        success:true,
-        message:"ye rha apka pura review jitna db me hai"
+        success: true,
+        message: "ye rha apka pura review jitna db me hai"
     })
 }
 
@@ -47,7 +49,7 @@ const deleteReviewById = async (req, res) => {
         const { _id } = req.params
 
         const deleteReview = await Review.deleteOne({ _id })
-         if (!deleteReview) {
+        if (!deleteReview) {
             return res.status(404).json({
                 success: false,
                 message: "Review nahi mila"

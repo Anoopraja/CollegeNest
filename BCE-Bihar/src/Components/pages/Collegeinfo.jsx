@@ -32,7 +32,7 @@ const CollegeInfo = () => {
 
     const [reviews, setReviews] = useState([]);
     const [reviewText, setReviewText] = useState("");
-    const [rating, setRating] = useState(5);
+    const [rating, setRating] = useState(0);
     const [submittingReview, setSubmittingReview] = useState(false);
 
 
@@ -115,7 +115,7 @@ const CollegeInfo = () => {
 
                 alert("Please login first");
 
-                navigate("/login");
+                navigate("/user/login");
 
                 return;
 
@@ -133,7 +133,7 @@ const CollegeInfo = () => {
 
             alert("Please login first");
 
-            navigate("/login");
+            navigate("/user/login");
 
         }
 
@@ -179,13 +179,9 @@ const CollegeInfo = () => {
 
             // 2. Save image URL in backend
             await api.post("/image", {
-
                 collegeId: college._id,
-
                 imageUrl: uploadedImageUrl,
-
             });
-
 
             // 3. Display uploaded image
             setImageUrl(uploadedImageUrl);
@@ -234,33 +230,28 @@ const CollegeInfo = () => {
     // =========================
 
     useEffect(() => {
-
         const getImages = async () => {
-
             try {
-
-                if (!id) return;
+                if (!college?._id) return;
 
                 const { data } = await api.get(
-                    `/image/${id}`
+                    `/image/${college._id}`
                 );
+
+                console.log("Images response:", data);
 
                 setImages(data.data || []);
 
             } catch (error) {
-
                 console.error(
                     "Images fetch failed:",
-                    error
+                    error.response?.data || error
                 );
-
             }
-
         };
 
         getImages();
-
-    }, [id]);
+    }, [college?._id]);
 
 
     // =========================
@@ -276,7 +267,7 @@ const CollegeInfo = () => {
                 if (!id) return;
 
                 const { data } = await api.get(
-                    `/review/${id}`
+                    `/review/${college?._id}`
                 );
 
                 console.log(
@@ -297,9 +288,10 @@ const CollegeInfo = () => {
 
         };
 
+
         getReviews();
 
-    }, [id]);
+    }, [college?._id]);
 
 
     // =========================
@@ -321,20 +313,15 @@ const CollegeInfo = () => {
 
 
         if (!rating) {
-
             alert("Please select a rating");
-
             return;
 
         }
 
 
         if (!college?._id) {
-
             alert("College data not loaded");
-
             return;
-
         }
 
 
@@ -355,7 +342,7 @@ const CollegeInfo = () => {
 
                 alert("Please login first");
 
-                navigate("/login");
+                navigate("/user/login");
 
                 return;
 
@@ -374,14 +361,10 @@ const CollegeInfo = () => {
                     "/review/write",
                     {
 
-                        // MongoDB College _id
                         collegeId: college._id,
-
-                        // MongoDB User _id
                         userId: user._id || user.id,
-
+                        username: user.username || user.name || "Anonymous User",
                         rating: Number(rating),
-
                         review: reviewText.trim(),
 
                     }
@@ -392,6 +375,13 @@ const CollegeInfo = () => {
                 "Review response:",
                 reviewResponse
             );
+            console.log("REVIEW DATA:", {
+                collegeId: college._id,
+                userId: user._id || user.id,
+                username: user.username || user.name || "Anonymous User",
+                rating: Number(rating),
+                review: reviewText.trim(),
+            });
 
 
             const newReview =
@@ -413,7 +403,6 @@ const CollegeInfo = () => {
             setRating(5);
 
             setStudentName(
-                user.name ||
                 user.username ||
                 "Anonymous User"
             );
@@ -1185,11 +1174,10 @@ const CollegeInfo = () => {
                                                 onClick={() =>
                                                     setRating(star)
                                                 }
-                                                className={`text-2xl transition ${
-                                                    star <= rating
-                                                        ? "text-yellow-400"
-                                                        : "text-gray-300"
-                                                }`}
+                                                className={`text-2xl transition ${star <= rating
+                                                    ? "text-yellow-400"
+                                                    : "text-gray-300"
+                                                    }`}
                                             >
                                                 ★
                                             </button>
@@ -1272,27 +1260,16 @@ const CollegeInfo = () => {
 
                                             <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
 
-                                                {(
-                                                    review.userId?.username ||
-                                                    review.userId?.name ||
-                                                    review.name ||
-                                                    "U"
-                                                )
+                                                {(review.username || "U")
                                                     .charAt(0)
                                                     .toUpperCase()}
-
                                             </div>
 
 
                                             <div className="min-w-0">
 
                                                 <p className="font-semibold text-gray-900 truncate">
-
-                                                    {review.userId?.username ||
-                                                        review.userId?.name ||
-                                                        review.name ||
-                                                        "Anonymous User"}
-
+                                                    {reviews.username }
                                                 </p>
 
 
@@ -1311,15 +1288,15 @@ const CollegeInfo = () => {
 
                                             {review.createdAt
                                                 ? new Date(
-                                                      review.createdAt
-                                                  ).toLocaleDateString(
-                                                      "en-IN",
-                                                      {
-                                                          day: "2-digit",
-                                                          month: "short",
-                                                          year: "numeric",
-                                                      }
-                                                  )
+                                                    review.createdAt
+                                                ).toLocaleDateString(
+                                                    "en-IN",
+                                                    {
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "numeric",
+                                                    }
+                                                )
                                                 : ""}
 
                                         </span>
@@ -1338,14 +1315,13 @@ const CollegeInfo = () => {
 
                                                     <span
                                                         key={star}
-                                                        className={`text-lg sm:text-xl ${
-                                                            star <=
+                                                        className={`text-lg sm:text-xl ${star <=
                                                             Number(
                                                                 review.rating
                                                             )
-                                                                ? "text-yellow-400"
-                                                                : "text-gray-200"
-                                                        }`}
+                                                            ? "text-yellow-400"
+                                                            : "text-gray-200"
+                                                            }`}
                                                     >
                                                         ★
                                                     </span>

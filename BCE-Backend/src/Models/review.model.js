@@ -8,6 +8,13 @@ const reviewSchema = new mongoose.Schema(
             required: true
         },
 
+        username:{
+            type:String,
+            ref:"username",
+            require:true,
+            trim:true
+        },
+
         collegeId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "College",
