@@ -52,22 +52,6 @@ const CollegeInfo = () => {
 
                 console.log("Single college response:", response.data.data);
 
-                /*
-                    Expected backend response:
-
-                    {
-                        success: true,
-                        college: {...}
-                    }
-
-                    OR
-
-                    {
-                        success: true,
-                        data: {...}
-                    }
-                */
-
                 const collegeData =
                     response.data.college ||
                     response.data.data;
@@ -260,39 +244,33 @@ const CollegeInfo = () => {
 
     useEffect(() => {
 
-        const getReviews = async () => {
+    const getReviews = async () => {
 
-            try {
+        try {
 
-                if (!id) return;
+            if (!college?._id) return;
 
-                const { data } = await api.get(
-                    `/review/${college?._id}`
-                );
+            const { data } = await api.get(
+                `/review/${college._id}`
+            );
 
-                console.log(
-                    "Reviews response:",
-                    data
-                );
+            console.log("Reviews response:", data);
 
-                setReviews(data.data || []);
+            setReviews(data.data || []);
 
-            } catch (error) {
+        } catch (error) {
 
-                console.error(
-                    "Reviews fetch failed:",
-                    error
-                );
+            console.error(
+                "Reviews fetch failed:",
+                error.response?.data || error
+            );
 
-            }
+        }
+    };
 
-        };
+    getReviews();
 
-
-        getReviews();
-
-    }, [college?._id]);
-
+}, [college?._id]);
 
     // =========================
     // REVIEW SUBMIT
@@ -1260,16 +1238,16 @@ const CollegeInfo = () => {
 
                                             <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
 
-                                                {(review.username || "U")
+                                                {(review.username)
                                                     .charAt(0)
                                                     .toUpperCase()}
                                             </div>
 
 
-                                            <div className="min-w-0">
+                                            <div className="min-w-auto">
 
                                                 <p className="font-semibold text-gray-900 truncate">
-                                                    {reviews.username }
+                                                    {review.username}
                                                 </p>
 
 
