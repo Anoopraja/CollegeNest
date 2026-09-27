@@ -9,7 +9,7 @@ route.get("/alluser", getAllUser);
 route.post("/login", userLogin);
 route.post("/logout", userLogout);
 route.get("/me", getCurrentUser);
-route.get("/:username", getUserById);
+// route.get("/:username", getUserById);
 route.post("/updateprofile/:id", updateProfile);
 
 

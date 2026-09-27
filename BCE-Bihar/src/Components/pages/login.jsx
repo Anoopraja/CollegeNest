@@ -22,7 +22,7 @@ function Login() {
       navigate("/");
     } catch (error) {
       console.error("LOGIN FAILED:", error);
-      navigate("/user/login");
+      navigate("/login");
       setError(error.response?.data?.message || "Login failed");
     }
   };

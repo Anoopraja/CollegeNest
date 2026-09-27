@@ -11,8 +11,6 @@ import {
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -46,23 +44,14 @@ const Navbar = () => {
   // if (!user) {
   //   console.log("User is not logged in");
   // }
-  // Logout
-  // const handleLogout = async () => {
-  //   try {
-  //     await api.post("/user/logout");
-
-  //     setUser(null);       // UI immediately update karega
-  //     setOpen(false);
-
-  //     navigate("/user/login");
-  //     setError(""); // Clear any previous error messages
-
-
-  //     console.log("Logged out successfully");
-  //   } catch (error) {
-  //     console.log("Logout failed:", error);
-  //   }
-  // };
+  const handleLogout = async () => {
+    try {
+      await api.post("/user/logout");
+    } finally {
+      // setUser(null);
+      navigate("/user/login");
+    }
+  };
 
   const Navlist = {
     path: [
@@ -127,14 +116,14 @@ const Navbar = () => {
           {!user && (
             <>
               <NavLink
-                to="/user/login"
+                to="/login"
                 className="hidden lg:block border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100"
               >
                 Login
               </NavLink>
 
               <NavLink
-                to="user/register"
+                to="/signup"
                 className="hidden lg:block bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800"
               >
                 Sign Up
@@ -145,22 +134,19 @@ const Navbar = () => {
           {/* LOGGED IN */}
           {user && (
             <button
-            
-              // onClick={handleLogout}
-              to="/user/logout"
+              type="button"
+              onClick={handleLogout}
               className="hidden lg:block bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700"
             >
               Logout
             </button>
-
-
           )}
 
           {/* Profile */}
           {user && (
             <NavLink
 
-              to="/profile/id:"
+              to={`/profile/${user.id}`}
             >
               <img
                 // onClick={(e) => navigate("/")}  
@@ -272,6 +258,7 @@ const Navbar = () => {
           {user ? (
             <NavLink
               to={`/profile/id:${user.name}`}
+                to={`/profile/${user.id}`}
               className={({ isActive }) =>
                 `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                   ? "bg-blue-500 text-white"
@@ -282,7 +269,7 @@ const Navbar = () => {
             </NavLink>
           ) : (
             <NavLink
-              to="/user/login"
+              to="/login"
               className={({ isActive }) =>
                 `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                   ? "bg-blue-500 text-white"

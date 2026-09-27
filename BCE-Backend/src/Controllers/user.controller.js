@@ -129,6 +129,7 @@ const userLogin = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: "none",
+            path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
@@ -193,22 +194,25 @@ const userLogout = async (req, res) => {
     try {
         res.clearCookie("token", {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            secure: true,
+            sameSite: "none",
+            path: "/"
         });
+
         return res.status(200).json({
             success: true,
             message: "Logout successful"
         });
+
     } catch (error) {
         console.log("LOGOUT ERROR:", error);
-        return res.status({
+
+        return res.status(500).json({
             success: false,
             message: error.message
-        })
+        });
     }
-}
+};
 
 const getCurrentUser = async (req, res) => {
     try {

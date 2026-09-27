@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 import api from "../../api/api.js";
-import { useNavigate } from "react-router-dom";
+import { NavLink,useNavigate } from "react-router-dom";
 
 function Profile() {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ function Profile() {
       const currentUser = data.user;
 
       if (!currentUser) {
-        navigate("/user/login");
+        navigate("/login");
         return;
       }
 
@@ -194,7 +194,7 @@ function Profile() {
     try {
       await api.post("/user/logout");
 
-      navigate("/user/login");
+      navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
 
@@ -574,6 +574,7 @@ function Profile() {
 
             {/* Logout */}
             <button
+              type="button"
               onClick={handleLogout}
               className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white px-5 py-3.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
             >
