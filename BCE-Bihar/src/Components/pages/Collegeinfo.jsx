@@ -16,6 +16,29 @@ const CollegeInfo = () => {
     const [collegeLoading, setCollegeLoading] = useState(true);
 
     // =========================
+    // EDIT COLLEGE
+    // =========================
+
+    const [editing, setEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    const [editForm, setEditForm] = useState({
+        name: "",
+        shortName: "",
+        location: "",
+        rating: "",
+        established: "",
+        type: "",
+        campus: "",
+        university: "",
+        approval: "",
+        phone: "",
+        email: "",
+        website: "",
+        about: ""
+    });
+
+    // =========================
     // GALLERY
     // =========================
 
@@ -35,6 +58,71 @@ const CollegeInfo = () => {
     const [rating, setRating] = useState(0);
     const [submittingReview, setSubmittingReview] = useState(false);
 
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+
+        setEditForm((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const startEditing = () => {
+        setEditForm({
+            name: college?.name || "",
+            shortName: college?.shortName || "",
+            location: college?.location || "",
+            rating: college?.rating ?? "",
+            established: college?.established ?? "",
+            type: college?.type || "",
+            campus: college?.campus || "",
+            university: college?.university || "",
+            approval: college?.approval || "",
+            phone: college?.phone || "",
+            email: college?.email || "",
+            website: college?.website || "",
+            about: college?.about || ""
+        });
+
+        setEditing(true);
+    };
+
+    const updateCollege = async () => {
+        try {
+            if (!college?._id) {
+                alert("College ID not found");
+                return;
+            }
+
+            setSaving(true);
+
+            const { data } = await api.post(
+                `/college/update/${college._id}`,
+                {
+                    ...editForm,
+                    rating: Number(editForm.rating),
+                    established: Number(editForm.established)
+                }
+            );
+
+            console.log("Updated college:", data);
+
+            const updatedCollege = data.college || data.data;
+
+            if (updatedCollege) {
+                setCollege(updatedCollege);
+            }
+
+            setEditing(false);
+            alert("College updated successfully");
+
+        } catch (error) {
+            console.error("College update failed:", error);
+            alert(error.response?.data?.message || "College update failed");
+        } finally {
+            setSaving(false);
+        }
+    };
 
     // =========================
     // GET SINGLE COLLEGE
@@ -57,6 +145,24 @@ const CollegeInfo = () => {
                     response.data.data;
 
                 setCollege(collegeData || null);
+
+                if (collegeData) {
+                    setEditForm({
+                        name: collegeData.name || "",
+                        shortName: collegeData.shortName || "",
+                        location: collegeData.location || "",
+                        rating: collegeData.rating ?? "",
+                        established: collegeData.established ?? "",
+                        type: collegeData.type || "",
+                        campus: collegeData.campus || "",
+                        university: collegeData.university || "",
+                        approval: collegeData.approval || "",
+                        phone: collegeData.phone || "",
+                        email: collegeData.email || "",
+                        website: collegeData.website || "",
+                        about: collegeData.about || ""
+                    });
+                }
 
             } catch (error) {
 
@@ -244,33 +350,33 @@ const CollegeInfo = () => {
 
     useEffect(() => {
 
-    const getReviews = async () => {
+        const getReviews = async () => {
 
-        try {
+            try {
 
-            if (!college?._id) return;
+                if (!college?._id) return;
 
-            const { data } = await api.get(
-                `/review/${college._id}`
-            );
+                const { data } = await api.get(
+                    `/review/${college._id}`
+                );
 
-            console.log("Reviews response:", data);
+                console.log("Reviews response:", data);
 
-            setReviews(data.data || []);
+                setReviews(data.data || []);
 
-        } catch (error) {
+            } catch (error) {
 
-            console.error(
-                "Reviews fetch failed:",
-                error.response?.data || error
-            );
+                console.error(
+                    "Reviews fetch failed:",
+                    error.response?.data || error
+                );
 
-        }
-    };
+            }
+        };
 
-    getReviews();
+        getReviews();
 
-}, [college?._id]);
+    }, [college?._id]);
 
     // =========================
     // REVIEW SUBMIT
@@ -524,6 +630,8 @@ const CollegeInfo = () => {
 
                             </div>
 
+
+
                         </div>
 
                     </div>
@@ -538,6 +646,110 @@ const CollegeInfo = () => {
             ========================= */}
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+
+                {/* =========================
+                    EDIT COLLEGE
+                ========================= */}
+
+                {editing && (
+                    <div className="mb-10 bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-lg">
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900">
+                                    Edit College
+                                </h2>
+                                <p className="text-sm text-gray-500 mt-1">
+                                    Update college information
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => setEditing(false)}
+                                className="text-gray-500 hover:text-gray-900 text-2xl"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-5">
+                            {[
+                                ["name", "College Name", "text"],
+                                ["shortName", "Short Name", "text"],
+                                ["location", "Location", "text"],
+                                ["rating", "Rating", "number"],
+                                ["established", "Established", "number"],
+                                ["type", "College Type", "text"],
+                                ["campus", "Campus", "text"],
+                                ["university", "University", "text"],
+                                ["approval", "Approval", "text"],
+                                ["phone", "Phone", "text"],
+                                ["email", "Email", "email"],
+                                ["website", "Website", "text"]
+                            ].map(([name, label, type]) => (
+                                <div key={name}>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        {label}
+                                    </label>
+                                    <input
+                                        type={type}
+                                        name={name}
+                                        value={editForm[name]}
+                                        onChange={handleEditChange}
+                                        min={name === "rating" ? "0" : undefined}
+                                        max={name === "rating" ? "5" : undefined}
+                                        step={name === "rating" ? "0.1" : undefined}
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-5">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                About College
+                            </label>
+                            <textarea
+                                name="about"
+                                value={editForm.about}
+                                onChange={handleEditChange}
+                                rows="5"
+                                className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                            />
+                        </div>
+
+                        <div className="flex gap-3 mt-6">
+                            <button
+                                type="button"
+                                onClick={updateCollege}
+                                disabled={saving}
+                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                            >
+                                {saving ? "Updating..." : "Update College"}
+                            </button>
+
+
+
+
+                            <button
+                                type="button"
+                                onClick={() => setEditing(false)}
+                                disabled={saving}
+                                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition disabled:opacity-50"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
+                <button
+                    type="button"
+                    onClick={startEditing}
+                    className="shrink-0 bg-white text-gray-900 px-4 py-2.5 mb-2 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition"
+                >
+                    ✏️ Edit
+                </button>
 
 
                 {/* QUICK INFO */}

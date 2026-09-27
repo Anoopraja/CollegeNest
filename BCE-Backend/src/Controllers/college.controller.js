@@ -49,9 +49,7 @@ const getCollegeById = async (req, res) => {
 };
 
 const addCollege = async (req, res) => {
-
     try {
-
         const {                
                 id,
                 name,
@@ -77,10 +75,7 @@ const addCollege = async (req, res) => {
                 about,
                 branches,
                 facilities,
-
-
         } = req.body
-
         const addCollege = await College.create({
                 id,
                 name,
@@ -119,43 +114,40 @@ const addCollege = async (req, res) => {
             message: "kuch to garbar hai bhaiya"
         })
     }
-
-
 }
 
-// const updateCollegeData = async (req, res) => {
-//     try {
+const updateCollegeData = async (req, res) => {
+    try {
 
-//         const { id } = req.params;
+        const { id } = req.params;
 
-//         const updatedCollege = await College.findByIdAndUpdate(
-//             id,
-//             req.body,
-//             {
-//                 new: true,
-//                 runValidators: true
-//             }
-//         );
+        const updatedCollege = await College.findByIdAndUpdate(
+            id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
 
-//         if(!updatedCollege){
-//            return res.status(400)({
-//             success:false,
-//             message:"nhi hai college list me"
-//            }) 
-//         }
-
-//     }
-//     catch (err) {
-//         return res.status(400).json({
-//             success: false,
-//             message: "kuch to garbar hai daya"
-//         })
-//     }
-// }
+        if(!updatedCollege){
+           return res.status(400).json({
+            success:false,
+            message:"nhi hai college list me"
+           }) 
+        }
+    }
+    catch (err) {
+        return res.status(400).json({
+            success: false,
+            message: "kuch to garbar hai daya"
+        })
+    }
+}
 
 export {
     addCollege, 
-    // updateCollegeData,
+    updateCollegeData,
     getCollegeById,
     getAllCollege
 }
