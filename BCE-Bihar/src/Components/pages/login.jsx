@@ -22,7 +22,7 @@ function Login() {
       navigate("/");
     } catch (error) {
       console.error("LOGIN FAILED:", error);
-      navigate("/login");
+      navigate("/user/login");
       setError(error.response?.data?.message || "Login failed");
     }
   };
@@ -128,7 +128,7 @@ function Login() {
         <p className="text-center text-sm text-gray-600 mt-6">
           Don't have an account?{" "}
           <Link
-            to="/signup"
+            to="/user/register"
             className="text-blue-700 font-medium hover:underline"
           >
             Sign Up
