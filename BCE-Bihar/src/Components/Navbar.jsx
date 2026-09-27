@@ -116,14 +116,14 @@ const Navbar = () => {
           {!user && (
             <>
               <NavLink
-                to="/login"
+                to="/user/login"
                 className="hidden lg:block border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100"
               >
                 Login
               </NavLink>
 
               <NavLink
-                to="/signup"
+                to="user/register"
                 className="hidden lg:block bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800"
               >
                 Sign Up
@@ -257,7 +257,7 @@ const Navbar = () => {
           {/* Profile */}
           {user ? (
             <NavLink
-              to={`/profile/id:${user.name}`}
+              // to={`/profile/id:${user.name}`}
                 to={`/profile/${user.id}`}
               className={({ isActive }) =>
                 `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
