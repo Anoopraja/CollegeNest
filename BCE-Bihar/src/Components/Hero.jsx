@@ -1309,7 +1309,7 @@ function Hero() {
                 </a>
 
                 <a
-                  href="/colleges"
+                  href="/college"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white border border-gray-200 rounded-xl font-semibold hover:border-blue-200 transition"
                 >
                   Explore colleges
