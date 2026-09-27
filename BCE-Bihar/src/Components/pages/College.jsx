@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-<<<<<<< Updated upstream
-import api from "../api/api";
-=======
 import api from "../api/api.js";
-import College from "../data/College";
->>>>>>> Stashed changes
+// import College from "../data/College";
 import { NavLink } from "react-router-dom";
 
 // =========================
@@ -154,7 +150,7 @@ const Colleges = () => {
 
     init();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
 
