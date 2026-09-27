@@ -1,9 +1,28 @@
 import React from "react";
 import { useState } from "react";
+import api from "../../api/api.js";
 
 function AdminProfile() {
   const [isEditing, setIsEditing] = useState(false);
+  const [user, setUser] = useState([""]);
+  const [college, setCollege] = useState([""])
 
+  const getUser = async () => {
+    try {
+      const { data: userData } = await api.get("/user/alluser");
+      const { data: collegeData } = await api.get("/college");
+      console.log("USER DATA:", userData);
+      console.log("COLLEGE DATA:", collegeData);
+
+      setUser(userData.user);
+      setCollege(collegeData.college);
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setStats(null);
+      navigate("/user/login");
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
@@ -77,7 +96,7 @@ function AdminProfile() {
 
           <StatCard
             title="Colleges"
-            value="38"
+            value={college?.length || 0}
             description="Listed colleges"
           />
 
@@ -89,7 +108,7 @@ function AdminProfile() {
 
           <StatCard
             title="Users"
-            value="10,482"
+            value={user?.length || 0}
             description="Registered users"
           />
 
