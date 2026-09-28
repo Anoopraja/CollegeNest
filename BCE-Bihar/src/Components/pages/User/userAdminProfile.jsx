@@ -7,22 +7,22 @@ function AdminProfile() {
   const [user, setUser] = useState([""]);
   const [college, setCollege] = useState([""])
 
-  const getUser = async () => {
-    try {
-      const { data: userData } = await api.get("/user/alluser");
-      const { data: collegeData } = await api.get("/college");
-      console.log("USER DATA:", userData);
-      console.log("COLLEGE DATA:", collegeData);
+  // const getUser = async () => {
+  //   try {
+  //     const { data: userData } = await api.get("/user/alluser");
+  //     const { data: collegeData } = await api.get("/college");
+  //     console.log("USER DATA:", userData);
+  //     console.log("COLLEGE DATA:", collegeData);
 
-      setUser(userData.user);
-      setCollege(collegeData.college);
+  //     setUser(userData.user);
+  //     setCollege(collegeData.college);
 
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setStats(null);
-      navigate("/user/login");
-    }
-  };
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     setStats(null);
+  //     navigate("/user/login");
+  //   }
+  // };
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">

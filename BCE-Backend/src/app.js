@@ -1,5 +1,6 @@
 import express from "express";
 import userRoute from "./Routes/user.route.js"
+import adminRoute from "./Routes/admin.route.js"
 import collegeRoute from "./Routes/college.route.js"
 import reviewRoute from "./Routes/review.route.js"
 import imageRoute from "./Routes/image.route.js"
@@ -19,6 +20,7 @@ app.use(cors({
 
 
 app.use("/user", userRoute)
+app.use("/admin", adminRoute)
 app.use("/college", collegeRoute)
 app.use("/review",reviewRoute)  
 app.use("/image", imageRoute)

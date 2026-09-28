@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-// import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/api.js";
@@ -13,6 +12,7 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  
 
   const login = async (event) => {
     event.preventDefault();
@@ -26,6 +26,7 @@ function Login() {
       setError(error.response?.data?.message || "Login failed");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
@@ -125,6 +126,11 @@ function Login() {
         </button> */}
 
         {/* Signup */}
+
+        <Link
+        to="/admin/login">
+        <h4 className="text-center text-blue-700">Admin Login</h4>
+        </Link>
         <p className="text-center text-sm text-gray-600 mt-6">
           Don't have an account?{" "}
           <Link

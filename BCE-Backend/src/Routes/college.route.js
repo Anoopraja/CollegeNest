@@ -1,4 +1,5 @@
 import express from "express"
+
 import { addCollege, getCollegeById, getAllCollege, updateCollegeData } from "../Controllers/college.controller.js"
 
 const route = express.Router();

@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
         username: {
             type: String,
             required: true,
-            match: [/^[a-z0-9_]+$/, "Username can only contain letters, numbers and underscore"],            
+            match: [/^[a-z0-9_]+$/, "Username can only contain letters, numbers and underscore"],
             trim: true,
             lowercase: true
         },
@@ -47,6 +47,11 @@ const userSchema = new mongoose.Schema(
         bio: {
             type: String,
             default: ""
+        },
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user"
         }
     },
     {

@@ -10,6 +10,7 @@ import AdminProfile from './Components/pages/User/userAdminProfile'
 
 import { Route, Routes } from 'react-router-dom'
 import Login from './Components/pages/login'
+import AdminLogin from './Components/pages/AdminLogin'
 import Signup from './Components/pages/signup'
 import CollegeInfo from './Components/pages/Collegeinfo'
 import Counselling from './Components/pages/Councling'
@@ -33,6 +34,7 @@ function App() {
       <Routes>
         <Route path='/user/login' element={<Login />} />
         <Route path='/user/register' element={<Signup />} />
+        <Route path='/admin/login' element={<AdminLogin/>} />
         <Route index element={<Hero />} />
         <Route path='/college' element={<Colleges />} />
         <Route path="/college/:id" element={<CollegeInfo />} />
@@ -45,7 +47,7 @@ function App() {
         <Route path='/syllabus' element={<Syllabus />} />
         <Route path='/chat' element={<ChatLive />} />
         <Route path='/profile/:id' element={<Profile />} />
-        {/* <Route path='/admin' element={<AdminProfile />} /> */}
+        <Route path='/admin' element={<AdminProfile />} />
         <Route path='/wheretostudy' element={<WhereToStudy />} />
       </Routes>
       <Footer />

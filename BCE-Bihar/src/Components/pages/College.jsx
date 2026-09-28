@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import api from "../api/api.js";
-// import College from "../data/College";
 import { NavLink } from "react-router-dom";
 
 function loadScript(src) {

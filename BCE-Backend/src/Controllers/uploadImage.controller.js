@@ -1,1 +1,0 @@
-import cloudinary from "../cloudinaryConfig/cloudinaryConfig"

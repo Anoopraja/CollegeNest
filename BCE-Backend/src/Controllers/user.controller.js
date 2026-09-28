@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import jwt from 'jsonwebtoken'
 
 dotenv.config();
-// const secret_key = process.env.SECRET_KEY
 
 const registerUser = async (req, res) => {
     try {
@@ -34,6 +33,132 @@ const registerUser = async (req, res) => {
     }
 }
 
+const adminRegister = async (req, res) => {
+    try {
+
+        const {
+            username,
+            gmail,
+            password
+        } = req.body;
+
+        const salt = await bcrypt.genSalt(10);
+
+        const hash = await bcrypt.hash(password, salt);
+
+        const admin = await User.create({
+            username,
+            gmail,
+            password: hash,
+            role: "admin"
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Admin registered successfully",
+            data: {
+                id: admin._id,
+                username: admin.username,
+                gmail: admin.gmail,
+                role: admin.role
+            }
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+const adminLogin = async (req, res) => {
+    try {
+        const gmail = req.body.gmail?.trim().toLowerCase();
+        const { password } = req.body;
+
+        if (!gmail || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and password are required"
+            });
+        }
+
+        // Find admin/user by email
+        const admin = await User.findOne({ gmail });
+
+        if (!admin) {
+            return res.status(404).json({
+                success: false,
+                message: "Admin not found"
+            });
+        }
+
+        // Check password
+        const isMatch = await bcrypt.compare(
+            password,
+            admin.password
+        );
+
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid password"
+            });
+        }
+
+        // Check admin role
+        if (admin.role !== "admin") {
+            return res.status(403).json({
+                success: false,
+                message: "You are not an admin"
+            });
+        }
+
+        // Create JWT
+        const token = jwt.sign(
+            {
+                userId: admin._id,
+            },
+            process.env.SECRET_KEY,
+            {
+                expiresIn: "7d"
+            }
+        );
+
+        const isHttps = req.secure || req.headers["x-forwarded-proto"] === "https";
+
+        // Store the cookie with local and deployed transport settings.
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: isHttps,
+            sameSite: isHttps ? "none" : "lax",
+            path: "/",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Admin logged in successfully",
+            data: {
+                id: admin._id,
+                username: admin.username,
+                gmail: admin.gmail,
+                role: admin.role
+            }
+        });
+
+    } catch (error) {
+        console.error("Admin login error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 const getAllUser = async (req, res) => {
     try {
         const AllUser = await User.find()
@@ -52,34 +177,34 @@ const getAllUser = async (req, res) => {
     }
 }
 
-const getUserById = async (req, res) => {
-    try {
+// const getUserById = async (req, res) => {
+//     try {
 
-        const { username } = req.params;
+//         const { username } = req.params;
 
-        const user = await User.findOne({ username });
+//         const user = await User.findOne({ username });
 
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
+//         if (!user) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "User not found"
+//             });
+//         }
 
-        return res.status(200).json({
-            success: true,
-            message: "Ye raha aapka user",
-            data: user
-        });
+//         return res.status(200).json({
+//             success: true,
+//             message: "Ye raha aapka user",
+//             data: user
+//         });
 
-    } catch (error) {
+//     } catch (error) {
 
-        return res.status(500).json({
-            success: false,
-            message: "Kuch to galat hai"
-        });
-    }
-};
+//         return res.status(500).json({
+//             success: false,
+//             message: "Kuch to galat hai"
+//         });
+//     }
+// };
 
 
 const userLogin = async (req, res) => {
@@ -153,13 +278,12 @@ const userLogin = async (req, res) => {
         });
     }
 }
+
+
 const updateProfile = async (req, res) => {
     try {
-
         const { id } = req.params;
-
         const updateData = req.body;
-
         const user = await User.findByIdAndUpdate(
             { _id: id },
             updateData,
@@ -244,4 +368,4 @@ const getCurrentUser = async (req, res) => {
     }
 };
 
-export { registerUser, getAllUser, userLogin, userLogout, getUserById, updateProfile, getCurrentUser }
+export { registerUser, getAllUser, userLogin, userLogout, updateProfile, getCurrentUser, adminRegister, adminLogin }
