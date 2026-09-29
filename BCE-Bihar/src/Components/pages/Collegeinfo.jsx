@@ -1266,34 +1266,7 @@ const CollegeInfo = () => {
                                     className="max-w-full max-h-[90vh] object-contain rounded-lg"
                                 />
                                 <button
-                                    onClick={async (e) => {
-                                        e.stopPropagation();
-
-                                        try {
-                                            await api.delete(
-                                                `/image/delete/${selectedImage._id}`
-                                            );
-
-                                            // UI se image remove
-                                            setImages((prev) =>
-                                                prev.filter(
-                                                    (item) =>
-                                                        item._id !== selectedImage._id
-                                                )
-                                            );
-
-                                            // Preview close
-                                            setSelectedImage(null);
-
-                                            console.log("Image deleted successfully");
-
-                                        } catch (error) {
-                                            console.error(
-                                                "Image delete failed:",
-                                                error
-                                            );
-                                        }
-                                    }}
+                                    onClick={handleDeleteReview}
                                     className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
                                 >
                                     🗑️
