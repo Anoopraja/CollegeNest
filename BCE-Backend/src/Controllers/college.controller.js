@@ -2,6 +2,7 @@ import College from "../Models/college.model.js"
 import dotenv from "dotenv";
 
 
+
 const getAllCollege = async (req,res) => {
     try{
         const college = await College.find()

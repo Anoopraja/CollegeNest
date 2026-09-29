@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import uploadImage from "../../utils/cloudnary";
 import api from "../api/api.js";
-import { CircleChevronUp } from "lucide-react";
+import { CircleChevronUp, Trash } from "lucide-react";
 
 const CollegeInfo = () => {
 
@@ -15,9 +15,7 @@ const CollegeInfo = () => {
 
     const [college, setCollege] = useState(null);
     const [collegeLoading, setCollegeLoading] = useState(true);
-    // const [showMenu, setShowMenu] = useState("");   
-
-
+    const [openMenuId, setOpenMenuId] = useState(null);
     // =========================
     // EDIT COLLEGE
     // =========================
@@ -134,7 +132,7 @@ const CollegeInfo = () => {
                 }
             );
 
-            alert("Updated college:");
+            // alert("Updated college:");
             console.log(data.college)
 
 
@@ -550,19 +548,15 @@ const CollegeInfo = () => {
 
     };
 
-    const handleDeleteReview = async (reviewId) => {
-
+    const handleDeleteReview = async (_Id) => {
         try {
-            const response = await api.delete(
-                `/review/delete/${reviewId}`
-            );
+            await api.delete(`/review/delete/${_Id}`);
 
-            console.log("lo kr diya review delete")
+            console.log("Review delete ho gaya");
+        } catch (err) {
+            console.log("Review delete karne me error:", err);
         }
-        catch (err) { }
-
-    }
-
+    };
 
     // =========================
     // LOADING
@@ -1256,7 +1250,6 @@ const CollegeInfo = () => {
                         {/* IMAGE PREVIEW */}
 
                         {selectedImage && (
-
                             <div
                                 onClick={() =>
                                     setSelectedImage(null)
@@ -1272,6 +1265,40 @@ const CollegeInfo = () => {
                                     }
                                     className="max-w-full max-h-[90vh] object-contain rounded-lg"
                                 />
+                                <button
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+
+                                        try {
+                                            await api.delete(
+                                                `/image/delete/${selectedImage}`
+                                            );
+
+                                            // UI se image remove
+                                            setImages((prev) =>
+                                                prev.filter(
+                                                    (item) =>
+                                                        item._id !== selectedImage
+                                                )
+                                            );
+
+                                            // Preview close
+                                            setSelectedImage(null);
+
+                                            console.log("Image deleted successfully");
+
+                                        } catch (error) {
+                                            console.error(
+                                                "Image delete failed:",
+                                                error
+                                            );
+                                        }
+                                    }}
+                                    className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
+                                >
+                                    🗑️
+                                </button>
+
 
 
                                 <button
@@ -1282,6 +1309,7 @@ const CollegeInfo = () => {
                                 >
                                     ✕
                                 </button>
+
 
                             </div>
 
@@ -1605,20 +1633,27 @@ const CollegeInfo = () => {
                                         </span>
 
 
-                                        {/* <div className="relative inline-block">
+                                        <div className="relative inline-block">
 
                                             <span
-                                                onClick={() => setShowMenu(!showMenu)}
+                                                onClick={() =>
+                                                    setOpenMenuId(
+                                                        openMenuId === review._id ? null : review._id
+                                                    )
+                                                }
                                                 className="text-xs text-gray-400 cursor-pointer"
                                             >
                                                 <CircleChevronUp size={18} />
                                             </span>
 
-                                            {showMenu && (
+                                            {openMenuId === review._id && (
                                                 <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
 
                                                     <button
-                                                        onClick={handleDeleteReview}
+                                                        onClick={() => {
+                                                            handleDeleteReview(review._id);
+                                                            setOpenMenuId(null);
+                                                        }}
                                                         className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
                                                     >
                                                         Delete
@@ -1627,8 +1662,7 @@ const CollegeInfo = () => {
                                                 </div>
                                             )}
 
-
-                                        </div> */}
+                                        </div>
 
                                     </div>
 
