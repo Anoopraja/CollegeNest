@@ -15,31 +15,24 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check logged-in user
+  // Check the admin session first because the same cookie is used by both roles.
   useEffect(() => {
-    const getCurrentUser = async () => {
-      try {
-        const { data } = await api.get("/user/me");
-        setUser(data.user);
-      } catch (error) {
-        setUser(null);
-      }
-    };
-
-    getCurrentUser();
-  }, [location.pathname]);
-
-  useEffect(() => {
-    const getCurrentAdmin = async () => {
+    const getCurrentAccount = async () => {
       try {
         const { data } = await api.get("/admin/me");
-        setUser(data.user);
-      } catch (error) {
-        setUser(null);
+        setUser(data.admin);
+        return;
+      } catch {
+        try {
+          const { data } = await api.get("/user/me");
+          setUser(data.user);
+        } catch {
+          setUser(null);
+        }
       }
     };
 
-    getCurrentAdmin();
+    getCurrentAccount();
   }, [location.pathname]);
 
 
@@ -169,22 +162,14 @@ const Navbar = () => {
 
           {/* Profile */}
           {user && (
-            <NavLink
-
-              to={handleProfile}
-            >
-              <button
-                onClick={handleProfile}
-              >
-                <img
-                  // onClick={(e) => navigate("/")}  
-                  className="h-10 hover:opacity-75 hidden lg:block rounded-full "
-                  src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
-                  alt="Profile"
-                />
-              </button>
-            </NavLink>)
-          }
+            <button type="button" onClick={handleProfile}>
+              <img
+                className="h-10 hover:opacity-75 hidden lg:block rounded-full"
+                src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
+                alt="Profile"
+              />
+            </button>
+          )}
 
           {/* Mobile Menu Button */}
           {/* <div className="lg:hidden">

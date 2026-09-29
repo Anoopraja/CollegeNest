@@ -1,11 +1,29 @@
-import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../api/api.js";
+import { useNavigate } from "react-router-dom";
 
 function AdminProfile() {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [user, setUser] = useState([""]);
-  const [college, setCollege] = useState([""])
+  const [user, setUser] = useState(null);
+  const [college] = useState([]);
+
+  useEffect(() => {
+    const getAdmin = async () => {
+      try {
+        const { data } = await api.get("/admin/me");
+        if (data.admin?.role !== "admin") {
+          navigate("/user/login");
+          return;
+        }
+        setUser(data.admin);
+      } catch {
+        navigate("/admin/login");
+      }
+    };
+
+    getAdmin();
+  }, [navigate]);
 
   // const getUser = async () => {
   //   try {
@@ -54,7 +72,7 @@ function AdminProfile() {
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-3">
                 <h2 className="text-2xl font-bold text-gray-900">
-                  CollegeNest Admin
+                  {user?.username || "CollegeNest Admin"}
                 </h2>
 
                 <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700">
@@ -67,7 +85,7 @@ function AdminProfile() {
               </p>
 
               <p className="text-sm text-gray-400 mt-2">
-                admin@collegenest.com
+                {user?.email || ""}
               </p>
 
               <div className="flex items-center gap-2 mt-3">
@@ -96,7 +114,7 @@ function AdminProfile() {
 
           <StatCard
             title="Colleges"
-            value={college?.length || 0}
+              value={college.length}
             description="Listed colleges"
           />
 
@@ -108,7 +126,7 @@ function AdminProfile() {
 
           <StatCard
             title="Users"
-            value={user?.length || 0}
+              value={user ? 1 : 0}
             description="Registered users"
           />
 
@@ -137,17 +155,17 @@ function AdminProfile() {
 
             <InfoRow
               label="Full Name"
-              value="CollegeNest Admin"
+              value={user?.username || ""}
             />
 
             <InfoRow
               label="Email"
-              value="admin@collegenest.com"
+              value={user?.email || ""}
             />
 
             <InfoRow
               label="Role"
-              value="Super Administrator"
+              value={user?.role || "admin"}
             />
 
             <InfoRow

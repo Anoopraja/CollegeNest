@@ -185,6 +185,13 @@ const getCurrentAdmin = async (req,res) => {
             });
         }
 
+        if (admin.role !== "admin") {
+            return res.status(403).json({
+                success: false,
+                message: "Admin access required"
+            });
+        }
+
         return res.status(200).json({
     success: true,
     admin: {
@@ -409,7 +416,8 @@ const getCurrentUser = async (req, res) => {
                 branch: user.branch,
                 year: user.year,
                 bio: user.bio,
-                profileImage: user.profileImage
+                profileImage: user.profileImage,
+                role: user.role
             }
         });
     } catch (error) {
