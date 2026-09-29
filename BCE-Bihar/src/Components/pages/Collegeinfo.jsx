@@ -1271,14 +1271,14 @@ const CollegeInfo = () => {
 
                                         try {
                                             await api.delete(
-                                                `/image/delete/${_id}`
+                                                `/image/delete/${selectedImage._id}`
                                             );
 
                                             // UI se image remove
                                             setImages((prev) =>
                                                 prev.filter(
                                                     (item) =>
-                                                        item._id !== _id
+                                                        item._id !== selectedImage._id
                                                 )
                                             );
 
