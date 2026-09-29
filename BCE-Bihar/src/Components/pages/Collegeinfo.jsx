@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import uploadImage from "../../utils/cloudnary";
 import api from "../api/api.js";
+import { CircleChevronUp } from "lucide-react";
 
 const CollegeInfo = () => {
 
@@ -14,7 +15,8 @@ const CollegeInfo = () => {
 
     const [college, setCollege] = useState(null);
     const [collegeLoading, setCollegeLoading] = useState(true);
-    
+    // const [showMenu, setShowMenu] = useState("");   
+
 
     // =========================
     // EDIT COLLEGE
@@ -26,17 +28,27 @@ const CollegeInfo = () => {
     const [editForm, setEditForm] = useState({
         name: "",
         shortName: "",
-        location: "",
-        rating: "",
-        established: "",
-        type: "",
-        campus: "",
+        slug: "",
+        distric: "",
+        addres: "",
+        locatio: "",
+        stat: "",
+        establishe: "",
+        typ: "",
+        ownershi: "",
         university: "",
         approval: "",
-        phone: "",
-        email: "",
+        campus: "",
         website: "",
-        about: ""
+        email: "",
+        phone: "",
+        image: "",
+        logo: "",
+        rating: "",
+        admission: "",
+        about: "",
+        branches: [""],
+        facilities: [""],
     });
 
     // =========================
@@ -72,17 +84,27 @@ const CollegeInfo = () => {
         setEditForm({
             name: college?.name || "",
             shortName: college?.shortName || "",
+            slug: college?.slug || "",
+            district: college?.district || "",
+            address: college?.address || "",
             location: college?.location || "",
-            rating: college?.rating ?? "",
-            established: college?.established ?? "",
+            state: college?.state || "",
+            established: college?.established || "",
             type: college?.type || "",
-            campus: college?.campus || "",
+            ownership: college?.ownership || "",
             university: college?.university || "",
             approval: college?.approval || "",
-            phone: college?.phone || "",
-            email: college?.email || "",
+            campus: college?.campus || "",
             website: college?.website || "",
-            about: college?.about || ""
+            email: college?.email || "",
+            phone: college?.phone || "",
+            image: college?.image || "",
+            logo: college?.logo || "",
+            rating: college?.rating || "",
+            admission: college?.admission || "",
+            about: college?.about || "",
+            branches: college?.branches || [""],
+            facilities: college?.facilities || [""],
         });
 
         setEditing(true);
@@ -91,6 +113,11 @@ const CollegeInfo = () => {
 
     const updateCollege = async () => {
         try {
+
+            // if(user?.role !== "admin"){
+            //     console("you are not allowed to do change any this")
+            // }
+
             if (!college?._id) {
                 alert("College ID not found");
                 return;
@@ -98,7 +125,7 @@ const CollegeInfo = () => {
 
             setSaving(true);
 
-            const { data } = await api.post(
+            const { data } = await api.patch(
                 `/college/update/${college._id}`,
                 {
                     ...editForm,
@@ -127,7 +154,7 @@ const CollegeInfo = () => {
             setSaving(false);
         }
     };
-   
+
 
     // =========================
     // GET SINGLE COLLEGE
@@ -523,6 +550,19 @@ const CollegeInfo = () => {
 
     };
 
+    const handleDeleteReview = async (reviewId) => {
+
+        try {
+            const response = await api.delete(
+                `/review/delete/${reviewId}`
+            );
+
+            console.log("lo kr diya review delete")
+        }
+        catch (err) { }
+
+    }
+
 
     // =========================
     // LOADING
@@ -682,16 +722,27 @@ const CollegeInfo = () => {
                             {[
                                 ["name", "College Name", "text"],
                                 ["shortName", "Short Name", "text"],
+                                ["slug", "Slug", "text"],
+                                ["district", "District", "text"],
+                                ["address", "Address", "text"],
                                 ["location", "Location", "text"],
-                                ["rating", "Rating", "number"],
+                                ["state", "State", "text"],
                                 ["established", "Established", "number"],
                                 ["type", "College Type", "text"],
-                                ["campus", "Campus", "text"],
+                                ["ownership", "Ownership", "text"],
                                 ["university", "University", "text"],
                                 ["approval", "Approval", "text"],
-                                ["phone", "Phone", "text"],
+                                ["campus", "Campus", "text"],
+                                ["website", "Website", "text"],
                                 ["email", "Email", "email"],
-                                ["website", "Website", "text"]
+                                ["phone", "Phone", "text"],
+                                ["image", "College Image", "text"],
+                                ["logo", "College Logo", "text"],
+                                ["rating", "Rating", "number"],
+                                ["admission", "Admission", "text"],
+                                ["about", "About College", "textarea"],
+                                ["branches", "Branches", "text"],
+                                ["facilities", "Facilities", "text"]
                             ].map(([name, label, type]) => (
                                 <div key={name}>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1554,14 +1605,30 @@ const CollegeInfo = () => {
                                         </span>
 
 
-                                        <span className="text-xs text-gray-400">
+                                        {/* <div className="relative inline-block">
 
-                                            #
-                                            {review._id
-                                                ? review._id.slice(-6)
-                                                : ""}
+                                            <span
+                                                onClick={() => setShowMenu(!showMenu)}
+                                                className="text-xs text-gray-400 cursor-pointer"
+                                            >
+                                                <CircleChevronUp size={18} />
+                                            </span>
 
-                                        </span>
+                                            {showMenu && (
+                                                <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
+
+                                                    <button
+                                                        onClick={handleDeleteReview}
+                                                        className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
+                                                    >
+                                                        Delete
+                                                    </button>
+
+                                                </div>
+                                            )}
+
+
+                                        </div> */}
 
                                     </div>
 
