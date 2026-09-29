@@ -548,9 +548,9 @@ const CollegeInfo = () => {
 
     };
 
-    const handleDeleteReview = async (_Id) => {
+    const handleDeleteReview = async (Id) => {
         try {
-            await api.delete(`/review/delete/${_Id}`);
+            await api.delete(`/review/delete/${selectedImage._id}`);
 
             console.log("Review delete ho gaya");
         } catch (err) {
