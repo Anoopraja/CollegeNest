@@ -159,6 +159,55 @@ const adminLogin = async (req, res) => {
     }
 };
 
+const getCurrentAdmin = async (req,res) => {
+
+    try {
+        const token = req.cookies.token;
+
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                message: "Not authenticated"
+            });
+        }
+
+        const { userId } = jwt.verify(
+            token,
+            process.env.SECRET_KEY
+        );
+
+        const admin = await User.findById(userId).select("-password");
+
+        if (!admin) {
+            return res.status(401).json({
+                success: false,
+                message: "Admin not found"
+            });
+        }
+
+        return res.status(200).json({
+    success: true,
+    admin: {
+        id: admin._id,
+        username: admin.username,
+        email: admin.gmail,
+        college: admin.college,
+        branch: admin.branch,
+        year: admin.year,
+        bio: admin.bio,
+        profileImage: admin.profileImage,
+        role: admin.role
+    }
+});
+
+    } catch (error) {
+        return res.status(401).json({
+            success: false,
+            message: "Invalid admin session"
+        });
+    }
+}
+
 const getAllUser = async (req, res) => {
     try {
         const AllUser = await User.find()
@@ -368,4 +417,4 @@ const getCurrentUser = async (req, res) => {
     }
 };
 
-export { registerUser, getAllUser, userLogin, userLogout, updateProfile, getCurrentUser, adminRegister, adminLogin }
+export { registerUser, getAllUser, userLogin, userLogout, updateProfile, getCurrentUser, adminRegister, adminLogin, getCurrentAdmin }

@@ -29,8 +29,33 @@ const Navbar = () => {
     getCurrentUser();
   }, [location.pathname]);
 
+  useEffect(() => {
+    const getCurrentAdmin = async () => {
+      try {
+        const { data } = await api.get("/admin/me");
+        setUser(data.user);
+      } catch (error) {
+        setUser(null);
+      }
+    };
+
+    getCurrentAdmin();
+  }, [location.pathname]);
 
 
+
+ const handleProfile = () => {
+    if (!user) {
+        navigate("/user/login");
+        return;
+    }
+
+    if (user.role === "admin") {
+        navigate(`/admin/profile/${user.id}`);
+    } else {
+        navigate(`/user/profile/${user.id}`);
+    }
+};
   // const userAccount = async () => {
   //   try {
   //     const user = await this.account.get();
@@ -59,7 +84,7 @@ const Navbar = () => {
       { name: "College", path: "/college" },
       // { name: "Contact", path: "/contact" },
       // { name: "Counselling", path: "/counselling" },
-      {name: "Roadmap", path: "/roadmap"},
+      { name: "Roadmap", path: "/roadmap" },
       { name: "Community", path: "/community" },
 
     ],
@@ -146,14 +171,18 @@ const Navbar = () => {
           {user && (
             <NavLink
 
-              to={`/profile/${user.id}`}
+              to={handleProfile}
             >
-              <img
-                // onClick={(e) => navigate("/")}  
-                className="h-10 hover:opacity-75 hidden lg:block rounded-full "
-                src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
-                alt="Profile"
-              />
+              <button
+                onClick={handleProfile}
+              >
+                <img
+                  // onClick={(e) => navigate("/")}  
+                  className="h-10 hover:opacity-75 hidden lg:block rounded-full "
+                  src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
+                  alt="Profile"
+                />
+              </button>
             </NavLink>)
           }
 
@@ -181,9 +210,9 @@ const Navbar = () => {
 
       {/* Mobile Bottom Navigation */}
       <nav className="lg:hidden fixed bottom-3 left-0 right-0 z-50 px-4">
-        <div 
+        <div
 
-        className="mx-auto max-w-2xl h-16 backdrop-blur-md bg-blur-2xl rounded-full px-3 flex items-center justify-around shadow-2xl border border-blue-200">
+          className="mx-auto max-w-2xl h-16 backdrop-blur-md bg-blur-2xl rounded-full px-3 flex items-center justify-around shadow-2xl border border-blue-200">
 
           {/* Home */}
           <NavLink
@@ -258,7 +287,7 @@ const Navbar = () => {
           {user ? (
             <NavLink
               // to={`/profile/id:${user.name}`}
-                to={`/profile/${user.id}`}
+              to={`/profile/${user.id}`}
               className={({ isActive }) =>
                 `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                   ? "bg-blue-500 text-white"
