@@ -127,10 +127,10 @@ function Login() {
 
         {/* Signup */}
 
-        <Link
+        {/* <Link
         to="/admin/login">
         <h4 className="text-center text-blue-700">Admin Login</h4>
-        </Link>
+        </Link> */}
         <p className="text-center text-sm text-gray-600 mt-6">
           Don't have an account?{" "}
           <Link

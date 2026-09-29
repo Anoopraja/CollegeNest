@@ -136,6 +136,12 @@ const updateCollegeData = async (req, res) => {
             message:"nhi hai college list me"
            }) 
         }
+
+        return res.status(200).json({
+            success: true,
+            message: "College updated successfully",
+            data: updatedCollege
+        });
     }
     catch (err) {
         return res.status(400).json({

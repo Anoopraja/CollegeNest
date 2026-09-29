@@ -166,11 +166,10 @@ const Signup = () => {
 
           <div className="flex-1 border-t"></div>
         </div>
-
-<Link
-        to="/admin/adminlogin">
-        <h4 className="text-center pb-5 text-blue-700">Admin Login</h4>
-        </Link>
+        {/*  <Link
+          to="/admin/adminlogin">
+          <h4 className="text-center pb-5 text-blue-700">Admin Login</h4>
+        </Link> */}
         {/* Google */}
         <button className="w-full border border-gray-300 rounded-lg py-3 hover:bg-gray-100 transition">
           Continue with Google

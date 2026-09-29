@@ -23,6 +23,37 @@ const writeReviewByCollegeId = async (req, res) => {
         })
     }
 }
+
+const deleteReview = async (req, res) => {
+    try {
+        const { reviewId } = req.params;
+
+        const response = await Review.deleteOne({
+            _id: reviewId
+        });
+
+        if (response.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Review not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Review deleted successfully"
+        });
+
+    } catch (error) {
+        console.error("Delete review error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong while deleting review"
+        });
+    }
+};
+
 const getAllReview = async (req, res) => {
     cosnt = await Review.find()
     return res.status(200).json({
@@ -73,5 +104,7 @@ export {
     deleteReviewById,
     getReviewById,
     writeReviewByCollegeId,
+    deleteReview,
+    getAllReview
 }
 

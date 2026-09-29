@@ -11,7 +11,6 @@ import {
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,19 +48,6 @@ const Navbar = () => {
         navigate(`/user/profile/${user.id}`);
     }
 };
-  // const userAccount = async () => {
-  //   try {
-  //     const user = await this.account.get();
-  //     return user;
-  //   }
-  //   catch { err } {
-  //     console.error("kuchu puchu tum kaha ho", err);
-  //   }
-  // }
-
-  // if (!user) {
-  //   console.log("User is not logged in");
-  // }
   const handleLogout = async () => {
     try {
       await api.post("/user/logout");
@@ -272,7 +258,7 @@ const Navbar = () => {
           {user ? (
             <NavLink
               // to={`/profile/id:${user.name}`}
-              to={`/profile/${user.id}`}
+              to={`admin/profile/${user.id}`}
               className={({ isActive }) =>
                 `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                   ? "bg-blue-500 text-white"
