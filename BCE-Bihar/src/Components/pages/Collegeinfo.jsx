@@ -14,6 +14,7 @@ const CollegeInfo = () => {
 
     const [college, setCollege] = useState(null);
     const [collegeLoading, setCollegeLoading] = useState(true);
+    
 
     // =========================
     // EDIT COLLEGE
@@ -87,6 +88,7 @@ const CollegeInfo = () => {
         setEditing(true);
     };
 
+
     const updateCollege = async () => {
         try {
             if (!college?._id) {
@@ -105,7 +107,9 @@ const CollegeInfo = () => {
                 }
             );
 
-            console.log("Updated college:", data);
+            alert("Updated college:");
+            console.log(data.college)
+
 
             const updatedCollege = data.college || data.data;
 
@@ -123,6 +127,7 @@ const CollegeInfo = () => {
             setSaving(false);
         }
     };
+   
 
     // =========================
     // GET SINGLE COLLEGE

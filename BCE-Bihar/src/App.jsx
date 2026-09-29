@@ -46,8 +46,8 @@ function App() {
         <Route path='/skills' element={<Skills />} />
         <Route path='/syllabus' element={<Syllabus />} />
         <Route path='/chat' element={<ChatLive />} />
-        <Route path='/profile/:id' element={<Profile />} />
-        <Route path='/admin' element={<AdminProfile />} />
+        <Route path='/user/profile/:id' element={<Profile />} />
+        {/* <Route path='/admin' element={<AdminProfile />} /> */}
         <Route path='/admin/profile/:id' element={<AdminProfile />} />
         <Route path='/wheretostudy' element={<WhereToStudy />} />
       </Routes>
