@@ -97,14 +97,14 @@ function AdminProfile() {
             </div>
 
             {/* Edit Button */}
-            <button
+            {/* <button
               onClick={() => setIsEditing(!isEditing)}
               className="px-5 py-2.5 rounded-xl border border-gray-300
                          text-sm font-medium text-gray-700
                          hover:bg-gray-50 transition"
             >
               {isEditing ? "Cancel" : "Edit Profile"}
-            </button>
+            </button> */}
 
           </div>
         </div>
