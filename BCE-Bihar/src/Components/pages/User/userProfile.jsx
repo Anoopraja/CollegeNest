@@ -132,7 +132,7 @@ function Profile() {
         username: profile.username,
       });
 
-      const { data } = await api.update(
+      const { data } = await api.patch(
         `/user/updateprofile/${userId}`,
         {
           college: profile.college,
