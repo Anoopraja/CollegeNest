@@ -1,8 +1,10 @@
 import express from "express";
-import { saveImage, getImages, deleteImageById } from "../Controllers/image.controller.js";
+import upload from "../cloudinaryConfig/multer.js";
+import { uploadImage, saveImage, getImages, deleteImageById } from "../Controllers/image.controller.js";
 
 const route = express.Router();
 
+route.post("/upload", upload.single("image"), uploadImage);
 route.post("/", saveImage);
 route.get("/:collegeId", getImages);
 route.delete("/delete/:id", deleteImageById);

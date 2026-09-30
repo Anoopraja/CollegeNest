@@ -1,12 +1,64 @@
 import Image from "../Models/image.model.js";
+import cloudinary from "../cloudinaryConfig/cloudinaryConfig.js";
+
+const uploadImage = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "Image file is required"
+            });
+        }
+
+        const result = await new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+                {
+                    folder: "collegenest/gallery",
+                    resource_type: "image"
+                },
+                (error, uploadedFile) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve(uploadedFile);
+                }
+            );
+
+            stream.end(req.file.buffer);
+        });
+
+        return res.status(201).json({
+            success: true,
+            data: {
+                imageUrl: result.secure_url,
+                publicId: result.public_id
+            }
+        });
+    } catch (error) {
+        console.error("Image upload error:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Image upload failed"
+        });
+    }
+};
 
 const saveImage = async (req, res) => {
     try {
-        const { collegeId, imageUrl } = req.body;
+        const { collegeId, imageUrl, publicId } = req.body;
+        if (!collegeId || !imageUrl) {
+            return res.status(400).json({
+                success: false,
+                message: "College ID and image URL are required"
+            });
+        }
+
         const image = await Image.create({
             collegeId: String(collegeId),
             imageUrl,
-            publicId: imageUrl,
+            publicId: publicId || imageUrl,
             uploadedBy: req.body.userId
         });
         return res.status(201).json({ success: true, data: image });
@@ -18,10 +70,10 @@ const saveImage = async (req, res) => {
 const deleteImageById = async (req, res) => {
     try {
 
-        const { _id } = req.params
+        const { id } = req.params;
 
-        const deleteImage = await Image.deleteOne({ _id })
-        if (!deleteImage) {
+        const deleteImage = await Image.deleteOne({ _id: id });
+        if (deleteImage.deletedCount === 0) {
             return res.status(404).json({
                 success: false,
                 message: "Image nahi mila"
@@ -47,4 +99,4 @@ const getImages = async (req, res) => {
     return res.status(200).json({ success: true, data: images });
 };
 
-export { saveImage, getImages, deleteImageById };
+export { uploadImage, saveImage, getImages, deleteImageById };

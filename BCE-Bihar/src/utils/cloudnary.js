@@ -11,46 +11,56 @@
 
 
 
+import api from "../Components/api/api.js";
+
 const uploadImage = async (file) => {
-
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-
-  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-  // console.log("Cloud Name:", cloudName);
-  // console.log("Upload Preset:", uploadPreset);
-
   if (!file) {
     throw new Error("No file selected");
   }
 
-
   const formData = new FormData();
+  formData.append("image", file);
 
-  formData.append("file", file);
-  formData.append(
-    "upload_preset",
-    uploadPreset
-  );
-
-  
-  const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-    {
-      method: "POST",
-      body: formData,
+  try {
+    const { data } = await api.post("/image/upload", formData);
+    return data.data;
+  } catch (error) {
+    if (error.response?.status !== 404) {
+      throw error;
     }
-  );
 
-  const data = await response.json();
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
-  if (!response.ok) {
-    throw new Error(data.error?.message || "Upload failed");
+    if (!cloudName || !uploadPreset) {
+      throw new Error("Image upload service is not configured", { cause: error });
+    }
+
+    const cloudinaryFormData = new FormData();
+    cloudinaryFormData.append("file", file);
+    cloudinaryFormData.append("upload_preset", uploadPreset);
+
+    const cloudinaryResponse = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      {
+        method: "POST",
+        body: cloudinaryFormData,
+      }
+    );
+    const cloudinaryData = await cloudinaryResponse.json();
+
+    if (!cloudinaryResponse.ok) {
+      throw new Error(
+        cloudinaryData.error?.message || "Image upload failed",
+        { cause: error }
+      );
+    }
+
+    return {
+      imageUrl: cloudinaryData.secure_url,
+      publicId: cloudinaryData.public_id,
+    };
   }
-
-
-
-  return data.secure_url;
 };
 
 export default uploadImage;

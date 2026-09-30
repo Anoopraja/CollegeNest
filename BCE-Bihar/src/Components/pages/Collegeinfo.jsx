@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import uploadImage from "../../utils/cloudnary";
 import api from "../api/api.js";
-import { CircleChevronUp, Trash } from "lucide-react";
+import { CircleChevronUp } from "lucide-react";
 
 const CollegeInfo = () => {
 
@@ -53,11 +53,9 @@ const CollegeInfo = () => {
     // GALLERY
     // =========================
 
-    const [studentName, setStudentName] = useState("");
     const [selectedImage, setSelectedImage] = useState(null);
     const [image, setImage] = useState(null);
     const [images, setImages] = useState([]);
-    const [imageUrl, setImageUrl] = useState("");
     const [uploading, setUploading] = useState(false);
 
     // =========================
@@ -289,7 +287,8 @@ const CollegeInfo = () => {
 
 
             // 1. Upload image to Cloudinary
-            const uploadedImageUrl = await uploadImage(image);
+            const uploadedImage = await uploadImage(image);
+            const uploadedImageUrl = uploadedImage.imageUrl;
 
             console.log(
                 "Cloudinary URL:",
@@ -301,12 +300,10 @@ const CollegeInfo = () => {
             await api.post("/image", {
                 collegeId: college._id,
                 imageUrl: uploadedImageUrl,
+                publicId: uploadedImage.publicId,
             });
 
             // 3. Display uploaded image
-            setImageUrl(uploadedImageUrl);
-
-
             // 4. Add image to gallery immediately
             setImages((prev) => [
                 {
@@ -515,12 +512,6 @@ const CollegeInfo = () => {
             setReviewText("");
 
             setRating(5);
-
-            setStudentName(
-                user.username ||
-                "Anonymous User"
-            );
-
 
             alert(
                 "Review submitted successfully!"
@@ -1243,11 +1234,7 @@ const CollegeInfo = () => {
 
                             <div
                                 key={item._id}
-                                onClick={() =>
-                                    setSelectedImage(
-                                        item.imageUrl
-                                    )
-                                }
+                                onClick={() => setSelectedImage(item)}
                                 className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in"
                             >
 
@@ -1273,7 +1260,7 @@ const CollegeInfo = () => {
                             >
 
                                 <img
-                                    src={selectedImage}
+                                    src={selectedImage.imageUrl}
                                     alt="College campus"
                                     onClick={(e) =>
                                         e.stopPropagation()
