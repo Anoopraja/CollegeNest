@@ -10,7 +10,7 @@ import AdminProfile from './Components/pages/User/userAdminProfile'
 
 import { Route, Routes } from 'react-router-dom'
 import Login from './Components/pages/login'
-import AdminLogin from './Components/pages/AdminLogin'
+// import AdminLogin from './Components/pages/AdminLogin'
 import Signup from './Components/pages/signup'
 import CollegeInfo from './Components/pages/Collegeinfo'
 import Counselling from './Components/pages/Councling'

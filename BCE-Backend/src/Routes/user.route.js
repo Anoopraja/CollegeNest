@@ -9,6 +9,6 @@ route.get("/alluser" ,adminOnly, getAllUser);
 route.post("/login", userLogin);
 route.post("/logout", userLogout);
 route.get("/me", getCurrentUser);
-route.post("/updateprofile/:id", updateProfile);
+route.update("/updateprofile/:id", updateProfile);
  
 export default route;
