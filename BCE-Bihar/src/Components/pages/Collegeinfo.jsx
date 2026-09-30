@@ -549,13 +549,13 @@ const CollegeInfo = () => {
         }
     };
 
-    const handleDeleteImage = async (_Id) => {
+    const handleDeleteImage = async (Id) => {
         try {
 
-            await api.delete(`/image/delete/${_Id}`)
+            await api.delete(`/image/delete/${Id}`)
             console.log("image delete ho gya")
             setImages((prev) =>
-                prev.filter((item) => item._id !== _Id)
+                prev.filter((item) => item._id !== Id)
             );
 
             setSelectedImage(null);
