@@ -34,7 +34,7 @@ function App() {
       <Routes>
         <Route path='/user/login' element={<Login />} />
         <Route path='/user/register' element={<Signup />} />
-        <Route path='/admin/login' element={<AdminLogin/>} />
+        {/* <Route path='/admin/login' element={<AdminLogin/>} /> */}
         <Route index element={<Hero />} />
         <Route path='/college' element={<Colleges />} />
         <Route path="/college/:id" element={<CollegeInfo />} />

@@ -10,20 +10,31 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   
 
   const login = async (event) => {
     event.preventDefault();
+
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail || !password) {
+      setError("Email and password are required");
+      return;
+    }
+
+    setError("");
+    setIsSubmitting(true);
+
     try {
-      await api.post("/user/login", { gmail: email.trim(), password });
-      setError("");
+      await api.post("/user/login", { gmail: normalizedEmail, password });
       navigate("/");
     } catch (error) {
       console.error("LOGIN FAILED:", error);
-      navigate("/user/login");
       setError(error.response?.data?.message || "Login failed");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -55,6 +66,7 @@ function Login() {
             <input
               type="email"
               placeholder="Enter your email"
+              autoComplete="email"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-700"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -78,6 +90,7 @@ function Login() {
             <div className="relative w-full">
               <input
                 type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="h-[3.5rem] w-full border border-gray-300 rounded-lg px-4 pr-12 outline-none focus:border-blue-700"
@@ -102,9 +115,10 @@ function Login() {
 
           <button
             type="submit"
+            disabled={isSubmitting}
             className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-medium transition"
           >
-            Login
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
 
         </form>

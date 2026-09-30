@@ -8,6 +8,18 @@ function AdminProfile() {
   const [user, setUser] = useState(null);
   const [college] = useState([]);
 
+  const handleLogout = async () => {
+    try {
+      await api.post("/user/logout");
+
+      navigate("/user/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+
+      alert("Logout failed. Please try again.");
+    }
+  };
+
   useEffect(() => {
     const getAdmin = async () => {
       try {
@@ -105,6 +117,13 @@ function AdminProfile() {
             >
               {isEditing ? "Cancel" : "Edit Profile"}
             </button> */}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="hidden lg:block bg-red-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-red-700 hover:shadow-md active:scale-95"
+            >
+              Logout
+            </button>
 
           </div>
         </div>
@@ -114,7 +133,7 @@ function AdminProfile() {
 
           <StatCard
             title="Colleges"
-              value={college.length}
+            value={college.length}
             description="Listed colleges"
           />
 
@@ -126,7 +145,7 @@ function AdminProfile() {
 
           <StatCard
             title="Users"
-              value={user ? 1 : 0}
+            value={user ? 1 : 0}
             description="Registered users"
           />
 
@@ -234,7 +253,7 @@ function AdminProfile() {
         </div>
 
         {/* Security */}
-        <div className="bg-white border border-gray-200 rounded-2xl mt-6 p-6">
+        {/* <div className="bg-white border border-gray-200 rounded-2xl mt-6 p-6">
 
           <h2 className="text-lg font-semibold text-gray-900">
             Security
@@ -261,7 +280,7 @@ function AdminProfile() {
             </button>
 
           </div>
-        </div>
+        </div> */}
 
       </div>
     </div>

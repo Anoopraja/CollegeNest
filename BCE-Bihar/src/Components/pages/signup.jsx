@@ -137,17 +137,14 @@ const Signup = () => {
             </p>
           </div> */}
 
-          {/* {error && (
+          {error && (
             <p className="text-sm text-red-600">
               {error}
             </p>
-          )} */}
+          )}
 
           {/* Sign Up Button */}
           <button
-            value={signup}
-            onChange={(e) => setSignup(e.target.value)
-            }
             type="submit"
             className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-medium transition"
           >

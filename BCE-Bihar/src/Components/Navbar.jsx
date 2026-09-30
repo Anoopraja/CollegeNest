@@ -36,18 +36,18 @@ const Navbar = () => {
 
 
 
- const handleProfile = () => {
+  const handleProfile = () => {
     if (!user) {
-        navigate("/user/login");
-        return;
+      navigate("/user/login");
+      return;
     }
 
-    if (user.role === "admin") {
-        navigate(`/admin/profile/${user.id}`);
-    } else {
-        navigate(`/user/profile/${user.id}`);
-    }
-};
+    // if (user.role === "admin") {
+    //   navigate(`/admin/profile/${user.id}`);
+    // } else {
+    //   navigate(`/user/profile/${user.id}`);
+    // }
+  };
   const handleLogout = async () => {
     try {
       await api.post("/user/logout");
@@ -148,13 +148,21 @@ const Navbar = () => {
 
           {/* Profile */}
           {user && (
-            <button type="button" onClick={handleProfile}>
-              <img
-                className="h-10 hover:opacity-75 hidden lg:block rounded-full"
-                src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
-                alt="Profile"
-              />
-            </button>
+            <NavLink
+            to={
+                user.role === "admin"
+                  ? `/admin/profile/${user.id}`
+                  : `/user/profile/${user.id}`
+              }
+            >
+            {/* // <button type="button" onClick={handleProfile}> */}
+                <img
+                  className="h-10 hover:opacity-75 hidden lg:block rounded-full"
+                  src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
+                  alt="Profile"
+                />
+            {/* // </button> */}
+            </NavLink>
           )}
 
           {/* Mobile Menu Button */}
@@ -163,7 +171,7 @@ const Navbar = () => {
               onClick={() => setOpen(!open)}
               className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100"
             >
-            
+
               <img
                 className="h-4"
                 src={
@@ -192,7 +200,7 @@ const Navbar = () => {
             className={({ isActive }) =>
               `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                 ? "bg-blue-500 text-white"
-                : "text-black hover:text-white"
+                : "text-black"
               }`
             }
           >
@@ -205,7 +213,7 @@ const Navbar = () => {
             className={({ isActive }) =>
               `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                 ? "bg-blue-500 text-white"
-                : "text-black hover:text-white"}`
+                : "text-black"}`
             }
           >
             <University size={24} strokeWidth={2.2} />
@@ -217,7 +225,7 @@ const Navbar = () => {
             className={({ isActive }) =>
               `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                 ? "bg-blue-500 text-white"
-                : "text-black hover:text-white"}`
+                : "text-black"}`
             }
           >
             <Users size={24} strokeWidth={2.2} />
@@ -249,7 +257,7 @@ const Navbar = () => {
             className={({ isActive }) =>
               `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                 ? "bg-blue-500 text-white"
-                : "text-black hover:text-white"}`
+                : "text-black"}`
             }
           >
             <Book size={23} strokeWidth={2.2} />
@@ -258,12 +266,16 @@ const Navbar = () => {
           {/* Profile */}
           {user ? (
             <NavLink
-              // to={`/profile/id:${user.name}`}
-              to={`admin/profile/${user.id}`}
+              to={
+                user.role === "admin"
+                  ? `/admin/profile/${user.id}`
+                  : `/user/profile/${user.id}`
+              }
               className={({ isActive }) =>
                 `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                   ? "bg-blue-500 text-white"
-                  : "text-black hover:text-white"}`
+                  : "text-black"
+                }`
               }
             >
               <User size={24} strokeWidth={2.2} />
@@ -274,7 +286,7 @@ const Navbar = () => {
               className={({ isActive }) =>
                 `w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isActive
                   ? "bg-blue-500 text-white"
-                  : "text-black hover:text-white"}`
+                  : "text-black"}`
               }
             >
               <User size={24} strokeWidth={2.2} />

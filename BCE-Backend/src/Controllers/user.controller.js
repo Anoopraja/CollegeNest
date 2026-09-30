@@ -266,7 +266,15 @@ const getAllUser = async (req, res) => {
 const userLogin = async (req, res) => {
     try {
 
-        const { gmail, password } = req.body
+        const gmail = req.body.gmail?.trim().toLowerCase();
+        const { password } = req.body;
+
+        if (!gmail || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and password are required"
+            });
+        }
 
         const user = await User.findOne({ gmail })
         if (!user) {
@@ -306,10 +314,12 @@ const userLogin = async (req, res) => {
         // console.log("JWT TOKEN:", token);
 
         // TOKEN COOKIE ME SAVE
+        const isHttps = req.secure || req.headers["x-forwarded-proto"] === "https";
+
         res.cookie("token", token, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            secure: isHttps,
+            sameSite: isHttps ? "none" : "lax",
             path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
