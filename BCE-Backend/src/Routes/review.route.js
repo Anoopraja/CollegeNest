@@ -5,9 +5,9 @@ import adminOnly from "../middleware/route.middleware.js"
 const route = express.Router();
 
 route.post("/write", writeReviewByCollegeId);
-route.delete("/delete/:_id", deleteReviewById);
+route.delete("/delete/:_id", adminOnly, deleteReviewById);
 route.get("/:collegeId", getReviewById);
 route.get("/allreview",getAllReview);
-route.delete("/deletereview",deleteReview)
+// route.delete("/deletereview",adminOnly ,deleteReview);
 
 export default route

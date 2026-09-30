@@ -1,286 +1,344 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-
-const posts = [
-  {
-    id: 1,
-    name: "Rahul Kumar",
-    college: "MIT Muzaffarpur",
-    time: "2 hours ago",
-    post: "Anyone preparing for Java Viva? Let's create a study group for 3rd semester students.",
-    likes: 42,
-    comments: 12,
-  },
-  {
-    id: 2,
-    name: "Priya Singh",
-    college: "BCE Bhagalpur",
-    time: "5 hours ago",
-    post: "How are hostel facilities in GEC Vaishali? Seniors please share your experience.",
-    likes: 31,
-    comments: 18,
-  },
-  {
-    id: 3,
-    name: "Aman Raj",
-    college: "GEC Gaya",
-    time: "Yesterday",
-    post: "Placement preparation resources for CSE students. Anyone interested in forming a coding group?",
-    likes: 55,
-    comments: 24,
-  },
-];
-
-const branch = ["CSE", "ECE", "ME", "CE", "EE"];
+import React, { useEffect, useRef, useState } from "react";
+import api from "../api/api.js";
 
 const Community = () => {
-  return (
-    <section className="bg-slate-50 mb-10 min-h-screen py-8 sm:py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    const [user, setUser] = useState(null);
+    const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [onlineUsers, setOnlineUsers] = useState(0);
+    const [loading, setLoading] = useState(true);
 
-        {/* Branch Navigation */}
-        {/* <div className="mb-12">
-          <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
-            {branch.map((item) => (
-              <NavLink
-                key={item}
-                to={`/community/${item.toLowerCase()}`}
-                className={({ isActive }) =>
-                  `px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-200 ${
-                    isActive
-                      ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50"
-                  }`
-                }
-              >
-                {item}
-              </NavLink>
-            ))}
-          </div>
-        </div> */}
+    const messagesEndRef = useRef(null);
 
-        {/* Hero */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+    // Get logged-in user
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                const { data } = await api.get("/user/me");
 
-          <span className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-100 px-4 py-2 rounded-full text-sm font-semibold">
-            <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
-            BEU Community
-          </span>
+                setUser(data.user || data);
+            } catch (error) {
+                console.log("User fetch error:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mt-6 tracking-tight">
-            Connect with Engineering Students
-          </h1>
+        getUser();
+    }, []);
 
-          <p className="text-slate-600 mt-5 text-base sm:text-lg leading-7 max-w-2xl mx-auto">
-            Ask questions, share experiences, discuss placements, hostels,
-            coding, internships and help fellow students.
-          </p>
-        </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-12">
+    // Auto scroll when new message arrives
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({
+            behavior: "smooth",
+        });
+    }, [messages]);
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 text-center hover:shadow-md transition-shadow">
-            <h2 className="text-2xl sm:text-3xl font-bold text-blue-600">
-              10K+
-            </h2>
-            <p className="text-sm text-slate-500 mt-2">
-              Students
-            </p>
-          </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 text-center hover:shadow-md transition-shadow">
-            <h2 className="text-2xl sm:text-3xl font-bold text-blue-600">
-              3.5K+
-            </h2>
-            <p className="text-sm text-slate-500 mt-2">
-              Posts
-            </p>
-          </div>
+    // Temporary message sender
+    // Later replace this with Socket.IO
+    const sendMessage = () => {
+        if (!message.trim()) return;
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 text-center hover:shadow-md transition-shadow">
-            <h2 className="text-2xl sm:text-3xl font-bold text-blue-600">
-              38
-            </h2>
-            <p className="text-sm text-slate-500 mt-2">
-              Colleges
-            </p>
-          </div>
+        const newMessage = {
+            id: Date.now(),
+            userId: user?._id,
+            username: user?.username || "You",
+            college: user?.college || "CollegeNest Student",
+            message: message.trim(),
+            createdAt: new Date(),
+        };
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 text-center hover:shadow-md transition-shadow">
-            <h2 className="text-2xl sm:text-3xl font-bold text-blue-600">
-              500+
-            </h2>
-            <p className="text-sm text-slate-500 mt-2">
-              Daily Discussions
-            </p>
-          </div>
+        setMessages((prev) => [...prev, newMessage]);
 
-        </div>
+        setMessage("");
+    };
 
-        {/* Main Community Content */}
-        <div className="max-w-4xl mx-auto">
 
-          {/* Create Post */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 mb-8 shadow-sm">
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    };
 
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
-                U
-              </div>
 
-              <div>
-                <h2 className="font-semibold text-slate-900">
-                  Create a Post
-                </h2>
-                <p className="text-xs text-slate-500">
-                  Share something with the community
-                </p>
-              </div>
-            </div>
+    const formatTime = (date) => {
+        return new Date(date).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
 
-            <textarea
-              rows="4"
-              placeholder="What's on your mind?"
-              className="w-full border border-slate-200 rounded-xl p-4 text-sm text-slate-700 placeholder:text-slate-400 outline-none resize-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-            />
 
-            <div className="flex items-center justify-between mt-4">
+    if (loading) {
+        return (
+            <section className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="text-sm text-slate-500">
+                    Loading community...
+                </div>
+            </section>
+        );
+    }
 
-              <button className="text-sm text-slate-500 hover:text-blue-600 transition">
-                📷 Add Media
-              </button>
 
-              <button className="bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 active:scale-95 transition">
-                Post
-              </button>
+    return (
+        <section className="min-h-screen bg-slate-50 py-4 sm:py-6">
 
-            </div>
-          </div>
+            <div className="max-w-5xl mx-auto px-3 sm:px-5">
 
-          {/* Trending */}
-          <div className="mb-8">
+                {/* Chat Container */}
+                <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
 
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-slate-900">
-                Trending Discussions
-              </h2>
-            </div>
+                    {/* Header */}
+                    <header className="h-[72px] border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between">
 
-            <div className="flex flex-wrap gap-2">
-              {[
-                "#Placement",
-                "#Hostel",
-                "#SemesterExam",
-                "#Internship",
-                "#Coding",
-              ].map((tag) => (
-                <button
-                  key={tag}
-                  className="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-full text-sm hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
+                        <div className="flex items-center gap-3">
 
-          </div>
+                            {/* Logo */}
+                            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                                CN
+                            </div>
 
-          {/* Posts */}
-          <div className="space-y-5">
 
-            {posts.map((post) => (
-              <article
-                key={post.id}
-                className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200"
-              >
+                            {/* Chat Info */}
+                            <div>
 
-                {/* User Info */}
-                <div className="flex items-start justify-between gap-4">
+                                <div className="flex items-center gap-2">
 
-                  <div className="flex items-center gap-3">
+                                    <h1 className="font-bold text-slate-900 text-base sm:text-lg">
+                                        CollegeNest Community
+                                    </h1>
 
-                    <div className="w-11 h-11 shrink-0 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
-                      {post.name.charAt(0)}
+                                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+
+                                </div>
+
+                                <p className="text-xs sm:text-sm text-slate-500">
+                                    Public Live Chat • All Colleges
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        {/* Online */}
+                        <div className="flex items-center gap-2">
+
+                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+
+                            <span className="text-xs sm:text-sm text-slate-500">
+                                {onlineUsers || "Online"}
+                            </span>
+
+                        </div>
+
+                    </header>
+
+
+                    {/* Chat Area */}
+                    <div className="h-[calc(100vh-220px)] min-h-[500px] max-h-[720px] flex flex-col">
+
+                        {/* Messages */}
+                        <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-5">
+
+                            {messages.length === 0 ? (
+
+                                /* Empty Chat */
+                                <div className="h-full flex items-center justify-center">
+
+                                    <div className="text-center max-w-sm">
+
+                                        <div className="w-16 h-16 mx-auto rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold">
+                                            CN
+                                        </div>
+
+                                        <h2 className="mt-5 text-lg font-semibold text-slate-900">
+                                            Welcome to CollegeNest Community
+                                        </h2>
+
+                                        <p className="mt-2 text-sm text-slate-500 leading-6">
+                                            This is a public live chat for students
+                                            from all 38 colleges. Start the
+                                            conversation.
+                                        </p>
+
+                                        <div className="mt-4 inline-flex items-center gap-2 px-3 py-2 bg-green-50 text-green-600 rounded-full text-xs font-medium">
+                                            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                                            Live Community
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            ) : (
+
+                                <div className="space-y-5">
+
+                                    {messages.map((item) => {
+
+                                        const isMe =
+                                            item.userId === user?._id;
+
+                                        return (
+                                            <div
+                                                key={item.id}
+                                                className={`flex gap-3 ${
+                                                    isMe
+                                                        ? "justify-end"
+                                                        : "justify-start"
+                                                }`}
+                                            >
+
+                                                {/* Other User Avatar */}
+                                                {!isMe && (
+                                                    <div className="w-9 h-9 shrink-0 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-semibold text-sm">
+                                                        {item.username
+                                                            ?.charAt(0)
+                                                            ?.toUpperCase()}
+                                                    </div>
+                                                )}
+
+
+                                                <div
+                                                    className={`max-w-[80%] sm:max-w-[65%] ${
+                                                        isMe
+                                                            ? "items-end"
+                                                            : "items-start"
+                                                    } flex flex-col`}
+                                                >
+
+                                                    {/* User Info */}
+                                                    {!isMe && (
+                                                        <div className="flex items-center gap-2 mb-1 px-1">
+
+                                                            <span className="text-sm font-semibold text-slate-800">
+                                                                {item.username}
+                                                            </span>
+
+                                                            <span className="text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                                                                {item.college}
+                                                            </span>
+
+                                                        </div>
+                                                    )}
+
+
+                                                    {/* Message Bubble */}
+                                                    <div
+                                                        className={`px-4 py-2.5 rounded-2xl text-sm leading-6 ${
+                                                            isMe
+                                                                ? "bg-blue-600 text-white rounded-br-md"
+                                                                : "bg-slate-100 text-slate-700 rounded-bl-md"
+                                                        }`}
+                                                    >
+                                                        {item.message}
+                                                    </div>
+
+
+                                                    {/* Time */}
+                                                    <span className="text-[10px] text-slate-400 mt-1 px-1">
+                                                        {formatTime(
+                                                            item.createdAt
+                                                        )}
+                                                    </span>
+
+                                                </div>
+
+
+                                                {/* My Avatar */}
+                                                {isMe && (
+                                                    <div className="w-9 h-9 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm">
+                                                        {item.username
+                                                            ?.charAt(0)
+                                                            ?.toUpperCase()}
+                                                    </div>
+                                                )}
+
+                                            </div>
+                                        );
+                                    })}
+
+                                    <div ref={messagesEndRef} />
+
+                                </div>
+
+                            )}
+
+                        </div>
+
+
+                        {/* Input Area */}
+                        <div className="border-t border-slate-200 p-3 sm:p-4 bg-white">
+
+                            <div className="flex items-end gap-2">
+
+                                {/* Attachment */}
+                                <button
+                                    type="button"
+                                    className="hidden sm:flex w-10 h-10 shrink-0 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 transition"
+                                >
+                                    +
+                                </button>
+
+
+                                {/* Input */}
+                                <textarea
+                                    value={message}
+                                    onChange={(e) =>
+                                        setMessage(e.target.value)
+                                    }
+                                    onKeyDown={handleKeyDown}
+                                    rows="1"
+                                    placeholder={
+                                        user
+                                            ? "Type a message..."
+                                            : "Login to join the chat"
+                                    }
+                                    disabled={!user}
+                                    className="flex-1 resize-none max-h-32 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:cursor-not-allowed"
+                                />
+
+
+                                {/* Send */}
+                                <button
+                                    type="button"
+                                    onClick={sendMessage}
+                                    disabled={!user || !message.trim()}
+                                    className="w-10 h-10 shrink-0 bg-blue-600 text-white rounded-xl flex items-center justify-center text-lg hover:bg-blue-700 active:scale-95 transition disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                                >
+                                    ↑
+                                </button>
+
+                            </div>
+
+
+                            <div className="hidden sm:flex items-center justify-between mt-2 px-1">
+
+                                <p className="text-[11px] text-slate-400">
+                                    Enter to send • Shift + Enter for new line
+                                </p>
+
+                                <p className="text-[11px] text-slate-400">
+                                    Public chat
+                                </p>
+
+                            </div>
+
+                        </div>
+
                     </div>
-
-                    <div>
-                      <h2 className="font-semibold text-slate-900">
-                        {post.name}
-                      </h2>
-
-                      <p className="text-sm text-slate-500 mt-0.5">
-                        {post.college}
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <span className="text-xs text-slate-400 whitespace-nowrap">
-                    {post.time}
-                  </span>
 
                 </div>
 
-                {/* Post Content */}
-                <p className="mt-5 text-slate-700 leading-7 text-[15px]">
-                  {post.post}
-                </p>
+            </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-2 sm:gap-6 mt-5 pt-4 border-t border-slate-100">
-
-                  <button className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 transition px-2 py-1 rounded-lg hover:bg-blue-50">
-                    <span>👍</span>
-                    <span>{post.likes}</span>
-                  </button>
-
-                  <button className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 transition px-2 py-1 rounded-lg hover:bg-blue-50">
-                    <span>💬</span>
-                    <span>{post.comments}</span>
-                  </button>
-
-                  <button className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 transition px-2 py-1 rounded-lg hover:bg-blue-50 ml-auto">
-                    <span>↗</span>
-                    <span className="hidden sm:inline">
-                      Share
-                    </span>
-                  </button>
-
-                </div>
-
-              </article>
-            ))}
-
-          </div>
-
-        </div>
-
-        {/* CTA */}
-        <div className="max-w-4xl mx-auto bg-blue-600 rounded-3xl p-8 sm:p-10 mt-14 text-center text-white">
-
-          <div className="max-w-xl mx-auto">
-
-            <h2 className="text-2xl sm:text-3xl font-bold">
-              Join the Conversation
-            </h2>
-
-            <p className="mt-3 text-blue-100 leading-6">
-              Share your thoughts, ask questions and help fellow BEU
-              students.
-            </p>
-
-            <button className="mt-6 bg-white text-blue-600 px-7 py-3 rounded-xl font-semibold hover:bg-slate-100 active:scale-95 transition">
-              Start Posting
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default Community;
+

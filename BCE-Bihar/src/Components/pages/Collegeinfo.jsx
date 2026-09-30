@@ -16,6 +16,7 @@ const CollegeInfo = () => {
     const [college, setCollege] = useState(null);
     const [collegeLoading, setCollegeLoading] = useState(true);
     const [openMenuId, setOpenMenuId] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
     // =========================
     // EDIT COLLEGE
     // =========================
@@ -66,6 +67,19 @@ const CollegeInfo = () => {
     const [reviewText, setReviewText] = useState("");
     const [rating, setRating] = useState(0);
     const [submittingReview, setSubmittingReview] = useState(false);
+
+    useEffect(() => {
+        const getCurrentUser = async () => {
+            try {
+                const { data } = await api.get("/user/me");
+                setCurrentUser(data.user || null);
+            } catch {
+                setCurrentUser(null);
+            }
+        };
+
+        getCurrentUser();
+    }, []);
 
     const handleEditChange = (e) => {
         const { name, value } = e.target;
@@ -540,8 +554,12 @@ const CollegeInfo = () => {
     };
 
     const handleDeleteReview = async (Id) => {
+        if (currentUser?.role !== "admin") return;
+
         try {
             await api.delete(`/review/delete/${Id}`);
+            setReviews((prev) => prev.filter((review) => review._id !== Id));
+
 
             console.log("Review delete ho gaya");
         } catch (err) {
@@ -550,8 +568,11 @@ const CollegeInfo = () => {
     };
 
     const handleDeleteImage = async (Id) => {
+        if (currentUser?.role !== "admin") return;
+
         try {
 
+            console.log("delete hone hi wala hai")
             await api.delete(`/image/delete/${Id}`)
             console.log("image delete ho gya")
             setImages((prev) =>
@@ -1267,14 +1288,16 @@ const CollegeInfo = () => {
                                     }
                                     className="max-w-full max-h-[90vh] object-contain rounded-lg"
                                 />
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeleteImage(selectedImage._id);
-                                    }} className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
-                                >
-                                    🗑️
-                                </button>
+                                {currentUser?.role === "admin" && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteImage(selectedImage._id);
+                                        }} className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
+                                    >
+                                        🗑️
+                                    </button>
+                                )}
 
 
 
@@ -1612,32 +1635,38 @@ const CollegeInfo = () => {
 
                                         <div className="relative inline-block">
 
-                                            <span
-                                                onClick={() =>
-                                                    setOpenMenuId(
-                                                        openMenuId === review._id ? null : review._id
-                                                    )
-                                                }
-                                                className="text-xs text-gray-400 cursor-pointer"
-                                            >
-                                                <CircleChevronUp size={18} />
-                                            </span>
 
-                                            {openMenuId === review._id && (
-                                                <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
+                                            <div className="relative inline-block">
 
-                                                    <button
-                                                        onClick={() => {
-                                                            handleDeleteReview(review._id);
-                                                            setOpenMenuId(null);
-                                                        }}
-                                                        className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
-                                                    >
-                                                        Delete
-                                                    </button>
+                                                <span
+                                                    onClick={() =>
+                                                        setOpenMenuId(
+                                                            openMenuId === review._id ? null : review._id
+                                                        )
+                                                    }
+                                                    className="text-xs text-gray-400 cursor-pointer"
+                                                >
+                                                    <CircleChevronUp size={18} />
+                                                </span>
 
-                                                </div>
-                                            )}
+                                                {openMenuId === review._id && currentUser?.role === "admin" && (
+                                                    <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
+
+                                                        <button
+                                                            onClick={() => {
+                                                                handleDeleteReview(review._id);
+                                                                setOpenMenuId(null);
+                                                            }}
+                                                            className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
+                                                        >
+                                                            Delete
+                                                        </button>
+
+                                                    </div>
+                                                )}
+
+                                            </div>
+
 
                                         </div>
 
