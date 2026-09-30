@@ -550,7 +550,7 @@ const CollegeInfo = () => {
 
     const handleDeleteReview = async (Id) => {
         try {
-            await api.delete(`/review/delete/${selectedImage._id}`);
+            await api.delete(`/review/delete/${Id}`);
 
             console.log("Review delete ho gaya");
         } catch (err) {
@@ -558,6 +558,21 @@ const CollegeInfo = () => {
         }
     };
 
+    const handleDeleteImage = async (_Id) => {
+        try {
+
+            await api.delete(`/image/delete/${_Id}`)
+            console.log("image delete ho gya")
+            setImages((prev) =>
+                prev.filter((item) => item._id !== _Id)
+            );
+
+            setSelectedImage(null);
+        }
+        catch {
+            alert("nhi hua delete")
+        }
+    }
     // =========================
     // LOADING
     // =========================
@@ -1266,8 +1281,10 @@ const CollegeInfo = () => {
                                     className="max-w-full max-h-[90vh] object-contain rounded-lg"
                                 />
                                 <button
-                                    onClick={handleDeleteReview}
-                                    className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteImage(selectedImage._id);
+                                    }} className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
                                 >
                                     🗑️
                                 </button>
