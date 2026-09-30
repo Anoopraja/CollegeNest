@@ -120,7 +120,7 @@ function AdminProfile() {
             <button
               type="button"
               onClick={handleLogout}
-              className="hidden lg:block bg-red-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-red-700 hover:shadow-md active:scale-95"
+              className="lg:hidden block bg-red-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-red-700 hover:shadow-md active:scale-95"
             >
               Logout
             </button>
