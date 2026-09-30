@@ -21,11 +21,11 @@ const Navbar = () => {
         const { data } = await api.get("/admin/me");
         setUser(data.admin);
         return;
-      } catch {
+      } catch(adminError) {
         try {
           const { data } = await api.get("/user/me");
           setUser(data.user);
-        } catch {
+        } catch(userError){
           setUser(null);
         }
       }
@@ -36,18 +36,18 @@ const Navbar = () => {
 
 
 
-  const handleProfile = () => {
-    if (!user) {
-      navigate("/user/login");
-      return;
-    }
+  // const handleProfile = () => {
+  //   if (!user) {
+  //     navigate("/user/login");
+  //     return;
+  //   }
 
-    // if (user.role === "admin") {
-    //   navigate(`/admin/profile/${user.id}`);
-    // } else {
-    //   navigate(`/user/profile/${user.id}`);
-    // }
-  };
+  //   // if (user.role === "admin") {
+  //   //   navigate(`/admin/profile/${user.id}`);
+  //   // } else {
+  //   //   navigate(`/user/profile/${user.id}`);
+  //   // }
+  // };
   const handleLogout = async () => {
     try {
       await api.post("/user/logout");
