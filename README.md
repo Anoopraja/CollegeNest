@@ -72,7 +72,7 @@
 * GitHub
 * Postman
 * Cloudinary
-* Appwrite
+* Appwrite(for short time period)
 
 ---
 
