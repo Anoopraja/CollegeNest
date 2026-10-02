@@ -277,7 +277,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 ### Start Backend
 
 ```bash
-npm run dev
+npm start
 ```
 
 ### Start Frontend
@@ -288,6 +288,45 @@ npm run dev
 
 Then open the local Vite URL shown in your terminal.
 
+## 🌐 Deployment
+
+CollegeNest uses a separate frontend and backend deployment architecture.
+
+### Frontend
+
+**Platform:** Vercel
+
+🌐 https://collegenest.anooplofi.me/
+
+### Backend
+
+**Platform:** Render
+
+The Express.js + Node.js backend is deployed on Render and provides the REST APIs used by the React frontend.
+
+### Architecture
+
+```text
+User
+  │
+  ▼
+CollegeNest Frontend
+(Vercel)
+  │
+  │ HTTPS / REST API
+  ▼
+CollegeNest Backend
+(Render)
+  │
+  ├── Authentication
+  ├── Users
+  ├── Colleges
+  ├── Reviews
+  ├── Images
+  └── Admin Controls
+  │
+  ▼
+MongoDB
 ---
 
 ## 🌐 Production
