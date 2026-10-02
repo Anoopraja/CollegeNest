@@ -20,6 +20,21 @@
 * 📚 Academic and career guidance
 * 📱 Responsive design for desktop and mobile
 
+## 🛡️ Admin Control
+
+CollegeNest includes a role-based admin system for managing and moderating platform content.
+
+### Admin Capabilities
+
+- 🔐 Admin authentication
+- 👥 User management
+- 🏫 College management
+- ⭐ Review moderation
+- 🖼️ Image/content management
+- 🔒 Protected admin routes
+- 🛡️ Role-based authorization
+- 📊 Access to platform-level data
+
 ### 🔑 Authentication & Authorization
 
 * JWT-based authentication
