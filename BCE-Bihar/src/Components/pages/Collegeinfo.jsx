@@ -1691,4 +1691,3 @@ const CollegeInfo = () => {
 };
 
 export default CollegeInfo;
-
