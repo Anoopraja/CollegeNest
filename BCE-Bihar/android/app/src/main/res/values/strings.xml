@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CollegeNest</string>
+    <string name="title_activity_main">CollegeNest</string>
+    <string name="package_name">com.collegenest.app</string>
+    <string name="custom_url_scheme">com.collegenest.app</string>
+</resources>

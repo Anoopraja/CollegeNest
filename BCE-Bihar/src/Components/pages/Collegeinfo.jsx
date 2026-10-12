@@ -10,2249 +10,2244 @@ import { CircleChevronUp } from "lucide-react";
 
 const CollegeInfo = () => {
 
-       const { id } = useParams();
+    const { id } = useParams();
 
-       const navigate = useNavigate();
+    const navigate = useNavigate();
 
-// =========================
+    // =========================
 
-// COLLEGE
+    // COLLEGE
 
-// =========================
+    // =========================
 
-       const [college, setCollege] = useState(null);
+    const [college, setCollege] = useState(null);
 
-       const [collegeLoading, setCollegeLoading] = useState(true);
+    const [collegeLoading, setCollegeLoading] = useState(true);
 
-       const [openMenuId, setOpenMenuId] = useState(null);
+    const [openMenuId, setOpenMenuId] = useState(null);
 
-       const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
 
-// =========================
+    // =========================
 
-// EDIT COLLEGE
+    // EDIT COLLEGE
 
-// =========================
+    // =========================
 
-       const [editing, setEditing] = useState(false);
+    const [editing, setEditing] = useState(false);
 
-       const [saving, setSaving] = useState(false);
+    const [saving, setSaving] = useState(false);
 
-       const [editForm, setEditForm] = useState({
+    const [editForm, setEditForm] = useState({
 
-           name: "",
+        name: "",
 
-           shortName: "",
+        shortName: "",
 
-           slug: "",
+        slug: "",
 
-           distric: "",
+        distric: "",
 
-           addres: "",
+        addres: "",
 
-           locatio: "",
+        locatio: "",
 
-           stat: "",
+        stat: "",
 
-           establishe: "",
+        establishe: "",
 
-           typ: "",
+        typ: "",
 
-           ownershi: "",
+        ownershi: "",
 
-           university: "",
+        university: "",
 
-           approval: "",
+        approval: "",
 
-           campus: "",
+        campus: "",
 
-           website: "",
+        website: "",
 
-           email: "",
+        email: "",
 
-           phone: "",
+        phone: "",
 
-           image: "",
+        image: "",
 
-           logo: "",
+        logo: "",
 
-           rating: "",
+        rating: "",
 
-           admission: "",
+        admission: "",
 
-           about: "",
+        about: "",
 
-           branches: [""],
+        branches: [""],
 
-           facilities: [""],
+        facilities: [""],
 
-       });
+    });
 
-// =========================
+    // =========================
 
-// GALLERY
+    // GALLERY
 
-// =========================
+    // =========================
 
-       const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
 
-       const [image, setImage] = useState(null);
+    const [image, setImage] = useState(null);
 
-       const [images, setImages] = useState([]);
+    const [images, setImages] = useState([]);
 
-       const [uploading, setUploading] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
-// =========================
+    // =========================
 
-// REVIEWS
+    // REVIEWS
 
-// =========================
+    // =========================
 
-       const [reviews, setReviews] = useState([]);
+    const [reviews, setReviews] = useState([]);
 
-       const [reviewText, setReviewText] = useState("");
+    const [reviewText, setReviewText] = useState("");
 
-       const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(0);
 
-       const [submittingReview, setSubmittingReview] = useState(false);
+    const [submittingReview, setSubmittingReview] = useState(false);
 
-       useEffect(() => {
+    useEffect(() => {
 
-           const getCurrentUser = async () => {
+        const getCurrentUser = async () => {
 
-               try {
+            try {
 
-                   const { data } = await api.get("/user/me");
+                const { data } = await api.get("/user/me");
 
-                   setCurrentUser(data.user || null);
+                setCurrentUser(data.user || null);
 
-               } catch {
+            } catch {
 
-                   setCurrentUser(null);
+                setCurrentUser(null);
 
-               }
+            }
 
-           };
+        };
 
-           getCurrentUser();
+        getCurrentUser();
 
-       }, []);
+    }, []);
 
-       const handleEditChange = (e) => {
+    const handleEditChange = (e) => {
 
-           const { name, value } = e.target;
+        const { name, value } = e.target;
 
-           setEditForm((prev) => ({
+        setEditForm((prev) => ({
 
-               ...prev,
+            ...prev,
 
-               [name]: value
+            [name]: value
 
-           }));
+        }));
 
-       };
+    };
 
-       const startEditing = () => {
+    const startEditing = () => {
 
-           setEditForm({
+        setEditForm({
 
-               name: college?.name || "",
+            name: college?.name || "",
 
-               shortName: college?.shortName || "",
+            shortName: college?.shortName || "",
 
-               slug: college?.slug || "",
+            slug: college?.slug || "",
 
-               district: college?.district || "",
+            district: college?.district || "",
 
-               address: college?.address || "",
+            address: college?.address || "",
 
-               location: college?.location || "",
+            location: college?.location || "",
 
-               state: college?.state || "",
+            state: college?.state || "",
 
-               established: college?.established || "",
+            established: college?.established || "",
 
-               type: college?.type || "",
+            type: college?.type || "",
 
-               ownership: college?.ownership || "",
+            ownership: college?.ownership || "",
 
-               university: college?.university || "",
+            university: college?.university || "",
 
-               approval: college?.approval || "",
+            approval: college?.approval || "",
 
-               campus: college?.campus || "",
+            campus: college?.campus || "",
 
-               website: college?.website || "",
+            website: college?.website || "",
 
-               email: college?.email || "",
+            email: college?.email || "",
 
-               phone: college?.phone || "",
+            phone: college?.phone || "",
 
-               image: college?.image || "",
+            image: college?.image || "",
 
-               logo: college?.logo || "",
+            logo: college?.logo || "",
 
-               rating: college?.rating || "",
+            rating: college?.rating || "",
 
-               admission: college?.admission || "",
+            admission: college?.admission || "",
 
-               about: college?.about || "",
+            about: college?.about || "",
 
-               branches: Array.isArray(college?.branches) ? college.branches : (typeof college?.branches === "string" && college.branches.trim() ? college.branches.split(",").map((item) => item.trim()) : [""]),
+            branches: Array.isArray(college?.branches) ? college.branches : (typeof college?.branches === "string" && college.branches.trim() ? college.branches.split(",").map((item) => item.trim()) : [""]),
 
-               facilities: Array.isArray(college?.facilities) ? college.facilities : (typeof college?.facilities === "string" && college.facilities.trim() ? college.facilities.split(",").map((item) => item.trim()) : [""]),
+            facilities: Array.isArray(college?.facilities) ? college.facilities : (typeof college?.facilities === "string" && college.facilities.trim() ? college.facilities.split(",").map((item) => item.trim()) : [""]),
 
-           });
+        });
 
-           setEditing(true);
+        setEditing(true);
 
-       };
+    };
 
-       const updateCollege = async () => {
+    const updateCollege = async () => {
 
-           try {
+        try {
 
-// if(user?.role !== "admin"){
+            // if(user?.role !== "admin"){
 
-//     console("you are not allowed to do change any this")
+            //     console("you are not allowed to do change any this")
 
-// }
+            // }
 
-               if (!college?._id) {
+            if (!college?._id) {
 
-                   alert("College ID not found");
+                alert("College ID not found");
 
-                   return;
+                return;
 
-               }
+            }
 
-               setSaving(true);
+            setSaving(true);
 
-               const { data } = await api.patch(
+            const { data } = await api.patch(
 
-                   `/college/update/${college._id}`,
+                `/college/update/${college._id}`,
 
-                   {
+                {
 
-                       ...editForm,
-                       branches: (Array.isArray(editForm.branches) ? editForm.branches : []).map((item) => item.trim()).filter(Boolean),
-                       facilities: (Array.isArray(editForm.facilities) ? editForm.facilities : []).map((item) => item.trim()).filter(Boolean),
+                    ...editForm,
+                    branches: (Array.isArray(editForm.branches) ? editForm.branches : []).map((item) => item.trim()).filter(Boolean),
+                    facilities: (Array.isArray(editForm.facilities) ? editForm.facilities : []).map((item) => item.trim()).filter(Boolean),
 
-                       rating: Number(editForm.rating),
+                    rating: Number(editForm.rating),
 
-                       established: Number(editForm.established)
+                    established: Number(editForm.established)
 
-                   }
+                }
 
-               );
+            );
 
-// alert("Updated college:");
+            // alert("Updated college:");
 
-               console.log(data.college)
+            console.log(data.college)
 
-               const updatedCollege = data.college || data.data;
+            const updatedCollege = data.college || data.data;
 
-               if (updatedCollege) {
+            if (updatedCollege) {
 
-                   setCollege(updatedCollege);
+                setCollege(updatedCollege);
 
-               }
+            }
 
-               setEditing(false);
+            setEditing(false);
 
-               alert("College updated successfully");
+            alert("College updated successfully");
 
-           } catch (error) {
+        } catch (error) {
 
-               console.error("College update failed:", error);
+            console.error("College update failed:", error);
 
-               alert(error.response?.data?.message || "College update failed");
+            alert(error.response?.data?.message || "College update failed");
 
-           } finally {
+        } finally {
 
-               setSaving(false);
+            setSaving(false);
 
-           }
+        }
 
-       };
+    };
 
-// =========================
+    // =========================
 
-// GET SINGLE COLLEGE
+    // GET SINGLE COLLEGE
 
-// =========================
+    // =========================
 
-       useEffect(() => {
+    useEffect(() => {
 
-           const getCollege = async () => {
+        const getCollege = async () => {
 
-               try {
+            try {
 
-                   setCollegeLoading(true);
+                setCollegeLoading(true);
 
-                   const response = await api.get(`/college/${id}`);
+                const response = await api.get(`/college/${id}`);
 
-                   console.log("Single college response:", response.data.data);
+                console.log("Single college response:", response.data.data);
 
-                   const collegeData =
+                const collegeData =
 
-                       response.data.college ||
+                    response.data.college ||
 
-                       response.data.data;
+                    response.data.data;
 
-                   setCollege(collegeData || null);
+                setCollege(collegeData || null);
 
-                   if (collegeData) {
+                if (collegeData) {
 
-                       setEditForm({
+                    setEditForm({
 
-                           name: collegeData.name || "",
+                        name: collegeData.name || "",
 
-                           shortName: collegeData.shortName || "",
+                        shortName: collegeData.shortName || "",
 
-                           location: collegeData.location || "",
+                        location: collegeData.location || "",
 
-                           rating: collegeData.rating ?? "",
+                        rating: collegeData.rating ?? "",
 
-                           established: collegeData.established ?? "",
+                        established: collegeData.established ?? "",
 
-                           type: collegeData.type || "",
+                        type: collegeData.type || "",
 
-                           campus: collegeData.campus || "",
+                        campus: collegeData.campus || "",
 
-                           university: collegeData.university || "",
+                        university: collegeData.university || "",
 
-                           approval: collegeData.approval || "",
+                        approval: collegeData.approval || "",
 
-                           phone: collegeData.phone || "",
+                        phone: collegeData.phone || "",
 
-                           email: collegeData.email || "",
+                        email: collegeData.email || "",
 
-                           website: collegeData.website || "",
-                           about: collegeData.about || "",
-                           slug: collegeData.slug || "",
-                           district: collegeData.district || "",
-                           address: collegeData.address || "",
-                           state: collegeData.state || "",
-                           ownership: collegeData.ownership || "",
-                           admission: collegeData.admission || "",
-                           image: collegeData.image || "",
-                           logo: collegeData.logo || "",
-                           branches: Array.isArray(collegeData.branches) ? collegeData.branches : (typeof collegeData.branches === "string" && collegeData.branches.trim() ? collegeData.branches.split(",").map((item) => item.trim()) : [""]),
-                           facilities: Array.isArray(collegeData.facilities) ? collegeData.facilities : (typeof collegeData.facilities === "string" && collegeData.facilities.trim() ? collegeData.facilities.split(",").map((item) => item.trim()) : [""])
-                       });
+                        website: collegeData.website || "",
+                        about: collegeData.about || "",
+                        slug: collegeData.slug || "",
+                        district: collegeData.district || "",
+                        address: collegeData.address || "",
+                        state: collegeData.state || "",
+                        ownership: collegeData.ownership || "",
+                        admission: collegeData.admission || "",
+                        image: collegeData.image || "",
+                        logo: collegeData.logo || "",
+                        branches: Array.isArray(collegeData.branches) ? collegeData.branches : (typeof collegeData.branches === "string" && collegeData.branches.trim() ? collegeData.branches.split(",").map((item) => item.trim()) : [""]),
+                        facilities: Array.isArray(collegeData.facilities) ? collegeData.facilities : (typeof collegeData.facilities === "string" && collegeData.facilities.trim() ? collegeData.facilities.split(",").map((item) => item.trim()) : [""])
+                    });
 
-                   }
+                }
 
-               } catch (error) {
+            } catch (error) {
 
-                   console.error(
+                console.error(
 
-                       "College fetch error:",
+                    "College fetch error:",
 
-                       error
+                    error
 
-                   );
+                );
 
-                   setCollege(null);
+                setCollege(null);
 
-               } finally {
+            } finally {
 
-                   setCollegeLoading(false);
+                setCollegeLoading(false);
 
-               }
+            }
 
-           };
+        };
 
-           if (id) {
+        if (id) {
 
-               getCollege();
+            getCollege();
 
-           }
+        }
 
-       }, [id]);
+    }, [id]);
 
-// =========================
+    // =========================
 
-// FILE SELECT
+    // FILE SELECT
 
-// =========================
+    // =========================
 
-       const handleFileChange = async (e) => {
+    const handleFileChange = async (e) => {
 
-           try {
+        try {
 
-// Check login first
+            // Check login first
 
-               const { data } = await api.get("/user/me");
+            const { data } = await api.get("/user/me");
 
-               const user = data.user;
+            const user = data.user;
 
-               if (!user) {
+            if (!user) {
 
-                   alert("Please login first");
+                alert("Please login first");
 
-                   navigate("/user/login");
+                navigate("/user/login");
 
-                   return;
+                return;
 
-               }
+            }
 
-               const selectedFile = e.target.files[0];
+            const selectedFile = e.target.files[0];
 
-               if (!selectedFile) return;
+            if (!selectedFile) return;
 
-               setImage(selectedFile);
+            setImage(selectedFile);
 
-           } catch (error) {
+        } catch (error) {
 
-               console.error("Login check failed:", error);
+            console.error("Login check failed:", error);
 
-               alert("Please login first");
+            alert("Please login first");
 
-               navigate("/user/login");
+            navigate("/user/login");
 
-           }
+        }
 
-       };
+    };
 
-// =========================
+    // =========================
 
-// UPLOAD IMAGE
+    // UPLOAD IMAGE
 
-// =========================
+    // =========================
 
-       const handleUpload = async () => {
+    const handleUpload = async () => {
 
-           if (!image) {
+        if (!image) {
 
-               alert("Pehle image select karo");
+            alert("Pehle image select karo");
 
-               return;
+            return;
 
-           }
+        }
 
-           if (!college?._id) {
+        if (!college?._id) {
 
-               alert("College data not loaded");
+            alert("College data not loaded");
 
-               return;
+            return;
 
-           }
+        }
 
-           try {
+        try {
 
-               setUploading(true);
+            setUploading(true);
 
-// 1. Upload image to Cloudinary
+            // 1. Upload image to Cloudinary
 
-               const uploadedImage = await uploadImage(image);
+            const uploadedImage = await uploadImage(image);
 
-               const uploadedImageUrl = uploadedImage.imageUrl;
+            const uploadedImageUrl = uploadedImage.imageUrl;
 
-               console.log(
+            console.log(
 
-                   "Cloudinary URL:",
+                "Cloudinary URL:",
 
-                   uploadedImageUrl
+                uploadedImageUrl
 
-               );
+            );
 
-// 2. Save image URL in backend
+            // 2. Save image URL in backend
 
-               await api.post("/image", {
+            await api.post("/image", {
 
-                   collegeId: college._id,
+                collegeId: college._id,
 
-                   imageUrl: uploadedImageUrl,
+                imageUrl: uploadedImageUrl,
 
-                   publicId: uploadedImage.publicId,
+                publicId: uploadedImage.publicId,
 
-               });
+            });
 
-// 3. Display uploaded image
+            // 3. Display uploaded image
 
-// 4. Add image to gallery immediately
+            // 4. Add image to gallery immediately
 
-               setImages((prev) => [
+            setImages((prev) => [
 
-                   {
+                {
 
-                       _id: Date.now().toString(),
+                    _id: Date.now().toString(),
 
-                       imageUrl: uploadedImageUrl,
+                    imageUrl: uploadedImageUrl,
 
-                   },
+                },
 
-                   ...prev,
+                ...prev,
 
-               ]);
+            ]);
 
-// 5. Clear selected file
+            // 5. Clear selected file
 
-               setImage(null);
+            setImage(null);
 
-               alert("Image uploaded and saved!");
+            alert("Image uploaded and saved!");
 
-           } catch (error) {
+        } catch (error) {
 
-               console.error(
+            console.error(
 
-                   "Upload error:",
+                "Upload error:",
 
-                   error
+                error
 
-               );
+            );
 
-               alert(
+            alert(
 
-                   error.response?.data?.message ||
+                error.response?.data?.message ||
 
-                   error.message ||
+                error.message ||
 
-                   "Image upload failed"
+                "Image upload failed"
 
-               );
+            );
 
-           } finally {
+        } finally {
 
-               setUploading(false);
+            setUploading(false);
 
-           }
+        }
 
-       };
+    };
 
-// =========================
+    // =========================
 
-// GET GALLERY IMAGES
+    // GET GALLERY IMAGES
 
-// =========================
+    // =========================
 
-       useEffect(() => {
+    useEffect(() => {
 
-           const getImages = async () => {
+        const getImages = async () => {
 
-               try {
+            try {
 
-                   if (!college?._id) return;
+                if (!college?._id) return;
 
-                   const { data } = await api.get(
+                const { data } = await api.get(
 
-                       `/image/${college._id}`
+                    `/image/${college._id}`
 
-                   );
+                );
 
-                   console.log("Images response:", data);
+                console.log("Images response:", data);
 
-                   setImages(data.data || []);
+                setImages(data.data || []);
 
-               } catch (error) {
+            } catch (error) {
 
-                   console.error(
+                console.error(
 
-                       "Images fetch failed:",
+                    "Images fetch failed:",
 
-                       error.response?.data || error
+                    error.response?.data || error
 
-                   );
+                );
 
-               }
+            }
 
-           };
+        };
 
-           getImages();
+        getImages();
 
-       }, [college?._id]);
+    }, [college?._id]);
 
-// =========================
+    // =========================
 
-// GET REVIEWS
+    // GET REVIEWS
 
-// =========================
+    // =========================
 
-       useEffect(() => {
+    useEffect(() => {
 
-           const getReviews = async () => {
+        const getReviews = async () => {
 
-               try {
+            try {
 
-                   if (!college?._id) return;
+                if (!college?._id) return;
 
-                   const { data } = await api.get(
+                const { data } = await api.get(
 
-                       `/review/${college._id}`
+                    `/review/${college._id}`
 
-                   );
+                );
 
-                   console.log("Reviews response:", data);
+                console.log("Reviews response:", data);
 
-                   setReviews(data.data || []);
+                setReviews(data.data || []);
 
-               } catch (error) {
+            } catch (error) {
 
-                   console.error(
+                console.error(
 
-                       "Reviews fetch failed:",
+                    "Reviews fetch failed:",
 
-                       error.response?.data || error
+                    error.response?.data || error
 
-                   );
+                );
 
-               }
+            }
 
-           };
+        };
 
-           getReviews();
+        getReviews();
 
-       }, [college?._id]);
+    }, [college?._id]);
 
-// =========================
+    // =========================
 
-// REVIEW SUBMIT
+    // REVIEW SUBMIT
 
-// =========================
+    // =========================
 
-       const handleReviewSubmit = async (e) => {
+    const handleReviewSubmit = async (e) => {
 
-           e.preventDefault();
+        e.preventDefault();
 
-           if (!reviewText.trim()) {
+        if (!reviewText.trim()) {
 
-               alert("Please write a review");
+            alert("Please write a review");
 
-               return;
+            return;
 
-           }
+        }
 
-           if (!rating) {
+        if (!rating) {
 
-               alert("Please select a rating");
+            alert("Please select a rating");
 
-               return;
+            return;
 
-           }
+        }
 
-           if (!college?._id) {
+        if (!college?._id) {
 
-               alert("College data not loaded");
+            alert("College data not loaded");
 
-               return;
+            return;
 
-           }
+        }
 
-           try {
+        try {
 
-               setSubmittingReview(true);
+            setSubmittingReview(true);
 
-// Check login
+            // Check login
 
-               const { data } = await api.get(
+            const { data } = await api.get(
 
-                   "/user/me"
+                "/user/me"
 
-               );
+            );
 
-               const user = data.user;
+            const user = data.user;
 
-               if (!user) {
+            if (!user) {
 
-                   alert("Please login first");
+                alert("Please login first");
 
-                   navigate("/user/login");
+                navigate("/user/login");
 
-                   return;
+                return;
 
-               }
+            }
 
-               console.log(
+            console.log(
 
-                   "Logged in user:",
+                "Logged in user:",
 
-                   user
+                user
 
-               );
+            );
 
-// Submit review
+            // Submit review
 
-               const { data: reviewResponse } =
+            const { data: reviewResponse } =
 
-                   await api.post(
+                await api.post(
 
-                       "/review/write",
+                    "/review/write",
 
-                       {
+                    {
 
-                           collegeId: college._id,
+                        collegeId: college._id,
 
-                           userId: user._id || user.id,
+                        userId: user._id || user.id,
 
-                           username: user.username || user.name || "Anonymous User",
+                        username: user.username || user.name || "Anonymous User",
 
-                           rating: Number(rating),
+                        rating: Number(rating),
 
-                           review: reviewText.trim(),
+                        review: reviewText.trim(),
 
-                       }
+                    }
 
-                   );
+                );
 
-               console.log(
+            console.log(
 
-                   "Review response:",
+                "Review response:",
 
-                   reviewResponse
+                reviewResponse
 
-               );
+            );
 
-               console.log("REVIEW DATA:", {
+            console.log("REVIEW DATA:", {
 
-                   collegeId: college._id,
+                collegeId: college._id,
 
-                   userId: user._id || user.id,
+                userId: user._id || user.id,
 
-                   username: user.username || user.name || "Anonymous User",
+                username: user.username || user.name || "Anonymous User",
 
-                   rating: Number(rating),
+                rating: Number(rating),
 
-                   review: reviewText.trim(),
+                review: reviewText.trim(),
 
-               });
+            });
 
-               const newReview =
+            const newReview =
 
-                   reviewResponse.data;
+                reviewResponse.data;
 
-               if (newReview) {
+            if (newReview) {
 
-                   setReviews((prev) => [
+                setReviews((prev) => [
 
-                       newReview,
+                    newReview,
 
-                       ...prev,
+                    ...prev,
 
-                   ]);
+                ]);
 
-               }
+            }
 
-               setReviewText("");
+            setReviewText("");
 
-               setRating(5);
+            setRating(5);
 
-               alert(
+            alert(
 
-                   "Review submitted successfully!"
+                "Review submitted successfully!"
 
-               );
+            );
 
-           } catch (error) {
+        } catch (error) {
 
-               console.error(
+            console.error(
 
-                   "Review submit error:",
+                "Review submit error:",
 
-                   error
+                error
 
-               );
+            );
 
-               alert(
+            alert(
 
-                   error.response?.data?.message ||
+                error.response?.data?.message ||
 
-                   error.message ||
+                error.message ||
 
-                   "Review submission failed"
+                "Review submission failed"
 
-               );
+            );
 
-           } finally {
+        } finally {
 
-               setSubmittingReview(false);
+            setSubmittingReview(false);
 
-           }
+        }
 
-       };
+    };
 
-       const handleDeleteReview = async (Id) => {
+    const handleDeleteReview = async (Id) => {
 
-           if (currentUser?.role !== "admin") return;
+        if (currentUser?.role !== "admin") return;
 
-           try {
+        try {
 
-               await api.delete(`/review/delete/${Id}`);
+            await api.delete(`/review/delete/${Id}`);
 
-               setReviews((prev) => prev.filter((review) => review._id !== Id));
+            setReviews((prev) => prev.filter((review) => review._id !== Id));
 
-               console.log("Review delete ho gaya");
+            console.log("Review delete ho gaya");
 
-           } catch (err) {
+        } catch (err) {
 
-               console.log("Review delete karne me error:", err);
+            console.log("Review delete karne me error:", err);
 
-           }
+        }
 
-       };
+    };
 
-       const handleDeleteImage = async (Id) => {
+    const handleDeleteImage = async (Id) => {
 
-           if (currentUser?.role !== "admin") return;
+        if (currentUser?.role !== "admin") return;
 
-           try {
+        try {
 
-               console.log("delete hone hi wala hai")
+            console.log("delete hone hi wala hai")
 
-               await api.delete(`/image/delete/${Id}`)
+            await api.delete(`/image/delete/${Id}`)
 
-               console.log("image delete ho gya")
+            console.log("image delete ho gya")
 
-               setImages((prev) =>
+            setImages((prev) =>
 
-                   prev.filter((item) => item._id !== Id)
+                prev.filter((item) => item._id !== Id)
 
-               );
+            );
 
-               setSelectedImage(null);
+            setSelectedImage(null);
 
-           }
+        }
 
-           catch {
+        catch {
 
-               alert("nhi hua delete")
+            alert("nhi hua delete")
 
-           }
+        }
 
-       }
+    }
 
-// =========================
+    // =========================
 
-// LOADING
+    // LOADING
 
-// =========================
+    // =========================
 
-       if (collegeLoading) {
+    if (collegeLoading) {
 
-           return (
+        return (
 
-               <div className="min-h-[60vh] flex items-center justify-center">
+            <div className="min-h-[60vh] flex items-center justify-center">
 
-                   <div className="text-center">
+                <div className="text-center">
 
-                       <div className="text-5xl mb-4">
+                    <div className="text-5xl mb-4">
 
-                           🎓
+                        🎓
 
-                       </div>
+                    </div>
 
-                       <p className="text-gray-500">
+                    <p className="text-gray-500">
 
-                           Loading college...
+                        Loading college...
 
-                       </p>
+                    </p>
 
-                   </div>
+                </div>
 
-               </div>
+            </div>
 
-           );
+        );
 
-       }
+    }
 
-// =========================
+    // =========================
 
-// COLLEGE NOT FOUND
+    // COLLEGE NOT FOUND
 
-// =========================
+    // =========================
 
-       if (!college) {
+    if (!college) {
 
-           return (
+        return (
 
-               <div className="min-h-[60vh] flex items-center justify-center px-6">
+            <div className="min-h-[60vh] flex items-center justify-center px-6">
 
-                   <div className="text-center">
+                <div className="text-center">
 
-                       <div className="text-6xl mb-5">
+                    <div className="text-6xl mb-5">
 
-                           🎓
+                        🎓
 
-                       </div>
+                    </div>
 
-                       <h2 className="text-3xl font-bold text-gray-900">
+                    <h2 className="text-3xl font-bold text-gray-900">
 
-                           College Not Found
+                        College Not Found
 
-                       </h2>
+                    </h2>
 
-                       <p className="text-gray-500 mt-2">
+                    <p className="text-gray-500 mt-2">
 
-                           The college you're looking for doesn't exist.
+                        The college you're looking for doesn't exist.
 
-                       </p>
+                    </p>
 
-                   </div>
+                </div>
 
-               </div>
+            </div>
 
-           );
+        );
 
-       }
+    }
 
-       return (
+    return (
 
-           <section className="bg-white pb-10 min-h-screen">
+        <section className="bg-white pb-10 min-h-screen">
 
-               <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6">
 
-                   <div className="relative h-[280px] sm:h-[380px] overflow-hidden rounded-3xl shadow-xl">
+                <div className="relative h-[280px] sm:h-[380px] overflow-hidden rounded-3xl shadow-xl">
 
-                       <img
+                    <img
 
-src={
+                        src={
 
-                               college.image ||
+                            college.image ||
 
-                               "/default-college.jpg"
+                            "/default-college.jpg"
 
-                           }
+                        }
 
-alt={college.name}
+                        alt={college.name}
 
-className="w-full h-full object-cover"
+                        className="w-full h-full object-cover"
 
-                       />
+                    />
 
-                       <div className="absolute inset-0 bg-black/45" />
+                    <div className="absolute inset-0 bg-black/45" />
 
-                       <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-white">
+                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-white">
 
-                           <div className="max-w-4xl">
+                        <div className="max-w-4xl">
 
-                               <span className="inline-block bg-blue-600 px-4 py-1.5 rounded-full text-sm font-medium mb-3">
+                            <span className="inline-block bg-blue-600 px-4 py-1.5 rounded-full text-sm font-medium mb-3">
 
-                                   {college.shortName ||
+                                {college.shortName ||
 
-                                       "Engineering College"}
+                                    "Engineering College"}
 
-                               </span>
+                            </span>
 
-                               <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
+                            <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
 
-                                   {college.name}
+                                {college.name}
 
-                               </h1>
+                            </h1>
 
-                               <div className="flex flex-wrap gap-3 sm:gap-5 mt-4 text-sm sm:text-base">
+                            <div className="flex flex-wrap gap-3 sm:gap-5 mt-4 text-sm sm:text-base">
 
-                                   <span className="flex items-center gap-2">
+                                <span className="flex items-center gap-2">
 
-                                       📍 {college.location}
+                                    📍 {college.location}
 
-                                   </span>
+                                </span>
 
-                                   <span className="flex items-center gap-2">
+                                <span className="flex items-center gap-2">
 
-                                       ⭐ {college.rating}/5
+                                    ⭐ {college.rating}/5
 
-                                   </span>
+                                </span>
 
-                               </div>
+                            </div>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                   </div>
+                </div>
 
-               </div>
+            </div>
 
-               <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
 
-                   {editing && (
+                {editing && (
 
-                       <div className="mb-10 bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-lg">
+                    <div className="mb-10 bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-lg">
 
-                           <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center justify-between mb-6">
 
-                               <div>
+                            <div>
 
-                                   <h2 className="text-2xl font-bold text-gray-900">
+                                <h2 className="text-2xl font-bold text-gray-900">
 
-                                       Edit College
+                                    Edit College
 
-                                   </h2>
+                                </h2>
 
-                                   <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-gray-500 mt-1">
 
-                                       Update college information
+                                    Update college information
 
-                                   </p>
+                                </p>
 
-                               </div>
+                            </div>
 
-                               <button
+                            <button
 
-type="button"
+                                type="button"
 
-onClick={() => setEditing(false)}
+                                onClick={() => setEditing(false)}
 
-className="text-gray-500 hover:text-gray-900 text-2xl"
+                                className="text-gray-500 hover:text-gray-900 text-2xl"
 
-                               >
+                            >
 
-                                   ✕
+                                ✕
 
-                               </button>
+                            </button>
 
-                           </div>
+                        </div>
 
-                           <div className="grid md:grid-cols-2 gap-5">
+                        <div className="grid md:grid-cols-2 gap-5">
 
-                               {[
+                            {[
 
-                                   ["name", "College Name", "text"],
+                                ["name", "College Name", "text"],
 
-                                   ["shortName", "Short Name", "text"],
+                                ["shortName", "Short Name", "text"],
 
-                                   ["slug", "Slug", "text"],
+                                ["slug", "Slug", "text"],
 
-                                   ["district", "District", "text"],
+                                ["district", "District", "text"],
 
-                                   ["address", "Address", "text"],
+                                ["address", "Address", "text"],
 
-                                   ["location", "Location", "text"],
+                                ["location", "Location", "text"],
 
-                                   ["state", "State", "text"],
+                                ["state", "State", "text"],
 
-                                   ["established", "Established", "number"],
+                                ["established", "Established", "number"],
 
-                                   ["type", "College Type", "text"],
+                                ["type", "College Type", "text"],
 
-                                   ["ownership", "Ownership", "text"],
+                                ["ownership", "Ownership", "text"],
 
-                                   ["university", "University", "text"],
+                                ["university", "University", "text"],
 
-                                   ["approval", "Approval", "text"],
+                                ["approval", "Approval", "text"],
 
-                                   ["campus", "Campus", "text"],
+                                ["campus", "Campus", "text"],
 
-                                   ["website", "Website", "text"],
+                                ["website", "Website", "text"],
 
-                                   ["email", "Email", "email"],
+                                ["email", "Email", "email"],
 
-                                   ["phone", "Phone", "text"],
+                                ["phone", "Phone", "text"],
 
-                                   ["image", "College Image", "text"],
+                                ["image", "College Image", "text"],
 
-                                   ["logo", "College Logo", "text"],
+                                ["logo", "College Logo", "text"],
 
-                                   ["rating", "Rating", "number"],
+                                ["rating", "Rating", "number"],
 
-                                   ["admission", "Admission", "text"],
+                                ["admission", "Admission", "text"],
 
-                               ].map(([name, label, type]) => (
+                            ].map(([name, label, type]) => (
 
-                                   <div key={name}>
+                                <div key={name}>
 
-                                       <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                                           {label}
+                                        {label}
 
-                                       </label>
+                                    </label>
 
-                                       <input
+                                    <input
 
-type={type}
+                                        type={type}
 
-name={name}
+                                        name={name}
 
-value={editForm[name]}
+                                        value={editForm[name]}
 
-onChange={handleEditChange}
+                                        onChange={handleEditChange}
 
-min={name === "rating" ? "0" : undefined}
+                                        min={name === "rating" ? "0" : undefined}
 
-max={name === "rating" ? "5" : undefined}
+                                        max={name === "rating" ? "5" : undefined}
 
-step={name === "rating" ? "0.1" : undefined}
+                                        step={name === "rating" ? "0.1" : undefined}
 
-className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
 
-                                       />
+                                    />
 
-                                   </div>
+                                </div>
 
-                               ))}
+                            ))}
 
-                           </div>
+                        </div>
 
-                           {/* Branches: separate input for every branch */}
-                           <div className="mt-6">
-                               <label className="block text-sm font-medium text-gray-700 mb-3">Branches</label>
-                               {(Array.isArray(editForm.branches) ? editForm.branches : [""]).map((branch, index) => (
-                                   <div key={`branch-${index}`} className="flex gap-2 mb-3">
-                                       <input
-                                           type="text"
-                                           value={branch}
-                                           onChange={(e) => {
-                                               const updated = [...(Array.isArray(editForm.branches) ? editForm.branches : [])];
-                                               updated[index] = e.target.value;
-                                               setEditForm((prev) => ({ ...prev, branches: updated }));
-                                           }}
-                                           placeholder={`Branch ${index + 1}`}
-                                           className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-                                       />
-                                       <button type="button" onClick={() => setEditForm((prev) => ({
-                                           ...prev,
-                                           branches: (Array.isArray(prev.branches) ? prev.branches : []).filter((_, i) => i !== index),
-                                       }))} className="px-4 bg-red-500 text-white rounded-xl hover:bg-red-600">Remove</button>
-                                   </div>
-                               ))}
-                               <button type="button" onClick={() => setEditForm((prev) => ({
-                                   ...prev,
-                                   branches: [...(Array.isArray(prev.branches) ? prev.branches : []), ""],
-                               }))} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">+ Add Branch</button>
-                           </div>
+                        {/* Branches: separate input for every branch */}
+                        <div className="mt-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-3">Branches</label>
+                            {(Array.isArray(editForm.branches) ? editForm.branches : [""]).map((branch, index) => (
+                                <div key={`branch-${index}`} className="flex gap-2 mb-3">
+                                    <input
+                                        type="text"
+                                        value={branch}
+                                        onChange={(e) => {
+                                            const updated = [...(Array.isArray(editForm.branches) ? editForm.branches : [])];
+                                            updated[index] = e.target.value;
+                                            setEditForm((prev) => ({ ...prev, branches: updated }));
+                                        }}
+                                        placeholder={`Branch ${index + 1}`}
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <button type="button" onClick={() => setEditForm((prev) => ({
+                                        ...prev,
+                                        branches: (Array.isArray(prev.branches) ? prev.branches : []).filter((_, i) => i !== index),
+                                    }))} className="px-4 bg-red-500 text-white rounded-xl hover:bg-red-600">Remove</button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={() => setEditForm((prev) => ({
+                                ...prev,
+                                branches: [...(Array.isArray(prev.branches) ? prev.branches : []), ""],
+                            }))} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">+ Add Branch</button>
+                        </div>
 
-                           {/* Facilities: separate input for every facility */}
-                           <div className="mt-6">
-                               <label className="block text-sm font-medium text-gray-700 mb-3">Facilities</label>
-                               {(Array.isArray(editForm.facilities) ? editForm.facilities : [""]).map((facility, index) => (
-                                   <div key={`facility-${index}`} className="flex gap-2 mb-3">
-                                       <input
-                                           type="text"
-                                           value={facility}
-                                           onChange={(e) => {
-                                               const updated = [...(Array.isArray(editForm.facilities) ? editForm.facilities : [])];
-                                               updated[index] = e.target.value;
-                                               setEditForm((prev) => ({ ...prev, facilities: updated }));
-                                           }}
-                                           placeholder={`Facility ${index + 1}`}
-                                           className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-                                       />
-                                       <button type="button" onClick={() => setEditForm((prev) => ({
-                                           ...prev,
-                                           facilities: (Array.isArray(prev.facilities) ? prev.facilities : []).filter((_, i) => i !== index),
-                                       }))} className="px-4 bg-red-500 text-white rounded-xl hover:bg-red-600">Remove</button>
-                                   </div>
-                               ))}
-                               <button type="button" onClick={() => setEditForm((prev) => ({
-                                   ...prev,
-                                   facilities: [...(Array.isArray(prev.facilities) ? prev.facilities : []), ""],
-                               }))} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">+ Add Facility</button>
-                           </div>
+                        {/* Facilities: separate input for every facility */}
+                        <div className="mt-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-3">Facilities</label>
+                            {(Array.isArray(editForm.facilities) ? editForm.facilities : [""]).map((facility, index) => (
+                                <div key={`facility-${index}`} className="flex gap-2 mb-3">
+                                    <input
+                                        type="text"
+                                        value={facility}
+                                        onChange={(e) => {
+                                            const updated = [...(Array.isArray(editForm.facilities) ? editForm.facilities : [])];
+                                            updated[index] = e.target.value;
+                                            setEditForm((prev) => ({ ...prev, facilities: updated }));
+                                        }}
+                                        placeholder={`Facility ${index + 1}`}
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <button type="button" onClick={() => setEditForm((prev) => ({
+                                        ...prev,
+                                        facilities: (Array.isArray(prev.facilities) ? prev.facilities : []).filter((_, i) => i !== index),
+                                    }))} className="px-4 bg-red-500 text-white rounded-xl hover:bg-red-600">Remove</button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={() => setEditForm((prev) => ({
+                                ...prev,
+                                facilities: [...(Array.isArray(prev.facilities) ? prev.facilities : []), ""],
+                            }))} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">+ Add Facility</button>
+                        </div>
 
-                           <div className="mt-5">
+                        <div className="mt-5">
 
-                               <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                                   About College
+                                About College
 
-                               </label>
+                            </label>
 
-                               <textarea
+                            <textarea
 
-name="about"
+                                name="about"
 
-value={editForm.about}
+                                value={editForm.about}
 
-onChange={handleEditChange}
+                                onChange={handleEditChange}
 
-rows="5"
+                                rows="5"
 
-className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
 
-                               />
+                            />
 
-                           </div>
+                        </div>
 
-                           <div className="flex gap-3 mt-6">
+                        <div className="flex gap-3 mt-6">
 
-                               <button
+                            <button
 
-type="button"
+                                type="button"
 
-onClick={updateCollege}
+                                onClick={updateCollege}
 
-disabled={saving}
+                                disabled={saving}
 
-className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
 
-                               >
+                            >
 
-                                   {saving ? "Updating..." : "Update College"}
+                                {saving ? "Updating..." : "Update College"}
 
-                               </button>
+                            </button>
 
-                               <button
+                            <button
 
-type="button"
+                                type="button"
 
-onClick={() => setEditing(false)}
+                                onClick={() => setEditing(false)}
 
-disabled={saving}
+                                disabled={saving}
 
-className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition disabled:opacity-50"
+                                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition disabled:opacity-50"
 
-                               >
+                            >
 
-                                   Cancel
+                                Cancel
 
-                               </button>
+                            </button>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                   )}
+                )}
 
-                   <button
+                <button
 
-type="button"
+                    type="button"
 
-onClick={startEditing}
+                    onClick={startEditing}
 
-className="shrink-0 bg-white text-gray-900 px-4 py-2.5 mb-2 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition"
+                    className="shrink-0 bg-white text-gray-900 px-4 py-2.5 mb-2 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition"
 
-                   >
+                >
 
-                       ✏️ Edit
+                    ✏️ Edit
 
-                   </button>
+                </button>
 
-                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-                       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
 
-                           <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500">
 
-                               Established
+                            Established
 
-                           </p>
+                        </p>
 
-                           <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
 
-                               {college.established}
+                            {college.established}
 
-                           </p>
+                        </p>
 
-                       </div>
+                    </div>
 
-                       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
 
-                           <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500">
 
-                               College Type
+                            College Type
 
-                           </p>
+                        </p>
 
-                           <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
 
-                               {college.type}
+                            {college.type}
 
-                           </p>
+                        </p>
 
-                       </div>
+                    </div>
 
-                       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
 
-                           <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500">
 
-                               Rating
+                            Rating
 
-                           </p>
+                        </p>
 
-                           <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
 
-                               {college.rating}/5
+                            {college.rating}/5
 
-                           </p>
+                        </p>
 
-                       </div>
+                    </div>
 
-                       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
 
-                           <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500">
 
-                               Campus
+                            Campus
 
-                           </p>
+                        </p>
 
-                           <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
 
-                               {college.campus}
+                            {college.campus}
 
-                           </p>
+                        </p>
 
-                       </div>
+                    </div>
 
-                   </div>
+                </div>
 
-                   <div className="mt-12">
+                <div className="mt-12">
 
-                       <div className="flex items-center gap-3 mb-5">
+                    <div className="flex items-center gap-3 mb-5">
 
-                           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
 
-                           <h2 className="text-3xl font-bold text-gray-900">
+                        <h2 className="text-3xl font-bold text-gray-900">
 
-                               About College
+                            About College
 
-                           </h2>
+                        </h2>
 
-                       </div>
+                    </div>
 
-                       <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8">
+                    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8">
 
-                           <p className="text-gray-700 leading-8 text-[16px]">
+                        <p className="text-gray-700 leading-8 text-[16px]">
 
-                               {college.about}
+                            {college.about}
 
-                           </p>
+                        </p>
 
-                       </div>
+                    </div>
 
-                   </div>
+                </div>
 
-                   <div className="grid lg:grid-cols-2 gap-6 mt-10">
+                <div className="grid lg:grid-cols-2 gap-6 mt-10">
 
-                       <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
+                    <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
 
-                           <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-3 mb-6">
 
-                               <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl overflow-hidden">
+                            <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl overflow-hidden">
 
-                                   <img
+                                <img
 
-src={college.logo}
+                                    src={college.logo}
 
-alt={college.name}
+                                    alt={college.name}
 
-className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover"
 
-                                   />
+                                />
 
-                               </div>
+                            </div>
 
-                               <div>
+                            <div>
 
-                                   <h3 className="text-xl font-bold text-gray-900">
+                                <h3 className="text-xl font-bold text-gray-900">
 
-                                       Basic Information
+                                    Basic Information
 
-                                   </h3>
+                                </h3>
 
-                                   <p className="text-sm text-gray-500">
+                                <p className="text-sm text-gray-500">
 
-                                       College details
+                                    College details
 
-                                   </p>
+                                </p>
 
-                               </div>
+                            </div>
 
-                           </div>
+                        </div>
 
-                           <div className="space-y-4">
+                        <div className="space-y-4">
 
-                               <div className="flex justify-between gap-4 border-b pb-3">
+                            <div className="flex justify-between gap-4 border-b pb-3">
 
-                                   <span className="text-gray-500">
+                                <span className="text-gray-500">
 
-                                       University
+                                    University
 
-                                   </span>
+                                </span>
 
-                                   <span className="font-semibold text-gray-900 text-right">
+                                <span className="font-semibold text-gray-900 text-right">
 
-                                       {college.university}
+                                    {college.university}
 
-                                   </span>
+                                </span>
 
-                               </div>
+                            </div>
 
-                               <div className="flex justify-between gap-4 border-b pb-3">
+                            <div className="flex justify-between gap-4 border-b pb-3">
 
-                                   <span className="text-gray-500">
+                                <span className="text-gray-500">
 
-                                       Approval
+                                    Approval
 
-                                   </span>
+                                </span>
 
-                                   <span className="font-semibold text-gray-900 text-right">
+                                <span className="font-semibold text-gray-900 text-right">
 
-                                       {college.approval}
+                                    {college.approval}
 
-                                   </span>
+                                </span>
 
-                               </div>
+                            </div>
 
-                               <div className="flex justify-between gap-4">
+                            <div className="flex justify-between gap-4">
 
-                                   <span className="text-gray-500">
+                                <span className="text-gray-500">
 
-                                       Campus Size
+                                    Campus Size
 
-                                   </span>
+                                </span>
 
-                                   <span className="font-semibold text-gray-900 text-right">
+                                <span className="font-semibold text-gray-900 text-right">
 
-                                       {college.campus}
+                                    {college.campus}
 
-                                   </span>
+                                </span>
 
-                               </div>
+                            </div>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                       <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
+                    <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
 
-                           <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-3 mb-6">
 
-                               <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
+                            <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
 
-                                   📞
+                                📞
 
-                               </div>
+                            </div>
 
-                               <div>
+                            <div>
 
-                                   <h3 className="text-xl font-bold text-gray-900">
+                                <h3 className="text-xl font-bold text-gray-900">
 
-                                       Contact Information
+                                    Contact Information
 
-                                   </h3>
+                                </h3>
 
-                                   <p className="text-sm text-gray-500">
+                                <p className="text-sm text-gray-500">
 
-                                       Get in touch
+                                    Get in touch
 
-                                   </p>
+                                </p>
 
-                               </div>
+                            </div>
 
-                           </div>
+                        </div>
 
-                           <div className="space-y-4">
+                        <div className="space-y-4">
 
-                               <div>
+                            <div>
 
-                                   <p className="text-sm text-gray-500 mb-1">
+                                <p className="text-sm text-gray-500 mb-1">
 
-                                       Phone
+                                    Phone
 
-                                   </p>
+                                </p>
 
-                                   <p className="font-semibold text-gray-900">
+                                <p className="font-semibold text-gray-900">
 
-                                       📞 {college.phone}
+                                    📞 {college.phone}
 
-                                   </p>
+                                </p>
 
-                               </div>
+                            </div>
 
-                               <div>
+                            <div>
 
-                                   <p className="text-sm text-gray-500 mb-1">
+                                <p className="text-sm text-gray-500 mb-1">
 
-                                       Email
+                                    Email
 
-                                   </p>
+                                </p>
 
-                                   <p className="font-semibold text-gray-900 break-all">
+                                <p className="font-semibold text-gray-900 break-all">
 
-                                       ✉️ {college.email}
+                                    ✉️ {college.email}
 
-                                   </p>
+                                </p>
 
-                               </div>
+                            </div>
 
-                               <div>
+                            <div>
 
-                                   <p className="text-sm text-gray-500 mb-1">
+                                <p className="text-sm text-gray-500 mb-1">
 
-                                       Website
+                                    Website
 
-                                   </p>
+                                </p>
 
-                                   <a
+                                <a
 
-href={college.website}
+                                    href={college.website}
 
-target="_blank"
+                                    target="_blank"
 
-rel="noopener noreferrer"
+                                    rel="noopener noreferrer"
 
-className="text-blue-600 font-medium hover:underline break-all"
+                                    className="text-blue-600 font-medium hover:underline break-all"
 
-                                   >
+                                >
 
-                                       🌐 {college.website}
+                                    🌐 {college.website}
 
-                                   </a>
+                                </a>
 
-                               </div>
+                            </div>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                   </div>
+                </div>
 
-                   <div className="mt-12">
+                <div className="mt-12">
 
-                       <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center gap-3 mb-6">
 
-                           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
 
-                           <div>
+                        <div>
 
-                               <h2 className="text-3xl font-bold text-gray-900">
+                            <h2 className="text-3xl font-bold text-gray-900">
 
-                                   Courses Offered
+                                Courses Offered
 
-                               </h2>
+                            </h2>
 
-                               <p className="text-gray-500 mt-1">
+                            <p className="text-gray-500 mt-1">
 
-                                   Engineering programs available at the college
+                                Engineering programs available at the college
 
-                               </p>
+                            </p>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-                           {(college.branches || []).map(
+                        {(college.branches || []).map(
 
-                               (branch) => (
+                            (branch) => (
 
-                                   <div
+                                <div
 
-key={branch}
+                                    key={branch}
 
-className="group border border-gray-200 rounded-2xl p-5 bg-white hover:border-blue-500 hover:shadow-lg transition-all duration-200"
+                                    className="group border border-gray-200 rounded-2xl p-5 bg-white hover:border-blue-500 hover:shadow-lg transition-all duration-200"
 
-                                   >
+                                >
 
-                                       <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-4">
 
-                                           <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-lg group-hover:bg-blue-600 group-hover:text-white transition">
+                                        <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-lg group-hover:bg-blue-600 group-hover:text-white transition">
 
-                                               🎓
+                                            🎓
 
-                                           </div>
+                                        </div>
 
-                                           <div>
+                                        <div>
 
-                                               <p className="font-semibold text-gray-900">
+                                            <p className="font-semibold text-gray-900">
 
-                                                   {branch}
+                                                {branch}
 
-                                               </p>
+                                            </p>
 
-                                               <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-gray-500">
 
-                                                   Engineering Program
+                                                Engineering Program
 
-                                               </p>
+                                            </p>
 
-                                           </div>
+                                        </div>
 
-                                       </div>
+                                    </div>
 
-                                   </div>
+                                </div>
 
-                               )
+                            )
 
-                           )}
+                        )}
 
-                       </div>
+                    </div>
 
-                   </div>
+                </div>
 
-                   <div className="mt-12">
+                <div className="mt-12">
 
-                       <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center gap-3 mb-6">
 
-                           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
 
-                           <div>
+                        <div>
 
-                               <h2 className="text-3xl font-bold text-gray-900">
+                            <h2 className="text-3xl font-bold text-gray-900">
 
-                                   Facilities
+                                Facilities
 
-                               </h2>
+                            </h2>
 
-                               <p className="text-gray-500 mt-1">
+                            <p className="text-gray-500 mt-1">
 
-                                   Facilities available on campus
+                                Facilities available on campus
 
-                               </p>
+                            </p>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                           {(college.facilities || []).map(
+                        {(college.facilities || []).map(
 
-                               (facility) => (
+                            (facility) => (
 
-                                   <div
+                                <div
 
-key={facility}
+                                    key={facility}
 
-className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center hover:bg-blue-50 hover:border-blue-200 hover:shadow-md transition"
+                                    className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center hover:bg-blue-50 hover:border-blue-200 hover:shadow-md transition"
 
-                                   >
+                                >
 
-                                       <div className="text-2xl mb-3">
+                                    <div className="text-2xl mb-3">
 
-                                           🏫
+                                        🏫
 
-                                       </div>
+                                    </div>
 
-                                       <p className="font-semibold text-gray-800">
+                                    <p className="font-semibold text-gray-800">
 
-                                           {facility}
+                                        {facility}
 
-                                       </p>
+                                    </p>
 
-                                   </div>
+                                </div>
 
-                               )
+                            )
 
-                           )}
+                        )}
 
-                       </div>
+                    </div>
 
-                   </div>
+                </div>
 
-                   <section className="mt-12">
+                <section className="mt-12">
 
-                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
 
-                           <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3">
 
-                               <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+                            <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
 
-                               <div>
+                            <div>
 
-                                   <h2 className="text-3xl font-bold text-gray-900">
+                                <h2 className="text-3xl font-bold text-gray-900">
 
-                                       Campus Gallery
+                                    Campus Gallery
 
-                                   </h2>
+                                </h2>
 
-                                   <p className="text-gray-500 mt-1">
+                                <p className="text-gray-500 mt-1">
 
-                                       Explore and share campus photos
+                                    Explore and share campus photos
 
-                                   </p>
+                                </p>
 
-                               </div>
+                            </div>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
-                           <div className="group relative overflow-hidden rounded-2xl shadow-md h-[250px]">
+                        <div className="group relative overflow-hidden rounded-2xl shadow-md h-[250px]">
 
-                               <img
+                            <img
 
-src={
+                                src={
 
-                                       college.image ||
+                                    college.image ||
 
-                                       "/default-college.jpg"
+                                    "/default-college.jpg"
 
-                                   }
+                                }
 
-alt={college.name}
+                                alt={college.name}
 
-className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
 
-                               />
+                            />
 
-                               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 pt-16">
+                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 pt-16">
 
-                                   <p className="text-white font-semibold">
+                                <p className="text-white font-semibold">
 
-                                       {college.name}
+                                    {college.name}
 
-                                   </p>
+                                </p>
 
-                                   <p className="text-gray-200 text-sm">
+                                <p className="text-gray-200 text-sm">
 
-                                       Campus View
+                                    Campus View
 
-                                   </p>
+                                </p>
 
-                               </div>
+                            </div>
 
-                           </div>
+                        </div>
 
-                           {images.map((item) => (
+                        {images.map((item) => (
 
-                               <div
+                            <div
 
-key={item._id}
+                                key={item._id}
 
-onClick={() => setSelectedImage(item)}
+                                onClick={() => setSelectedImage(item)}
 
-className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in"
+                                className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in"
 
-                               >
+                            >
 
-                                   <img
+                                <img
 
-src={item.imageUrl}
+                                    src={item.imageUrl}
 
-alt="College campus"
+                                    alt="College campus"
 
-className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
 
-                                   />
+                                />
 
-                               </div>
+                            </div>
 
-                           ))}
+                        ))}
 
-                           {selectedImage && (
+                        {selectedImage && (
 
-                               <div
+                            <div
 
-onClick={() =>
+                                onClick={() =>
 
-                                       setSelectedImage(null)
+                                    setSelectedImage(null)
 
-                                   }
+                                }
 
-className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+                                className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
 
-                               >
+                            >
 
-                                   <img
+                                <img
 
-src={selectedImage.imageUrl}
+                                    src={selectedImage.imageUrl}
 
-alt="College campus"
+                                    alt="College campus"
 
-onClick={(e) =>
+                                    onClick={(e) =>
 
-                                           e.stopPropagation()
+                                        e.stopPropagation()
 
-                                       }
+                                    }
 
-className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                                    className="max-w-full max-h-[90vh] object-contain rounded-lg"
 
-                                   />
+                                />
 
-                                   {currentUser?.role === "admin" && (
+                                {currentUser?.role === "admin" && (
 
-                                       <button
+                                    <button
 
-onClick={(e) => {
+                                        onClick={(e) => {
 
-                                               e.stopPropagation();
+                                            e.stopPropagation();
 
-                                               handleDeleteImage(selectedImage._id);
+                                            handleDeleteImage(selectedImage._id);
 
-                                           }} className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
+                                        }} className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
 
-                                       >
+                                    >
 
-                                           🗑️
+                                        🗑️
 
-                                       </button>
+                                    </button>
 
-                                   )}
+                                )}
 
-                                   <button
+                                <button
 
-onClick={() =>
+                                    onClick={() =>
 
-                                           setSelectedImage(null)
+                                        setSelectedImage(null)
 
-                                       }
+                                    }
 
-className="absolute top-5 right-5 text-white text-3xl hover:text-gray-300"
+                                    className="absolute top-5 right-5 text-white text-3xl hover:text-gray-300"
 
-                                   >
+                                >
 
-                                       ✕
+                                    ✕
 
-                                   </button>
+                                </button>
 
-                               </div>
+                            </div>
 
-                           )}
+                        )}
 
-                           <div className="h-[250px] border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50 hover:bg-blue-100 hover:border-blue-500 transition-all duration-200 flex flex-col items-center justify-center text-center p-6">
+                        <div className="h-[250px] border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50 hover:bg-blue-100 hover:border-blue-500 transition-all duration-200 flex flex-col items-center justify-center text-center p-6">
 
-                               <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4">
+                            <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4">
 
-                                   <svg
+                                <svg
 
-className="w-8 h-8 text-blue-600"
+                                    className="w-8 h-8 text-blue-600"
 
-fill="none"
+                                    fill="none"
 
-stroke="currentColor"
+                                    stroke="currentColor"
 
-viewBox="0 0 24 24"
+                                    viewBox="0 0 24 24"
 
-                                   >
+                                >
 
-                                       <path
+                                    <path
 
-strokeLinecap="round"
+                                        strokeLinecap="round"
 
-strokeLinejoin="round"
+                                        strokeLinejoin="round"
 
-strokeWidth="2"
+                                        strokeWidth="2"
 
-d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 014 8.9M12 12v9m0-9l-3 3m3-3l3 3"
+                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 014 8.9M12 12v9m0-9l-3 3m3-3l3 3"
 
-                                       />
+                                    />
 
-                                   </svg>
+                                </svg>
 
-                               </div>
+                            </div>
 
-                               <h3 className="text-lg font-semibold text-gray-900">
+                            <h3 className="text-lg font-semibold text-gray-900">
 
-                                   Upload Campus Photo
+                                Upload Campus Photo
 
-                               </h3>
+                            </h3>
 
-                               <p className="text-sm text-gray-500 mt-2">
+                            <p className="text-sm text-gray-500 mt-2">
 
-                                   {image
+                                {image
 
-                                       ? image.name
+                                    ? image.name
 
-                                       : "No file chosen"}
+                                    : "No file chosen"}
 
-                               </p>
+                            </p>
 
-                               <label
+                            <label
 
-htmlFor="campus-upload"
+                                htmlFor="campus-upload"
 
-className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium cursor-pointer"
+                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium cursor-pointer"
 
-                               >
+                            >
 
-                                   {image
+                                {image
 
-                                       ? "Change File"
+                                    ? "Change File"
 
-                                       : "Choose File"}
+                                    : "Choose File"}
 
-                               </label>
+                            </label>
 
-                               <input
+                            <input
 
-id="campus-upload"
+                                id="campus-upload"
 
-type="file"
+                                type="file"
 
-accept="image/png,image/jpeg,image/webp"
+                                accept="image/png,image/jpeg,image/webp"
 
-onChange={handleFileChange}
+                                onChange={handleFileChange}
 
-className="hidden"
+                                className="hidden"
 
-                               />
+                            />
 
-                               <button
+                            <button
 
-type="button"
+                                type="button"
 
-className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
 
-onClick={handleUpload}
+                                onClick={handleUpload}
 
-disabled={uploading}
+                                disabled={uploading}
 
-                               >
+                            >
 
-                                   {uploading
+                                {uploading
 
-                                       ? "Uploading..."
+                                    ? "Uploading..."
 
-                                       : "Upload"}
+                                    : "Upload"}
 
-                               </button>
+                            </button>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                   </section>
+                </section>
 
-                   <section className="mt-12">
+                <section className="mt-12">
 
-                       <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center gap-3 mb-6">
 
-                           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
 
-                           <div>
+                        <div>
 
-                               <h2 className="text-3xl font-bold text-gray-900">
+                            <h2 className="text-3xl font-bold text-gray-900">
 
-                                   Student Reviews
+                                Student Reviews
 
-                               </h2>
+                            </h2>
 
-                               <p className="text-gray-500 mt-1">
+                            <p className="text-gray-500 mt-1">
 
-                                   Share your experience about this college
+                                Share your experience about this college
 
-                               </p>
+                            </p>
 
-                           </div>
+                        </div>
 
-                       </div>
+                    </div>
 
-                       <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-8 mb-8">
+                    <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-8 mb-8">
 
-                           <h3 className="text-xl font-bold text-gray-900 mb-5">
+                        <h3 className="text-xl font-bold text-gray-900 mb-5">
 
-                               Write a Review
+                            Write a Review
 
-                           </h3>
+                        </h3>
 
-                           <form onSubmit={handleReviewSubmit}>
+                        <form onSubmit={handleReviewSubmit}>
 
-                               <div className="mb-5">
+                            <div className="mb-5">
 
-                                   <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                                       Your Rating
+                                    Your Rating
 
-                                   </label>
+                                </label>
 
-                                   <div className="flex gap-2">
+                                <div className="flex gap-2">
 
-                                       {[1, 2, 3, 4, 5].map(
+                                    {[1, 2, 3, 4, 5].map(
 
-                                           (star) => (
+                                        (star) => (
 
-                                               <button
+                                            <button
 
-key={star}
+                                                key={star}
 
-type="button"
+                                                type="button"
 
-onClick={() =>
+                                                onClick={() =>
 
-                                                       setRating(star)
+                                                    setRating(star)
 
-                                                   }
+                                                }
 
-className={`text-2xl transition ${star <= rating
+                                                className={`text-2xl transition ${star <= rating
 
-                                                       ? "text-yellow-400"
+                                                    ? "text-yellow-400"
 
-                                                       : "text-gray-300"
+                                                    : "text-gray-300"
 
-                                                       }`}
+                                                    }`}
 
-                                               >
+                                            >
 
-                                                   ★
+                                                ★
 
-                                               </button>
+                                            </button>
 
-                                           )
+                                        )
 
-                                       )}
+                                    )}
 
-                                   </div>
+                                </div>
 
-                               </div>
+                            </div>
 
-                               <div className="mb-5">
+                            <div className="mb-5">
 
-                                   <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                                       Your Review
+                                    Your Review
 
-                                   </label>
+                                </label>
 
-                                   <textarea
+                                <textarea
 
-value={reviewText}
+                                    value={reviewText}
 
-onChange={(e) =>
+                                    onChange={(e) =>
 
-                                           setReviewText(
+                                        setReviewText(
 
-                                               e.target.value
+                                            e.target.value
 
-                                           )
+                                        )
 
-                                       }
+                                    }
 
-placeholder="Share your experience with this college..."
+                                    placeholder="Share your experience with this college..."
 
-rows="5"
+                                    rows="5"
 
-className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
 
-                                   />
+                                />
 
-                               </div>
+                            </div>
 
-                               <button
+                            <button
 
-type="submit"
+                                type="submit"
 
-disabled={submittingReview}
+                                disabled={submittingReview}
 
-className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition disabled:opacity-50"
+                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition disabled:opacity-50"
 
-                               >
+                            >
 
-                                   {submittingReview
+                                {submittingReview
 
-                                       ? "Submitting..."
+                                    ? "Submitting..."
 
-                                       : "Submit Review"}
+                                    : "Submit Review"}
 
-                               </button>
+                            </button>
 
-                           </form>
+                        </form>
 
-                       </div>
+                    </div>
 
-                       <div className="space-y-4">
+                    <div className="space-y-4">
 
-                           {reviews.length === 0 ? (
+                        {reviews.length === 0 ? (
 
-                               <div className="text-center py-10 text-gray-500">
+                            <div className="text-center py-10 text-gray-500">
 
-                                   No reviews yet. Be the first to review!
+                                No reviews yet. Be the first to review!
 
-                               </div>
+                            </div>
 
-                           ) : (
+                        ) : (
 
-                               reviews.map((review) => (
+                            reviews.map((review) => (
 
-                                   <div
+                                <div
 
-key={review._id}
+                                    key={review._id}
 
-className="w-full bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300"
+                                    className="w-full bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300"
 
-                                   >
+                                >
 
-                                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-5">
+                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-5">
 
-                                           <div className="flex items-center gap-3 min-w-0">
+                                        <div className="flex items-center gap-3 min-w-0">
 
-                                               <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+                                            <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
 
-                                                   {(review.username)
+                                                {(review.username)
 
-                                                       .charAt(0)
+                                                    .charAt(0)
 
-                                                       .toUpperCase()}
+                                                    .toUpperCase()}
 
-                                               </div>
+                                            </div>
 
-                                               <div className="min-w-auto">
+                                            <div className="min-w-auto">
 
-                                                   <p className="font-semibold text-gray-900 truncate">
+                                                <p className="font-semibold text-gray-900 truncate">
 
-                                                       {review.username}
+                                                    {review.username}
 
-                                                   </p>
+                                                </p>
 
-                                                   <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+                                                <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
 
-                                                       Student Review
+                                                    Student Review
 
-                                                   </p>
+                                                </p>
 
-                                               </div>
+                                            </div>
 
-                                           </div>
+                                        </div>
 
-                                           <span className="text-xs sm:text-sm text-gray-400 whitespace-nowrap sm:pt-1">
+                                        <span className="text-xs sm:text-sm text-gray-400 whitespace-nowrap sm:pt-1">
 
-                                               {review.createdAt
+                                            {review.createdAt
 
-                                                   ? new Date(
+                                                ? new Date(
 
-                                                       review.createdAt
+                                                    review.createdAt
 
-                                                   ).toLocaleDateString(
+                                                ).toLocaleDateString(
 
-                                                       "en-IN",
+                                                    "en-IN",
 
-                                                       {
+                                                    {
 
-                                                           day: "2-digit",
+                                                        day: "2-digit",
 
-                                                           month: "short",
+                                                        month: "short",
 
-                                                           year: "numeric",
+                                                        year: "numeric",
 
-                                                       }
+                                                    }
 
-                                                   )
+                                                )
 
-                                                   : ""}
+                                                : ""}
 
-                                           </span>
+                                        </span>
 
-                                       </div>
+                                    </div>
 
-                                       <div className="flex items-center gap-3 mb-4">
+                                    <div className="flex items-center gap-3 mb-4">
 
-                                           <div className="flex items-center gap-1">
+                                        <div className="flex items-center gap-1">
 
-                                               {[1, 2, 3, 4, 5].map(
+                                            {[1, 2, 3, 4, 5].map(
 
-                                                   (star) => (
+                                                (star) => (
 
-                                                       <span
+                                                    <span
 
-key={star}
+                                                        key={star}
 
-className={`text-lg sm:text-xl ${star <=
+                                                        className={`text-lg sm:text-xl ${star <=
 
-                                                               Number(
+                                                            Number(
 
-                                                                   review.rating
+                                                                review.rating
 
-                                                               )
+                                                            )
 
-                                                               ? "text-yellow-400"
+                                                            ? "text-yellow-400"
 
-                                                               : "text-gray-200"
+                                                            : "text-gray-200"
 
-                                                               }`}
+                                                            }`}
+                                                    >
+                                                        ★
+                                                    </span>
+                                                )
+                                            )}
 
-                                                       >
+                                        </div>
 
-                                                           ★
+                                        <span className="text-sm font-semibold text-gray-700 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-full">
 
-                                                       </span>
+                                            {review.rating}/5
 
-                                                   )
+                                        </span>
 
-                                               )}
+                                    </div>
 
-                                           </div>
+                                    <div className="border-l-4 border-blue-500 bg-gray-50 rounded-r-xl px-4 sm:px-5 py-4">
 
-                                           <span className="text-sm font-semibold text-gray-700 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-full">
+                                        <p className="text-sm sm:text-base text-gray-700 leading-7 break-words">
 
-                                               {review.rating}/5
+                                            {review.review}
 
-                                           </span>
+                                        </p>
 
-                                       </div>
+                                    </div>
 
-                                       <div className="border-l-4 border-blue-500 bg-gray-50 rounded-r-xl px-4 sm:px-5 py-4">
+                                    <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
 
-                                           <p className="text-sm sm:text-base text-gray-700 leading-7 break-words">
+                                        <span className="text-xs text-gray-400">
 
-                                               {review.review}
+                                            Verified Review
 
-                                           </p>
+                                        </span>
 
-                                       </div>
+                                        <div className="relative inline-block">
 
-                                       <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
+                                            <div className="relative inline-block">
 
-                                           <span className="text-xs text-gray-400">
+                                                <span
 
-                                               Verified Review
+                                                    onClick={() =>
 
-                                           </span>
+                                                        setOpenMenuId(
 
-                                           <div className="relative inline-block">
+                                                            openMenuId === review._id ? null : review._id
 
-                                               <div className="relative inline-block">
+                                                        )
 
-                                                   <span
+                                                    }
 
-onClick={() =>
+                                                    className="text-xs text-gray-400 cursor-pointer"
 
-                                                           setOpenMenuId(
+                                                >
 
-                                                               openMenuId === review._id ? null : review._id
+                                                    <CircleChevronUp size={18} />
 
-                                                           )
+                                                </span>
 
-                                                       }
+                                                {openMenuId === review._id && currentUser?.role === "admin" && (
 
-className="text-xs text-gray-400 cursor-pointer"
+                                                    <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
 
-                                                   >
+                                                        <button
 
-                                                       <CircleChevronUp size={18} />
+                                                            onClick={() => {
 
-                                                   </span>
+                                                                handleDeleteReview(review._id);
 
-                                                   {openMenuId === review._id && currentUser?.role === "admin" && (
+                                                                setOpenMenuId(null);
 
-                                                       <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
+                                                            }}
 
-                                                           <button
+                                                            className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
 
-onClick={() => {
+                                                        >
 
-                                                                   handleDeleteReview(review._id);
+                                                            Delete
 
-                                                                   setOpenMenuId(null);
+                                                        </button>
 
-                                                               }}
+                                                    </div>
 
-className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
+                                                )}
 
-                                                           >
+                                            </div>
 
-                                                               Delete
+                                        </div>
 
-                                                           </button>
+                                    </div>
 
-                                                       </div>
+                                </div>
 
-                                                   )}
+                            ))
 
-                                               </div>
+                        )}
 
-                                           </div>
+                    </div>
 
-                                       </div>
+                </section>
 
-                                   </div>
+            </div>
 
-                               ))
+        </section>
 
-                           )}
-
-                       </div>
-
-                   </section>
-
-               </div>
-
-           </section>
-
-       );
+    );
 
 };
 
