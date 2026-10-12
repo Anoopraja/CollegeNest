@@ -706,7 +706,7 @@ function Hero() {
 
                     <div>
                       <p className="font-semibold text-sm">
-                        Student Rated
+                        Student Rate
                       </p>
 
                       <p className="text-xs text-gray-500">
