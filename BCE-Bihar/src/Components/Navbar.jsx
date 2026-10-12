@@ -130,7 +130,7 @@ const Navbar = () => {
                 to="user/register"
                 className="hidden lg:block bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800"
               >
-                Sign Up
+                SignUp
               </NavLink>
             </>
           )}
