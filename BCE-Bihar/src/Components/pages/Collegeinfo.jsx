@@ -1,1692 +1,2258 @@
 import { useState, useEffect } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
+
 import uploadImage from "../../utils/cloudnary";
+
 import api from "../api/api.js";
+
 import { CircleChevronUp } from "lucide-react";
 
 const CollegeInfo = () => {
 
-    const { id } = useParams();
-    const navigate = useNavigate();
-
-    // =========================
-    // COLLEGE
-    // =========================
-
-    const [college, setCollege] = useState(null);
-    const [collegeLoading, setCollegeLoading] = useState(true);
-    const [openMenuId, setOpenMenuId] = useState(null);
-    const [currentUser, setCurrentUser] = useState(null);
-    // =========================
-    // EDIT COLLEGE
-    // =========================
-
-    const [editing, setEditing] = useState(false);
-    const [saving, setSaving] = useState(false);
-
-    const [editForm, setEditForm] = useState({
-        name: "",
-        shortName: "",
-        slug: "",
-        distric: "",
-        addres: "",
-        locatio: "",
-        stat: "",
-        establishe: "",
-        typ: "",
-        ownershi: "",
-        university: "",
-        approval: "",
-        campus: "",
-        website: "",
-        email: "",
-        phone: "",
-        image: "",
-        logo: "",
-        rating: "",
-        admission: "",
-        about: "",
-        branches: [""],
-        facilities: [""],
-    });
-
-    // =========================
-    // GALLERY
-    // =========================
-
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [image, setImage] = useState(null);
-    const [images, setImages] = useState([]);
-    const [uploading, setUploading] = useState(false);
-
-    // =========================
-    // REVIEWS
-    // =========================
-
-    const [reviews, setReviews] = useState([]);
-    const [reviewText, setReviewText] = useState("");
-    const [rating, setRating] = useState(0);
-    const [submittingReview, setSubmittingReview] = useState(false);
-
-    useEffect(() => {
-        const getCurrentUser = async () => {
-            try {
-                const { data } = await api.get("/user/me");
-                setCurrentUser(data.user || null);
-            } catch {
-                setCurrentUser(null);
-            }
-        };
-
-        getCurrentUser();
-    }, []);
-
-    const handleEditChange = (e) => {
-        const { name, value } = e.target;
-
-        setEditForm((prev) => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const startEditing = () => {
-        setEditForm({
-            name: college?.name || "",
-            shortName: college?.shortName || "",
-            slug: college?.slug || "",
-            district: college?.district || "",
-            address: college?.address || "",
-            location: college?.location || "",
-            state: college?.state || "",
-            established: college?.established || "",
-            type: college?.type || "",
-            ownership: college?.ownership || "",
-            university: college?.university || "",
-            approval: college?.approval || "",
-            campus: college?.campus || "",
-            website: college?.website || "",
-            email: college?.email || "",
-            phone: college?.phone || "",
-            image: college?.image || "",
-            logo: college?.logo || "",
-            rating: college?.rating || "",
-            admission: college?.admission || "",
-            about: college?.about || "",
-            branches: college?.branches || [""],
-            facilities: college?.facilities || [""],
-        });
+       const { id } = useParams();
 
-        setEditing(true);
-    };
+       const navigate = useNavigate();
 
+// =========================
 
-    const updateCollege = async () => {
-        try {
+// COLLEGE
 
-            // if(user?.role !== "admin"){
-            //     console("you are not allowed to do change any this")
-            // }
+// =========================
 
-            if (!college?._id) {
-                alert("College ID not found");
-                return;
-            }
+       const [college, setCollege] = useState(null);
 
-            setSaving(true);
+       const [collegeLoading, setCollegeLoading] = useState(true);
 
-            const { data } = await api.patch(
-                `/college/update/${college._id}`,
-                {
-                    ...editForm,
-                    rating: Number(editForm.rating),
-                    established: Number(editForm.established)
-                }
-            );
+       const [openMenuId, setOpenMenuId] = useState(null);
 
-            // alert("Updated college:");
-            console.log(data.college)
+       const [currentUser, setCurrentUser] = useState(null);
 
+// =========================
 
-            const updatedCollege = data.college || data.data;
+// EDIT COLLEGE
 
-            if (updatedCollege) {
-                setCollege(updatedCollege);
-            }
+// =========================
 
-            setEditing(false);
-            alert("College updated successfully");
+       const [editing, setEditing] = useState(false);
 
-        } catch (error) {
-            console.error("College update failed:", error);
-            alert(error.response?.data?.message || "College update failed");
-        } finally {
-            setSaving(false);
-        }
-    };
+       const [saving, setSaving] = useState(false);
 
+       const [editForm, setEditForm] = useState({
 
-    // =========================
-    // GET SINGLE COLLEGE
-    // =========================
+           name: "",
 
-    useEffect(() => {
+           shortName: "",
 
-        const getCollege = async () => {
+           slug: "",
 
-            try {
+           distric: "",
 
-                setCollegeLoading(true);
+           addres: "",
 
-                const response = await api.get(`/college/${id}`);
+           locatio: "",
 
-                console.log("Single college response:", response.data.data);
+           stat: "",
 
-                const collegeData =
-                    response.data.college ||
-                    response.data.data;
+           establishe: "",
 
-                setCollege(collegeData || null);
+           typ: "",
 
-                if (collegeData) {
-                    setEditForm({
-                        name: collegeData.name || "",
-                        shortName: collegeData.shortName || "",
-                        location: collegeData.location || "",
-                        rating: collegeData.rating ?? "",
-                        established: collegeData.established ?? "",
-                        type: collegeData.type || "",
-                        campus: collegeData.campus || "",
-                        university: collegeData.university || "",
-                        approval: collegeData.approval || "",
-                        phone: collegeData.phone || "",
-                        email: collegeData.email || "",
-                        website: collegeData.website || "",
-                        about: collegeData.about || ""
-                    });
-                }
+           ownershi: "",
 
-            } catch (error) {
+           university: "",
 
-                console.error(
-                    "College fetch error:",
-                    error
-                );
+           approval: "",
 
-                setCollege(null);
+           campus: "",
 
-            } finally {
+           website: "",
 
-                setCollegeLoading(false);
+           email: "",
 
-            }
+           phone: "",
 
-        };
+           image: "",
 
-        if (id) {
-            getCollege();
-        }
+           logo: "",
 
-    }, [id]);
+           rating: "",
 
+           admission: "",
 
-    // =========================
-    // FILE SELECT
-    // =========================
+           about: "",
 
-    const handleFileChange = async (e) => {
+           branches: [""],
 
-        try {
+           facilities: [""],
 
-            // Check login first
-            const { data } = await api.get("/user/me");
+       });
 
-            const user = data.user;
+// =========================
 
-            if (!user) {
+// GALLERY
 
-                alert("Please login first");
+// =========================
 
-                navigate("/user/login");
+       const [selectedImage, setSelectedImage] = useState(null);
 
-                return;
+       const [image, setImage] = useState(null);
 
-            }
+       const [images, setImages] = useState([]);
 
-            const selectedFile = e.target.files[0];
+       const [uploading, setUploading] = useState(false);
 
-            if (!selectedFile) return;
+// =========================
 
-            setImage(selectedFile);
+// REVIEWS
 
-        } catch (error) {
+// =========================
 
-            console.error("Login check failed:", error);
+       const [reviews, setReviews] = useState([]);
 
-            alert("Please login first");
+       const [reviewText, setReviewText] = useState("");
 
-            navigate("/user/login");
+       const [rating, setRating] = useState(0);
 
-        }
+       const [submittingReview, setSubmittingReview] = useState(false);
 
-    };
+       useEffect(() => {
 
+           const getCurrentUser = async () => {
 
-    // =========================
-    // UPLOAD IMAGE
-    // =========================
+               try {
 
-    const handleUpload = async () => {
+                   const { data } = await api.get("/user/me");
 
-        if (!image) {
+                   setCurrentUser(data.user || null);
 
-            alert("Pehle image select karo");
+               } catch {
 
-            return;
+                   setCurrentUser(null);
 
-        }
+               }
 
-        if (!college?._id) {
+           };
 
-            alert("College data not loaded");
+           getCurrentUser();
 
-            return;
+       }, []);
 
-        }
+       const handleEditChange = (e) => {
 
+           const { name, value } = e.target;
 
-        try {
+           setEditForm((prev) => ({
 
-            setUploading(true);
+               ...prev,
 
+               [name]: value
 
-            // 1. Upload image to Cloudinary
-            const uploadedImage = await uploadImage(image);
-            const uploadedImageUrl = uploadedImage.imageUrl;
+           }));
 
-            console.log(
-                "Cloudinary URL:",
-                uploadedImageUrl
-            );
+       };
 
+       const startEditing = () => {
 
-            // 2. Save image URL in backend
-            await api.post("/image", {
-                collegeId: college._id,
-                imageUrl: uploadedImageUrl,
-                publicId: uploadedImage.publicId,
-            });
+           setEditForm({
 
-            // 3. Display uploaded image
-            // 4. Add image to gallery immediately
-            setImages((prev) => [
-                {
-                    _id: Date.now().toString(),
-                    imageUrl: uploadedImageUrl,
-                },
-                ...prev,
-            ]);
+               name: college?.name || "",
 
+               shortName: college?.shortName || "",
 
-            // 5. Clear selected file
-            setImage(null);
+               slug: college?.slug || "",
 
+               district: college?.district || "",
 
-            alert("Image uploaded and saved!");
+               address: college?.address || "",
 
-        } catch (error) {
+               location: college?.location || "",
 
-            console.error(
-                "Upload error:",
-                error
-            );
+               state: college?.state || "",
 
-            alert(
-                error.response?.data?.message ||
-                error.message ||
-                "Image upload failed"
-            );
+               established: college?.established || "",
 
-        } finally {
+               type: college?.type || "",
 
-            setUploading(false);
+               ownership: college?.ownership || "",
 
-        }
+               university: college?.university || "",
 
-    };
+               approval: college?.approval || "",
 
+               campus: college?.campus || "",
 
-    // =========================
-    // GET GALLERY IMAGES
-    // =========================
+               website: college?.website || "",
 
-    useEffect(() => {
-        const getImages = async () => {
-            try {
-                if (!college?._id) return;
+               email: college?.email || "",
 
-                const { data } = await api.get(
-                    `/image/${college._id}`
-                );
+               phone: college?.phone || "",
 
-                console.log("Images response:", data);
+               image: college?.image || "",
 
-                setImages(data.data || []);
+               logo: college?.logo || "",
 
-            } catch (error) {
-                console.error(
-                    "Images fetch failed:",
-                    error.response?.data || error
-                );
-            }
-        };
+               rating: college?.rating || "",
 
-        getImages();
-    }, [college?._id]);
+               admission: college?.admission || "",
 
+               about: college?.about || "",
 
-    // =========================
-    // GET REVIEWS
-    // =========================
+               branches: Array.isArray(college?.branches) ? college.branches : (typeof college?.branches === "string" && college.branches.trim() ? college.branches.split(",").map((item) => item.trim()) : [""]),
 
-    useEffect(() => {
+               facilities: Array.isArray(college?.facilities) ? college.facilities : (typeof college?.facilities === "string" && college.facilities.trim() ? college.facilities.split(",").map((item) => item.trim()) : [""]),
 
-        const getReviews = async () => {
+           });
 
-            try {
+           setEditing(true);
 
-                if (!college?._id) return;
+       };
 
-                const { data } = await api.get(
-                    `/review/${college._id}`
-                );
+       const updateCollege = async () => {
 
-                console.log("Reviews response:", data);
+           try {
 
-                setReviews(data.data || []);
+// if(user?.role !== "admin"){
 
-            } catch (error) {
+//     console("you are not allowed to do change any this")
 
-                console.error(
-                    "Reviews fetch failed:",
-                    error.response?.data || error
-                );
+// }
 
-            }
-        };
+               if (!college?._id) {
 
-        getReviews();
+                   alert("College ID not found");
 
-    }, [college?._id]);
+                   return;
 
-    // =========================
-    // REVIEW SUBMIT
-    // =========================
+               }
 
-    const handleReviewSubmit = async (e) => {
+               setSaving(true);
 
-        e.preventDefault();
+               const { data } = await api.patch(
 
+                   `/college/update/${college._id}`,
 
-        if (!reviewText.trim()) {
+                   {
 
-            alert("Please write a review");
+                       ...editForm,
+                       branches: (Array.isArray(editForm.branches) ? editForm.branches : []).map((item) => item.trim()).filter(Boolean),
+                       facilities: (Array.isArray(editForm.facilities) ? editForm.facilities : []).map((item) => item.trim()).filter(Boolean),
 
-            return;
+                       rating: Number(editForm.rating),
 
-        }
+                       established: Number(editForm.established)
 
+                   }
 
-        if (!rating) {
-            alert("Please select a rating");
-            return;
+               );
 
-        }
+// alert("Updated college:");
 
+               console.log(data.college)
 
-        if (!college?._id) {
-            alert("College data not loaded");
-            return;
-        }
+               const updatedCollege = data.college || data.data;
 
+               if (updatedCollege) {
 
-        try {
+                   setCollege(updatedCollege);
 
-            setSubmittingReview(true);
+               }
 
+               setEditing(false);
 
-            // Check login
-            const { data } = await api.get(
-                "/user/me"
-            );
+               alert("College updated successfully");
 
-            const user = data.user;
+           } catch (error) {
 
+               console.error("College update failed:", error);
 
-            if (!user) {
+               alert(error.response?.data?.message || "College update failed");
 
-                alert("Please login first");
+           } finally {
 
-                navigate("/user/login");
+               setSaving(false);
 
-                return;
+           }
 
-            }
+       };
 
+// =========================
 
-            console.log(
-                "Logged in user:",
-                user
-            );
+// GET SINGLE COLLEGE
 
+// =========================
 
-            // Submit review
-            const { data: reviewResponse } =
-                await api.post(
-                    "/review/write",
-                    {
+       useEffect(() => {
 
-                        collegeId: college._id,
-                        userId: user._id || user.id,
-                        username: user.username || user.name || "Anonymous User",
-                        rating: Number(rating),
-                        review: reviewText.trim(),
+           const getCollege = async () => {
 
-                    }
-                );
+               try {
 
+                   setCollegeLoading(true);
 
-            console.log(
-                "Review response:",
-                reviewResponse
-            );
-            console.log("REVIEW DATA:", {
-                collegeId: college._id,
-                userId: user._id || user.id,
-                username: user.username || user.name || "Anonymous User",
-                rating: Number(rating),
-                review: reviewText.trim(),
-            });
+                   const response = await api.get(`/college/${id}`);
 
+                   console.log("Single college response:", response.data.data);
 
-            const newReview =
-                reviewResponse.data;
+                   const collegeData =
 
+                       response.data.college ||
 
-            if (newReview) {
+                       response.data.data;
 
-                setReviews((prev) => [
-                    newReview,
-                    ...prev,
-                ]);
+                   setCollege(collegeData || null);
 
-            }
+                   if (collegeData) {
 
+                       setEditForm({
 
-            setReviewText("");
+                           name: collegeData.name || "",
 
-            setRating(5);
+                           shortName: collegeData.shortName || "",
 
-            alert(
-                "Review submitted successfully!"
-            );
+                           location: collegeData.location || "",
 
+                           rating: collegeData.rating ?? "",
 
-        } catch (error) {
+                           established: collegeData.established ?? "",
 
-            console.error(
-                "Review submit error:",
-                error
-            );
+                           type: collegeData.type || "",
 
-            alert(
-                error.response?.data?.message ||
-                error.message ||
-                "Review submission failed"
-            );
+                           campus: collegeData.campus || "",
 
-        } finally {
+                           university: collegeData.university || "",
 
-            setSubmittingReview(false);
+                           approval: collegeData.approval || "",
 
-        }
+                           phone: collegeData.phone || "",
 
-    };
+                           email: collegeData.email || "",
 
-    const handleDeleteReview = async (Id) => {
-        if (currentUser?.role !== "admin") return;
+                           website: collegeData.website || "",
+                           about: collegeData.about || "",
+                           slug: collegeData.slug || "",
+                           district: collegeData.district || "",
+                           address: collegeData.address || "",
+                           state: collegeData.state || "",
+                           ownership: collegeData.ownership || "",
+                           admission: collegeData.admission || "",
+                           image: collegeData.image || "",
+                           logo: collegeData.logo || "",
+                           branches: Array.isArray(collegeData.branches) ? collegeData.branches : (typeof collegeData.branches === "string" && collegeData.branches.trim() ? collegeData.branches.split(",").map((item) => item.trim()) : [""]),
+                           facilities: Array.isArray(collegeData.facilities) ? collegeData.facilities : (typeof collegeData.facilities === "string" && collegeData.facilities.trim() ? collegeData.facilities.split(",").map((item) => item.trim()) : [""])
+                       });
 
-        try {
-            await api.delete(`/review/delete/${Id}`);
-            setReviews((prev) => prev.filter((review) => review._id !== Id));
+                   }
 
+               } catch (error) {
 
-            console.log("Review delete ho gaya");
-        } catch (err) {
-            console.log("Review delete karne me error:", err);
-        }
-    };
+                   console.error(
 
-    const handleDeleteImage = async (Id) => {
-        if (currentUser?.role !== "admin") return;
+                       "College fetch error:",
 
-        try {
+                       error
 
-            console.log("delete hone hi wala hai")
-            await api.delete(`/image/delete/${Id}`)
-            console.log("image delete ho gya")
-            setImages((prev) =>
-                prev.filter((item) => item._id !== Id)
-            );
+                   );
 
-            setSelectedImage(null);
-        }
-        catch {
-            alert("nhi hua delete")
-        }
-    }
-    // =========================
-    // LOADING
-    // =========================
+                   setCollege(null);
 
-    if (collegeLoading) {
+               } finally {
 
-        return (
-            <div className="min-h-[60vh] flex items-center justify-center">
+                   setCollegeLoading(false);
 
-                <div className="text-center">
+               }
 
-                    <div className="text-5xl mb-4">
-                        🎓
-                    </div>
+           };
 
-                    <p className="text-gray-500">
-                        Loading college...
-                    </p>
+           if (id) {
 
-                </div>
+               getCollege();
 
-            </div>
-        );
+           }
 
-    }
+       }, [id]);
 
+// =========================
 
-    // =========================
-    // COLLEGE NOT FOUND
-    // =========================
+// FILE SELECT
 
-    if (!college) {
+// =========================
 
-        return (
-            <div className="min-h-[60vh] flex items-center justify-center px-6">
+       const handleFileChange = async (e) => {
 
-                <div className="text-center">
+           try {
 
-                    <div className="text-6xl mb-5">
-                        🎓
-                    </div>
+// Check login first
 
-                    <h2 className="text-3xl font-bold text-gray-900">
-                        College Not Found
-                    </h2>
+               const { data } = await api.get("/user/me");
 
-                    <p className="text-gray-500 mt-2">
-                        The college you're looking for doesn't exist.
-                    </p>
+               const user = data.user;
 
-                </div>
+               if (!user) {
 
-            </div>
-        );
+                   alert("Please login first");
 
-    }
+                   navigate("/user/login");
 
+                   return;
 
-    return (
+               }
 
-        <section className="bg-white pb-10 min-h-screen">
+               const selectedFile = e.target.files[0];
 
+               if (!selectedFile) return;
 
-            {/* =========================
-                HERO BANNER
-            ========================= */}
+               setImage(selectedFile);
 
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+           } catch (error) {
 
-                <div className="relative h-[280px] sm:h-[380px] overflow-hidden rounded-3xl shadow-xl">
+               console.error("Login check failed:", error);
 
-                    <img
-                        src={
-                            college.image ||
-                            "/default-college.jpg"
-                        }
-                        alt={college.name}
-                        className="w-full h-full object-cover"
-                    />
+               alert("Please login first");
 
+               navigate("/user/login");
 
-                    <div className="absolute inset-0 bg-black/45" />
+           }
 
+       };
 
-                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-white">
+// =========================
 
-                        <div className="max-w-4xl">
+// UPLOAD IMAGE
 
-                            <span className="inline-block bg-blue-600 px-4 py-1.5 rounded-full text-sm font-medium mb-3">
-                                {college.shortName ||
-                                    "Engineering College"}
-                            </span>
+// =========================
 
+       const handleUpload = async () => {
 
-                            <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
-                                {college.name}
-                            </h1>
+           if (!image) {
 
+               alert("Pehle image select karo");
 
-                            <div className="flex flex-wrap gap-3 sm:gap-5 mt-4 text-sm sm:text-base">
+               return;
 
-                                <span className="flex items-center gap-2">
-                                    📍 {college.location}
-                                </span>
+           }
 
-                                <span className="flex items-center gap-2">
-                                    ⭐ {college.rating}/5
-                                </span>
+           if (!college?._id) {
 
-                            </div>
+               alert("College data not loaded");
 
+               return;
 
+           }
 
-                        </div>
+           try {
 
-                    </div>
+               setUploading(true);
 
-                </div>
+// 1. Upload image to Cloudinary
 
-            </div>
+               const uploadedImage = await uploadImage(image);
 
+               const uploadedImageUrl = uploadedImage.imageUrl;
 
-            {/* =========================
-                MAIN CONTENT
-            ========================= */}
+               console.log(
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+                   "Cloudinary URL:",
 
+                   uploadedImageUrl
 
-                {/* =========================
-                    EDIT COLLEGE
-                ========================= */}
+               );
 
-                {editing && (
-                    <div className="mb-10 bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-lg">
-                        <div className="flex items-center justify-between mb-6">
-                            <div>
-                                <h2 className="text-2xl font-bold text-gray-900">
-                                    Edit College
-                                </h2>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    Update college information
-                                </p>
-                            </div>
+// 2. Save image URL in backend
 
-                            <button
-                                type="button"
-                                onClick={() => setEditing(false)}
-                                className="text-gray-500 hover:text-gray-900 text-2xl"
-                            >
-                                ✕
-                            </button>
-                        </div>
+               await api.post("/image", {
 
-                        <div className="grid md:grid-cols-2 gap-5">
-                            {[
-                                ["name", "College Name", "text"],
-                                ["shortName", "Short Name", "text"],
-                                ["slug", "Slug", "text"],
-                                ["district", "District", "text"],
-                                ["address", "Address", "text"],
-                                ["location", "Location", "text"],
-                                ["state", "State", "text"],
-                                ["established", "Established", "number"],
-                                ["type", "College Type", "text"],
-                                ["ownership", "Ownership", "text"],
-                                ["university", "University", "text"],
-                                ["approval", "Approval", "text"],
-                                ["campus", "Campus", "text"],
-                                ["website", "Website", "text"],
-                                ["email", "Email", "email"],
-                                ["phone", "Phone", "text"],
-                                ["image", "College Image", "text"],
-                                ["logo", "College Logo", "text"],
-                                ["rating", "Rating", "number"],
-                                ["admission", "Admission", "text"],
-                                ["about", "About College", "textarea"],
-                                ["branches", "Branches", "text"],
-                                ["facilities", "Facilities", "text"]
-                            ].map(([name, label, type]) => (
-                                <div key={name}>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        {label}
-                                    </label>
-                                    <input
-                                        type={type}
-                                        name={name}
-                                        value={editForm[name]}
-                                        onChange={handleEditChange}
-                                        min={name === "rating" ? "0" : undefined}
-                                        max={name === "rating" ? "5" : undefined}
-                                        step={name === "rating" ? "0.1" : undefined}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                   collegeId: college._id,
 
-                        <div className="mt-5">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                About College
-                            </label>
-                            <textarea
-                                name="about"
-                                value={editForm.about}
-                                onChange={handleEditChange}
-                                rows="5"
-                                className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                            />
-                        </div>
+                   imageUrl: uploadedImageUrl,
 
-                        <div className="flex gap-3 mt-6">
-                            <button
-                                type="button"
-                                onClick={updateCollege}
-                                disabled={saving}
-                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-                            >
-                                {saving ? "Updating..." : "Update College"}
-                            </button>
+                   publicId: uploadedImage.publicId,
 
+               });
 
+// 3. Display uploaded image
 
+// 4. Add image to gallery immediately
 
-                            <button
-                                type="button"
-                                onClick={() => setEditing(false)}
-                                disabled={saving}
-                                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition disabled:opacity-50"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                )}
-                <button
-                    type="button"
-                    onClick={startEditing}
-                    className="shrink-0 bg-white text-gray-900 px-4 py-2.5 mb-2 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition"
-                >
-                    ✏️ Edit
-                </button>
+               setImages((prev) => [
 
+                   {
 
-                {/* QUICK INFO */}
+                       _id: Date.now().toString(),
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                       imageUrl: uploadedImageUrl,
 
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+                   },
 
-                        <p className="text-sm text-gray-500">
-                            Established
-                        </p>
+                   ...prev,
 
-                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
-                            {college.established}
-                        </p>
+               ]);
 
-                    </div>
+// 5. Clear selected file
 
+               setImage(null);
 
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+               alert("Image uploaded and saved!");
 
-                        <p className="text-sm text-gray-500">
-                            College Type
-                        </p>
+           } catch (error) {
 
-                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
-                            {college.type}
-                        </p>
+               console.error(
 
-                    </div>
+                   "Upload error:",
 
+                   error
 
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+               );
 
-                        <p className="text-sm text-gray-500">
-                            Rating
-                        </p>
+               alert(
 
-                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
-                            {college.rating}/5
-                        </p>
+                   error.response?.data?.message ||
 
-                    </div>
+                   error.message ||
 
+                   "Image upload failed"
 
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+               );
 
-                        <p className="text-sm text-gray-500">
-                            Campus
-                        </p>
+           } finally {
 
-                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
-                            {college.campus}
-                        </p>
+               setUploading(false);
 
-                    </div>
+           }
 
-                </div>
+       };
 
+// =========================
 
-                {/* ABOUT */}
+// GET GALLERY IMAGES
 
-                <div className="mt-12">
+// =========================
 
-                    <div className="flex items-center gap-3 mb-5">
+       useEffect(() => {
 
-                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+           const getImages = async () => {
 
-                        <h2 className="text-3xl font-bold text-gray-900">
-                            About College
-                        </h2>
+               try {
 
-                    </div>
+                   if (!college?._id) return;
 
+                   const { data } = await api.get(
 
-                    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8">
+                       `/image/${college._id}`
 
-                        <p className="text-gray-700 leading-8 text-[16px]">
-                            {college.about}
-                        </p>
+                   );
 
-                    </div>
+                   console.log("Images response:", data);
 
-                </div>
+                   setImages(data.data || []);
 
+               } catch (error) {
 
-                {/* INFORMATION CARDS */}
+                   console.error(
 
-                <div className="grid lg:grid-cols-2 gap-6 mt-10">
+                       "Images fetch failed:",
 
+                       error.response?.data || error
 
-                    {/* BASIC INFORMATION */}
+                   );
 
-                    <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
+               }
 
-                        <div className="flex items-center gap-3 mb-6">
+           };
 
-                            <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl overflow-hidden">
+           getImages();
 
-                                <img
-                                    src={college.logo}
-                                    alt={college.name}
-                                    className="w-full h-full object-cover"
-                                />
+       }, [college?._id]);
 
-                            </div>
+// =========================
 
+// GET REVIEWS
 
-                            <div>
+// =========================
 
-                                <h3 className="text-xl font-bold text-gray-900">
-                                    Basic Information
-                                </h3>
+       useEffect(() => {
 
-                                <p className="text-sm text-gray-500">
-                                    College details
-                                </p>
+           const getReviews = async () => {
 
-                            </div>
+               try {
 
-                        </div>
+                   if (!college?._id) return;
 
+                   const { data } = await api.get(
 
-                        <div className="space-y-4">
+                       `/review/${college._id}`
 
-                            <div className="flex justify-between gap-4 border-b pb-3">
+                   );
 
-                                <span className="text-gray-500">
-                                    University
-                                </span>
+                   console.log("Reviews response:", data);
 
-                                <span className="font-semibold text-gray-900 text-right">
-                                    {college.university}
-                                </span>
+                   setReviews(data.data || []);
 
-                            </div>
+               } catch (error) {
 
+                   console.error(
 
-                            <div className="flex justify-between gap-4 border-b pb-3">
+                       "Reviews fetch failed:",
 
-                                <span className="text-gray-500">
-                                    Approval
-                                </span>
+                       error.response?.data || error
 
-                                <span className="font-semibold text-gray-900 text-right">
-                                    {college.approval}
-                                </span>
+                   );
 
-                            </div>
+               }
 
+           };
 
-                            <div className="flex justify-between gap-4">
+           getReviews();
 
-                                <span className="text-gray-500">
-                                    Campus Size
-                                </span>
+       }, [college?._id]);
 
-                                <span className="font-semibold text-gray-900 text-right">
-                                    {college.campus}
-                                </span>
+// =========================
 
-                            </div>
+// REVIEW SUBMIT
 
-                        </div>
+// =========================
 
-                    </div>
+       const handleReviewSubmit = async (e) => {
 
+           e.preventDefault();
 
-                    {/* CONTACT */}
+           if (!reviewText.trim()) {
 
-                    <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
+               alert("Please write a review");
 
-                        <div className="flex items-center gap-3 mb-6">
+               return;
 
-                            <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
-                                📞
-                            </div>
+           }
 
+           if (!rating) {
 
-                            <div>
+               alert("Please select a rating");
 
-                                <h3 className="text-xl font-bold text-gray-900">
-                                    Contact Information
-                                </h3>
+               return;
 
-                                <p className="text-sm text-gray-500">
-                                    Get in touch
-                                </p>
+           }
 
-                            </div>
+           if (!college?._id) {
 
-                        </div>
+               alert("College data not loaded");
 
+               return;
 
-                        <div className="space-y-4">
+           }
 
-                            <div>
+           try {
 
-                                <p className="text-sm text-gray-500 mb-1">
-                                    Phone
-                                </p>
+               setSubmittingReview(true);
 
-                                <p className="font-semibold text-gray-900">
-                                    📞 {college.phone}
-                                </p>
+// Check login
 
-                            </div>
+               const { data } = await api.get(
 
+                   "/user/me"
 
-                            <div>
+               );
 
-                                <p className="text-sm text-gray-500 mb-1">
-                                    Email
-                                </p>
+               const user = data.user;
 
-                                <p className="font-semibold text-gray-900 break-all">
-                                    ✉️ {college.email}
-                                </p>
+               if (!user) {
 
-                            </div>
+                   alert("Please login first");
 
+                   navigate("/user/login");
 
-                            <div>
+                   return;
 
-                                <p className="text-sm text-gray-500 mb-1">
-                                    Website
-                                </p>
+               }
 
-                                <a
-                                    href={college.website}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 font-medium hover:underline break-all"
-                                >
-                                    🌐 {college.website}
-                                </a>
+               console.log(
 
-                            </div>
+                   "Logged in user:",
 
-                        </div>
+                   user
 
-                    </div>
+               );
 
-                </div>
+// Submit review
 
+               const { data: reviewResponse } =
 
-                {/* COURSES */}
+                   await api.post(
 
-                <div className="mt-12">
+                       "/review/write",
 
-                    <div className="flex items-center gap-3 mb-6">
+                       {
 
-                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+                           collegeId: college._id,
 
-                        <div>
+                           userId: user._id || user.id,
 
-                            <h2 className="text-3xl font-bold text-gray-900">
-                                Courses Offered
-                            </h2>
+                           username: user.username || user.name || "Anonymous User",
 
-                            <p className="text-gray-500 mt-1">
-                                Engineering programs available at the college
-                            </p>
+                           rating: Number(rating),
 
-                        </div>
+                           review: reviewText.trim(),
 
-                    </div>
+                       }
 
+                   );
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+               console.log(
 
-                        {(college.branches || []).map(
-                            (branch) => (
+                   "Review response:",
 
-                                <div
-                                    key={branch}
-                                    className="group border border-gray-200 rounded-2xl p-5 bg-white hover:border-blue-500 hover:shadow-lg transition-all duration-200"
-                                >
+                   reviewResponse
 
-                                    <div className="flex items-center gap-4">
+               );
 
-                                        <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-lg group-hover:bg-blue-600 group-hover:text-white transition">
-                                            🎓
-                                        </div>
+               console.log("REVIEW DATA:", {
 
+                   collegeId: college._id,
 
-                                        <div>
+                   userId: user._id || user.id,
 
-                                            <p className="font-semibold text-gray-900">
-                                                {branch}
-                                            </p>
+                   username: user.username || user.name || "Anonymous User",
 
-                                            <p className="text-sm text-gray-500">
-                                                Engineering Program
-                                            </p>
+                   rating: Number(rating),
 
-                                        </div>
+                   review: reviewText.trim(),
 
-                                    </div>
+               });
 
-                                </div>
+               const newReview =
 
-                            )
-                        )}
+                   reviewResponse.data;
 
-                    </div>
+               if (newReview) {
 
-                </div>
+                   setReviews((prev) => [
 
+                       newReview,
 
-                {/* FACILITIES */}
+                       ...prev,
 
-                <div className="mt-12">
+                   ]);
 
-                    <div className="flex items-center gap-3 mb-6">
+               }
 
-                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+               setReviewText("");
 
-                        <div>
+               setRating(5);
 
-                            <h2 className="text-3xl font-bold text-gray-900">
-                                Facilities
-                            </h2>
+               alert(
 
-                            <p className="text-gray-500 mt-1">
-                                Facilities available on campus
-                            </p>
+                   "Review submitted successfully!"
 
-                        </div>
+               );
 
-                    </div>
+           } catch (error) {
 
+               console.error(
 
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                   "Review submit error:",
 
-                        {(college.facilities || []).map(
-                            (facility) => (
+                   error
 
-                                <div
-                                    key={facility}
-                                    className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center hover:bg-blue-50 hover:border-blue-200 hover:shadow-md transition"
-                                >
+               );
 
-                                    <div className="text-2xl mb-3">
-                                        🏫
-                                    </div>
+               alert(
 
-                                    <p className="font-semibold text-gray-800">
-                                        {facility}
-                                    </p>
+                   error.response?.data?.message ||
 
-                                </div>
+                   error.message ||
 
-                            )
-                        )}
+                   "Review submission failed"
 
-                    </div>
+               );
 
-                </div>
+           } finally {
 
+               setSubmittingReview(false);
 
-                {/* =========================
-                    CAMPUS GALLERY
-                ========================= */}
+           }
 
-                <section className="mt-12">
+       };
 
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+       const handleDeleteReview = async (Id) => {
 
-                        <div className="flex items-center gap-3">
+           if (currentUser?.role !== "admin") return;
 
-                            <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+           try {
 
-                            <div>
+               await api.delete(`/review/delete/${Id}`);
 
-                                <h2 className="text-3xl font-bold text-gray-900">
-                                    Campus Gallery
-                                </h2>
+               setReviews((prev) => prev.filter((review) => review._id !== Id));
 
-                                <p className="text-gray-500 mt-1">
-                                    Explore and share campus photos
-                                </p>
+               console.log("Review delete ho gaya");
 
-                            </div>
+           } catch (err) {
 
-                        </div>
+               console.log("Review delete karne me error:", err);
 
-                    </div>
+           }
 
+       };
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+       const handleDeleteImage = async (Id) => {
 
+           if (currentUser?.role !== "admin") return;
 
-                        {/* MAIN COLLEGE IMAGE */}
+           try {
 
-                        <div className="group relative overflow-hidden rounded-2xl shadow-md h-[250px]">
+               console.log("delete hone hi wala hai")
 
-                            <img
-                                src={
-                                    college.image ||
-                                    "/default-college.jpg"
-                                }
-                                alt={college.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
+               await api.delete(`/image/delete/${Id}`)
 
+               console.log("image delete ho gya")
 
-                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 pt-16">
+               setImages((prev) =>
 
-                                <p className="text-white font-semibold">
-                                    {college.name}
-                                </p>
+                   prev.filter((item) => item._id !== Id)
 
-                                <p className="text-gray-200 text-sm">
-                                    Campus View
-                                </p>
+               );
 
-                            </div>
+               setSelectedImage(null);
 
-                        </div>
+           }
 
+           catch {
 
-                        {/* UPLOADED IMAGES */}
+               alert("nhi hua delete")
 
-                        {images.map((item) => (
+           }
 
-                            <div
-                                key={item._id}
-                                onClick={() => setSelectedImage(item)}
-                                className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in"
-                            >
+       }
 
-                                <img
-                                    src={item.imageUrl}
-                                    alt="College campus"
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                />
+// =========================
 
-                            </div>
+// LOADING
 
-                        ))}
+// =========================
 
+       if (collegeLoading) {
 
-                        {/* IMAGE PREVIEW */}
+           return (
 
-                        {selectedImage && (
-                            <div
-                                onClick={() =>
-                                    setSelectedImage(null)
-                                }
-                                className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
-                            >
+               <div className="min-h-[60vh] flex items-center justify-center">
 
-                                <img
-                                    src={selectedImage.imageUrl}
-                                    alt="College campus"
-                                    onClick={(e) =>
-                                        e.stopPropagation()
-                                    }
-                                    className="max-w-full max-h-[90vh] object-contain rounded-lg"
-                                />
-                                {currentUser?.role === "admin" && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteImage(selectedImage._id);
-                                        }} className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
-                                    >
-                                        🗑️
-                                    </button>
-                                )}
+                   <div className="text-center">
 
+                       <div className="text-5xl mb-4">
 
+                           🎓
 
-                                <button
-                                    onClick={() =>
-                                        setSelectedImage(null)
-                                    }
-                                    className="absolute top-5 right-5 text-white text-3xl hover:text-gray-300"
-                                >
-                                    ✕
-                                </button>
+                       </div>
 
+                       <p className="text-gray-500">
 
-                            </div>
+                           Loading college...
 
-                        )}
+                       </p>
 
+                   </div>
 
-                        {/* UPLOAD CARD */}
+               </div>
 
-                        <div className="h-[250px] border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50 hover:bg-blue-100 hover:border-blue-500 transition-all duration-200 flex flex-col items-center justify-center text-center p-6">
+           );
 
-                            <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4">
+       }
 
-                                <svg
-                                    className="w-8 h-8 text-blue-600"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
+// =========================
 
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 014 8.9M12 12v9m0-9l-3 3m3-3l3 3"
-                                    />
+// COLLEGE NOT FOUND
 
-                                </svg>
+// =========================
 
-                            </div>
+       if (!college) {
 
+           return (
 
-                            <h3 className="text-lg font-semibold text-gray-900">
-                                Upload Campus Photo
-                            </h3>
+               <div className="min-h-[60vh] flex items-center justify-center px-6">
 
+                   <div className="text-center">
 
-                            <p className="text-sm text-gray-500 mt-2">
-                                {image
-                                    ? image.name
-                                    : "No file chosen"}
-                            </p>
+                       <div className="text-6xl mb-5">
 
+                           🎓
 
-                            <label
-                                htmlFor="campus-upload"
-                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium cursor-pointer"
-                            >
-                                {image
-                                    ? "Change File"
-                                    : "Choose File"}
-                            </label>
+                       </div>
 
+                       <h2 className="text-3xl font-bold text-gray-900">
 
-                            <input
-                                id="campus-upload"
-                                type="file"
-                                accept="image/png,image/jpeg,image/webp"
-                                onChange={handleFileChange}
-                                className="hidden"
-                            />
+                           College Not Found
 
+                       </h2>
 
-                            <button
-                                type="button"
-                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
-                                onClick={handleUpload}
-                                disabled={uploading}
-                            >
-                                {uploading
-                                    ? "Uploading..."
-                                    : "Upload"}
-                            </button>
+                       <p className="text-gray-500 mt-2">
 
-                        </div>
+                           The college you're looking for doesn't exist.
 
-                    </div>
+                       </p>
 
-                </section>
+                   </div>
 
+               </div>
 
-                {/* =========================
-                    REVIEWS
-                ========================= */}
+           );
 
-                <section className="mt-12">
+       }
 
+       return (
 
-                    <div className="flex items-center gap-3 mb-6">
+           <section className="bg-white pb-10 min-h-screen">
 
-                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+               <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6">
 
-                        <div>
+                   <div className="relative h-[280px] sm:h-[380px] overflow-hidden rounded-3xl shadow-xl">
 
-                            <h2 className="text-3xl font-bold text-gray-900">
-                                Student Reviews
-                            </h2>
+                       <img
 
-                            <p className="text-gray-500 mt-1">
-                                Share your experience about this college
-                            </p>
+src={
 
-                        </div>
+                               college.image ||
 
-                    </div>
+                               "/default-college.jpg"
 
+                           }
 
-                    {/* WRITE REVIEW */}
+alt={college.name}
 
-                    <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-8 mb-8">
+className="w-full h-full object-cover"
 
-                        <h3 className="text-xl font-bold text-gray-900 mb-5">
-                            Write a Review
-                        </h3>
+                       />
 
+                       <div className="absolute inset-0 bg-black/45" />
 
-                        <form onSubmit={handleReviewSubmit}>
+                       <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-white">
 
+                           <div className="max-w-4xl">
 
-                            {/* RATING */}
+                               <span className="inline-block bg-blue-600 px-4 py-1.5 rounded-full text-sm font-medium mb-3">
 
-                            <div className="mb-5">
+                                   {college.shortName ||
 
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Your Rating
-                                </label>
+                                       "Engineering College"}
 
+                               </span>
 
-                                <div className="flex gap-2">
+                               <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
 
-                                    {[1, 2, 3, 4, 5].map(
-                                        (star) => (
+                                   {college.name}
 
-                                            <button
-                                                key={star}
-                                                type="button"
-                                                onClick={() =>
-                                                    setRating(star)
-                                                }
-                                                className={`text-2xl transition ${star <= rating
-                                                    ? "text-yellow-400"
-                                                    : "text-gray-300"
-                                                    }`}
-                                            >
-                                                ★
-                                            </button>
+                               </h1>
 
-                                        )
-                                    )}
+                               <div className="flex flex-wrap gap-3 sm:gap-5 mt-4 text-sm sm:text-base">
 
-                                </div>
+                                   <span className="flex items-center gap-2">
 
-                            </div>
+                                       📍 {college.location}
 
+                                   </span>
 
-                            {/* REVIEW */}
+                                   <span className="flex items-center gap-2">
 
-                            <div className="mb-5">
+                                       ⭐ {college.rating}/5
 
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Your Review
-                                </label>
+                                   </span>
 
+                               </div>
 
-                                <textarea
-                                    value={reviewText}
-                                    onChange={(e) =>
-                                        setReviewText(
-                                            e.target.value
-                                        )
-                                    }
-                                    placeholder="Share your experience with this college..."
-                                    rows="5"
-                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                                />
+                           </div>
 
-                            </div>
+                       </div>
 
+                   </div>
 
-                            {/* SUBMIT */}
+               </div>
 
-                            <button
-                                type="submit"
-                                disabled={submittingReview}
-                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition disabled:opacity-50"
-                            >
-                                {submittingReview
-                                    ? "Submitting..."
-                                    : "Submit Review"}
-                            </button>
+               <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
 
-                        </form>
+                   {editing && (
 
-                    </div>
+                       <div className="mb-10 bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-lg">
 
+                           <div className="flex items-center justify-between mb-6">
 
-                    {/* REVIEWS LIST */}
+                               <div>
 
-                    <div className="space-y-4">
+                                   <h2 className="text-2xl font-bold text-gray-900">
 
-                        {reviews.length === 0 ? (
+                                       Edit College
 
-                            <div className="text-center py-10 text-gray-500">
-                                No reviews yet. Be the first to review!
-                            </div>
+                                   </h2>
 
-                        ) : (
+                                   <p className="text-sm text-gray-500 mt-1">
 
-                            reviews.map((review) => (
+                                       Update college information
 
-                                <div
-                                    key={review._id}
-                                    className="w-full bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300"
-                                >
+                                   </p>
 
+                               </div>
 
-                                    {/* HEADER */}
+                               <button
 
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-5">
+type="button"
 
+onClick={() => setEditing(false)}
 
-                                        <div className="flex items-center gap-3 min-w-0">
+className="text-gray-500 hover:text-gray-900 text-2xl"
 
-                                            <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+                               >
 
-                                                {(review.username)
-                                                    .charAt(0)
-                                                    .toUpperCase()}
-                                            </div>
+                                   ✕
 
+                               </button>
 
-                                            <div className="min-w-auto">
+                           </div>
 
-                                                <p className="font-semibold text-gray-900 truncate">
-                                                    {review.username}
-                                                </p>
+                           <div className="grid md:grid-cols-2 gap-5">
 
+                               {[
 
-                                                <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-                                                    Student Review
-                                                </p>
+                                   ["name", "College Name", "text"],
 
-                                            </div>
+                                   ["shortName", "Short Name", "text"],
 
-                                        </div>
+                                   ["slug", "Slug", "text"],
 
+                                   ["district", "District", "text"],
 
-                                        {/* DATE */}
+                                   ["address", "Address", "text"],
 
-                                        <span className="text-xs sm:text-sm text-gray-400 whitespace-nowrap sm:pt-1">
+                                   ["location", "Location", "text"],
 
-                                            {review.createdAt
-                                                ? new Date(
-                                                    review.createdAt
-                                                ).toLocaleDateString(
-                                                    "en-IN",
-                                                    {
-                                                        day: "2-digit",
-                                                        month: "short",
-                                                        year: "numeric",
-                                                    }
-                                                )
-                                                : ""}
+                                   ["state", "State", "text"],
 
-                                        </span>
+                                   ["established", "Established", "number"],
 
-                                    </div>
+                                   ["type", "College Type", "text"],
 
+                                   ["ownership", "Ownership", "text"],
 
-                                    {/* RATING */}
+                                   ["university", "University", "text"],
 
-                                    <div className="flex items-center gap-3 mb-4">
+                                   ["approval", "Approval", "text"],
 
-                                        <div className="flex items-center gap-1">
+                                   ["campus", "Campus", "text"],
 
-                                            {[1, 2, 3, 4, 5].map(
-                                                (star) => (
+                                   ["website", "Website", "text"],
 
-                                                    <span
-                                                        key={star}
-                                                        className={`text-lg sm:text-xl ${star <=
-                                                            Number(
-                                                                review.rating
-                                                            )
-                                                            ? "text-yellow-400"
-                                                            : "text-gray-200"
-                                                            }`}
-                                                    >
-                                                        ★
-                                                    </span>
+                                   ["email", "Email", "email"],
 
-                                                )
-                                            )}
+                                   ["phone", "Phone", "text"],
 
-                                        </div>
+                                   ["image", "College Image", "text"],
 
+                                   ["logo", "College Logo", "text"],
 
-                                        <span className="text-sm font-semibold text-gray-700 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-full">
-                                            {review.rating}/5
-                                        </span>
+                                   ["rating", "Rating", "number"],
 
-                                    </div>
+                                   ["admission", "Admission", "text"],
 
+                               ].map(([name, label, type]) => (
 
-                                    {/* REVIEW TEXT */}
+                                   <div key={name}>
 
-                                    <div className="border-l-4 border-blue-500 bg-gray-50 rounded-r-xl px-4 sm:px-5 py-4">
+                                       <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                                        <p className="text-sm sm:text-base text-gray-700 leading-7 break-words">
-                                            {review.review}
-                                        </p>
+                                           {label}
 
-                                    </div>
+                                       </label>
 
+                                       <input
 
-                                    {/* FOOTER */}
+type={type}
 
-                                    <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
+name={name}
 
-                                        <span className="text-xs text-gray-400">
-                                            Verified Review
-                                        </span>
+value={editForm[name]}
 
+onChange={handleEditChange}
 
-                                        <div className="relative inline-block">
+min={name === "rating" ? "0" : undefined}
 
+max={name === "rating" ? "5" : undefined}
 
-                                            <div className="relative inline-block">
+step={name === "rating" ? "0.1" : undefined}
 
-                                                <span
-                                                    onClick={() =>
-                                                        setOpenMenuId(
-                                                            openMenuId === review._id ? null : review._id
-                                                        )
-                                                    }
-                                                    className="text-xs text-gray-400 cursor-pointer"
-                                                >
-                                                    <CircleChevronUp size={18} />
-                                                </span>
+className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
 
-                                                {openMenuId === review._id && currentUser?.role === "admin" && (
-                                                    <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
+                                       />
 
-                                                        <button
-                                                            onClick={() => {
-                                                                handleDeleteReview(review._id);
-                                                                setOpenMenuId(null);
-                                                            }}
-                                                            className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
-                                                        >
-                                                            Delete
-                                                        </button>
+                                   </div>
 
-                                                    </div>
-                                                )}
+                               ))}
 
-                                            </div>
+                           </div>
 
+                           {/* Branches: separate input for every branch */}
+                           <div className="mt-6">
+                               <label className="block text-sm font-medium text-gray-700 mb-3">Branches</label>
+                               {(Array.isArray(editForm.branches) ? editForm.branches : [""]).map((branch, index) => (
+                                   <div key={`branch-${index}`} className="flex gap-2 mb-3">
+                                       <input
+                                           type="text"
+                                           value={branch}
+                                           onChange={(e) => {
+                                               const updated = [...(Array.isArray(editForm.branches) ? editForm.branches : [])];
+                                               updated[index] = e.target.value;
+                                               setEditForm((prev) => ({ ...prev, branches: updated }));
+                                           }}
+                                           placeholder={`Branch ${index + 1}`}
+                                           className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                                       />
+                                       <button type="button" onClick={() => setEditForm((prev) => ({
+                                           ...prev,
+                                           branches: (Array.isArray(prev.branches) ? prev.branches : []).filter((_, i) => i !== index),
+                                       }))} className="px-4 bg-red-500 text-white rounded-xl hover:bg-red-600">Remove</button>
+                                   </div>
+                               ))}
+                               <button type="button" onClick={() => setEditForm((prev) => ({
+                                   ...prev,
+                                   branches: [...(Array.isArray(prev.branches) ? prev.branches : []), ""],
+                               }))} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">+ Add Branch</button>
+                           </div>
 
-                                        </div>
+                           {/* Facilities: separate input for every facility */}
+                           <div className="mt-6">
+                               <label className="block text-sm font-medium text-gray-700 mb-3">Facilities</label>
+                               {(Array.isArray(editForm.facilities) ? editForm.facilities : [""]).map((facility, index) => (
+                                   <div key={`facility-${index}`} className="flex gap-2 mb-3">
+                                       <input
+                                           type="text"
+                                           value={facility}
+                                           onChange={(e) => {
+                                               const updated = [...(Array.isArray(editForm.facilities) ? editForm.facilities : [])];
+                                               updated[index] = e.target.value;
+                                               setEditForm((prev) => ({ ...prev, facilities: updated }));
+                                           }}
+                                           placeholder={`Facility ${index + 1}`}
+                                           className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                                       />
+                                       <button type="button" onClick={() => setEditForm((prev) => ({
+                                           ...prev,
+                                           facilities: (Array.isArray(prev.facilities) ? prev.facilities : []).filter((_, i) => i !== index),
+                                       }))} className="px-4 bg-red-500 text-white rounded-xl hover:bg-red-600">Remove</button>
+                                   </div>
+                               ))}
+                               <button type="button" onClick={() => setEditForm((prev) => ({
+                                   ...prev,
+                                   facilities: [...(Array.isArray(prev.facilities) ? prev.facilities : []), ""],
+                               }))} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">+ Add Facility</button>
+                           </div>
 
-                                    </div>
+                           <div className="mt-5">
 
-                                </div>
+                               <label className="block text-sm font-medium text-gray-700 mb-2">
 
-                            ))
+                                   About College
 
-                        )}
+                               </label>
 
-                    </div>
+                               <textarea
 
-                </section>
+name="about"
 
-            </div>
+value={editForm.about}
 
-        </section>
+onChange={handleEditChange}
 
-    );
+rows="5"
+
+className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+
+                               />
+
+                           </div>
+
+                           <div className="flex gap-3 mt-6">
+
+                               <button
+
+type="button"
+
+onClick={updateCollege}
+
+disabled={saving}
+
+className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+
+                               >
+
+                                   {saving ? "Updating..." : "Update College"}
+
+                               </button>
+
+                               <button
+
+type="button"
+
+onClick={() => setEditing(false)}
+
+disabled={saving}
+
+className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition disabled:opacity-50"
+
+                               >
+
+                                   Cancel
+
+                               </button>
+
+                           </div>
+
+                       </div>
+
+                   )}
+
+                   <button
+
+type="button"
+
+onClick={startEditing}
+
+className="shrink-0 bg-white text-gray-900 px-4 py-2.5 mb-2 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition"
+
+                   >
+
+                       ✏️ Edit
+
+                   </button>
+
+                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+                       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+
+                           <p className="text-sm text-gray-500">
+
+                               Established
+
+                           </p>
+
+                           <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+
+                               {college.established}
+
+                           </p>
+
+                       </div>
+
+                       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+
+                           <p className="text-sm text-gray-500">
+
+                               College Type
+
+                           </p>
+
+                           <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+
+                               {college.type}
+
+                           </p>
+
+                       </div>
+
+                       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+
+                           <p className="text-sm text-gray-500">
+
+                               Rating
+
+                           </p>
+
+                           <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+
+                               {college.rating}/5
+
+                           </p>
+
+                       </div>
+
+                       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+
+                           <p className="text-sm text-gray-500">
+
+                               Campus
+
+                           </p>
+
+                           <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
+
+                               {college.campus}
+
+                           </p>
+
+                       </div>
+
+                   </div>
+
+                   <div className="mt-12">
+
+                       <div className="flex items-center gap-3 mb-5">
+
+                           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+                           <h2 className="text-3xl font-bold text-gray-900">
+
+                               About College
+
+                           </h2>
+
+                       </div>
+
+                       <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8">
+
+                           <p className="text-gray-700 leading-8 text-[16px]">
+
+                               {college.about}
+
+                           </p>
+
+                       </div>
+
+                   </div>
+
+                   <div className="grid lg:grid-cols-2 gap-6 mt-10">
+
+                       <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
+
+                           <div className="flex items-center gap-3 mb-6">
+
+                               <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl overflow-hidden">
+
+                                   <img
+
+src={college.logo}
+
+alt={college.name}
+
+className="w-full h-full object-cover"
+
+                                   />
+
+                               </div>
+
+                               <div>
+
+                                   <h3 className="text-xl font-bold text-gray-900">
+
+                                       Basic Information
+
+                                   </h3>
+
+                                   <p className="text-sm text-gray-500">
+
+                                       College details
+
+                                   </p>
+
+                               </div>
+
+                           </div>
+
+                           <div className="space-y-4">
+
+                               <div className="flex justify-between gap-4 border-b pb-3">
+
+                                   <span className="text-gray-500">
+
+                                       University
+
+                                   </span>
+
+                                   <span className="font-semibold text-gray-900 text-right">
+
+                                       {college.university}
+
+                                   </span>
+
+                               </div>
+
+                               <div className="flex justify-between gap-4 border-b pb-3">
+
+                                   <span className="text-gray-500">
+
+                                       Approval
+
+                                   </span>
+
+                                   <span className="font-semibold text-gray-900 text-right">
+
+                                       {college.approval}
+
+                                   </span>
+
+                               </div>
+
+                               <div className="flex justify-between gap-4">
+
+                                   <span className="text-gray-500">
+
+                                       Campus Size
+
+                                   </span>
+
+                                   <span className="font-semibold text-gray-900 text-right">
+
+                                       {college.campus}
+
+                                   </span>
+
+                               </div>
+
+                           </div>
+
+                       </div>
+
+                       <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
+
+                           <div className="flex items-center gap-3 mb-6">
+
+                               <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
+
+                                   📞
+
+                               </div>
+
+                               <div>
+
+                                   <h3 className="text-xl font-bold text-gray-900">
+
+                                       Contact Information
+
+                                   </h3>
+
+                                   <p className="text-sm text-gray-500">
+
+                                       Get in touch
+
+                                   </p>
+
+                               </div>
+
+                           </div>
+
+                           <div className="space-y-4">
+
+                               <div>
+
+                                   <p className="text-sm text-gray-500 mb-1">
+
+                                       Phone
+
+                                   </p>
+
+                                   <p className="font-semibold text-gray-900">
+
+                                       📞 {college.phone}
+
+                                   </p>
+
+                               </div>
+
+                               <div>
+
+                                   <p className="text-sm text-gray-500 mb-1">
+
+                                       Email
+
+                                   </p>
+
+                                   <p className="font-semibold text-gray-900 break-all">
+
+                                       ✉️ {college.email}
+
+                                   </p>
+
+                               </div>
+
+                               <div>
+
+                                   <p className="text-sm text-gray-500 mb-1">
+
+                                       Website
+
+                                   </p>
+
+                                   <a
+
+href={college.website}
+
+target="_blank"
+
+rel="noopener noreferrer"
+
+className="text-blue-600 font-medium hover:underline break-all"
+
+                                   >
+
+                                       🌐 {college.website}
+
+                                   </a>
+
+                               </div>
+
+                           </div>
+
+                       </div>
+
+                   </div>
+
+                   <div className="mt-12">
+
+                       <div className="flex items-center gap-3 mb-6">
+
+                           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+                           <div>
+
+                               <h2 className="text-3xl font-bold text-gray-900">
+
+                                   Courses Offered
+
+                               </h2>
+
+                               <p className="text-gray-500 mt-1">
+
+                                   Engineering programs available at the college
+
+                               </p>
+
+                           </div>
+
+                       </div>
+
+                       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                           {(college.branches || []).map(
+
+                               (branch) => (
+
+                                   <div
+
+key={branch}
+
+className="group border border-gray-200 rounded-2xl p-5 bg-white hover:border-blue-500 hover:shadow-lg transition-all duration-200"
+
+                                   >
+
+                                       <div className="flex items-center gap-4">
+
+                                           <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-lg group-hover:bg-blue-600 group-hover:text-white transition">
+
+                                               🎓
+
+                                           </div>
+
+                                           <div>
+
+                                               <p className="font-semibold text-gray-900">
+
+                                                   {branch}
+
+                                               </p>
+
+                                               <p className="text-sm text-gray-500">
+
+                                                   Engineering Program
+
+                                               </p>
+
+                                           </div>
+
+                                       </div>
+
+                                   </div>
+
+                               )
+
+                           )}
+
+                       </div>
+
+                   </div>
+
+                   <div className="mt-12">
+
+                       <div className="flex items-center gap-3 mb-6">
+
+                           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+                           <div>
+
+                               <h2 className="text-3xl font-bold text-gray-900">
+
+                                   Facilities
+
+                               </h2>
+
+                               <p className="text-gray-500 mt-1">
+
+                                   Facilities available on campus
+
+                               </p>
+
+                           </div>
+
+                       </div>
+
+                       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                           {(college.facilities || []).map(
+
+                               (facility) => (
+
+                                   <div
+
+key={facility}
+
+className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center hover:bg-blue-50 hover:border-blue-200 hover:shadow-md transition"
+
+                                   >
+
+                                       <div className="text-2xl mb-3">
+
+                                           🏫
+
+                                       </div>
+
+                                       <p className="font-semibold text-gray-800">
+
+                                           {facility}
+
+                                       </p>
+
+                                   </div>
+
+                               )
+
+                           )}
+
+                       </div>
+
+                   </div>
+
+                   <section className="mt-12">
+
+                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+
+                           <div className="flex items-center gap-3">
+
+                               <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+                               <div>
+
+                                   <h2 className="text-3xl font-bold text-gray-900">
+
+                                       Campus Gallery
+
+                                   </h2>
+
+                                   <p className="text-gray-500 mt-1">
+
+                                       Explore and share campus photos
+
+                                   </p>
+
+                               </div>
+
+                           </div>
+
+                       </div>
+
+                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                           <div className="group relative overflow-hidden rounded-2xl shadow-md h-[250px]">
+
+                               <img
+
+src={
+
+                                       college.image ||
+
+                                       "/default-college.jpg"
+
+                                   }
+
+alt={college.name}
+
+className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+
+                               />
+
+                               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 pt-16">
+
+                                   <p className="text-white font-semibold">
+
+                                       {college.name}
+
+                                   </p>
+
+                                   <p className="text-gray-200 text-sm">
+
+                                       Campus View
+
+                                   </p>
+
+                               </div>
+
+                           </div>
+
+                           {images.map((item) => (
+
+                               <div
+
+key={item._id}
+
+onClick={() => setSelectedImage(item)}
+
+className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in"
+
+                               >
+
+                                   <img
+
+src={item.imageUrl}
+
+alt="College campus"
+
+className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+
+                                   />
+
+                               </div>
+
+                           ))}
+
+                           {selectedImage && (
+
+                               <div
+
+onClick={() =>
+
+                                       setSelectedImage(null)
+
+                                   }
+
+className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+
+                               >
+
+                                   <img
+
+src={selectedImage.imageUrl}
+
+alt="College campus"
+
+onClick={(e) =>
+
+                                           e.stopPropagation()
+
+                                       }
+
+className="max-w-full max-h-[90vh] object-contain rounded-lg"
+
+                                   />
+
+                                   {currentUser?.role === "admin" && (
+
+                                       <button
+
+onClick={(e) => {
+
+                                               e.stopPropagation();
+
+                                               handleDeleteImage(selectedImage._id);
+
+                                           }} className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
+
+                                       >
+
+                                           🗑️
+
+                                       </button>
+
+                                   )}
+
+                                   <button
+
+onClick={() =>
+
+                                           setSelectedImage(null)
+
+                                       }
+
+className="absolute top-5 right-5 text-white text-3xl hover:text-gray-300"
+
+                                   >
+
+                                       ✕
+
+                                   </button>
+
+                               </div>
+
+                           )}
+
+                           <div className="h-[250px] border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50 hover:bg-blue-100 hover:border-blue-500 transition-all duration-200 flex flex-col items-center justify-center text-center p-6">
+
+                               <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4">
+
+                                   <svg
+
+className="w-8 h-8 text-blue-600"
+
+fill="none"
+
+stroke="currentColor"
+
+viewBox="0 0 24 24"
+
+                                   >
+
+                                       <path
+
+strokeLinecap="round"
+
+strokeLinejoin="round"
+
+strokeWidth="2"
+
+d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 014 8.9M12 12v9m0-9l-3 3m3-3l3 3"
+
+                                       />
+
+                                   </svg>
+
+                               </div>
+
+                               <h3 className="text-lg font-semibold text-gray-900">
+
+                                   Upload Campus Photo
+
+                               </h3>
+
+                               <p className="text-sm text-gray-500 mt-2">
+
+                                   {image
+
+                                       ? image.name
+
+                                       : "No file chosen"}
+
+                               </p>
+
+                               <label
+
+htmlFor="campus-upload"
+
+className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium cursor-pointer"
+
+                               >
+
+                                   {image
+
+                                       ? "Change File"
+
+                                       : "Choose File"}
+
+                               </label>
+
+                               <input
+
+id="campus-upload"
+
+type="file"
+
+accept="image/png,image/jpeg,image/webp"
+
+onChange={handleFileChange}
+
+className="hidden"
+
+                               />
+
+                               <button
+
+type="button"
+
+className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+
+onClick={handleUpload}
+
+disabled={uploading}
+
+                               >
+
+                                   {uploading
+
+                                       ? "Uploading..."
+
+                                       : "Upload"}
+
+                               </button>
+
+                           </div>
+
+                       </div>
+
+                   </section>
+
+                   <section className="mt-12">
+
+                       <div className="flex items-center gap-3 mb-6">
+
+                           <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
+
+                           <div>
+
+                               <h2 className="text-3xl font-bold text-gray-900">
+
+                                   Student Reviews
+
+                               </h2>
+
+                               <p className="text-gray-500 mt-1">
+
+                                   Share your experience about this college
+
+                               </p>
+
+                           </div>
+
+                       </div>
+
+                       <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-8 mb-8">
+
+                           <h3 className="text-xl font-bold text-gray-900 mb-5">
+
+                               Write a Review
+
+                           </h3>
+
+                           <form onSubmit={handleReviewSubmit}>
+
+                               <div className="mb-5">
+
+                                   <label className="block text-sm font-medium text-gray-700 mb-2">
+
+                                       Your Rating
+
+                                   </label>
+
+                                   <div className="flex gap-2">
+
+                                       {[1, 2, 3, 4, 5].map(
+
+                                           (star) => (
+
+                                               <button
+
+key={star}
+
+type="button"
+
+onClick={() =>
+
+                                                       setRating(star)
+
+                                                   }
+
+className={`text-2xl transition ${star <= rating
+
+                                                       ? "text-yellow-400"
+
+                                                       : "text-gray-300"
+
+                                                       }`}
+
+                                               >
+
+                                                   ★
+
+                                               </button>
+
+                                           )
+
+                                       )}
+
+                                   </div>
+
+                               </div>
+
+                               <div className="mb-5">
+
+                                   <label className="block text-sm font-medium text-gray-700 mb-2">
+
+                                       Your Review
+
+                                   </label>
+
+                                   <textarea
+
+value={reviewText}
+
+onChange={(e) =>
+
+                                           setReviewText(
+
+                                               e.target.value
+
+                                           )
+
+                                       }
+
+placeholder="Share your experience with this college..."
+
+rows="5"
+
+className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+
+                                   />
+
+                               </div>
+
+                               <button
+
+type="submit"
+
+disabled={submittingReview}
+
+className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition disabled:opacity-50"
+
+                               >
+
+                                   {submittingReview
+
+                                       ? "Submitting..."
+
+                                       : "Submit Review"}
+
+                               </button>
+
+                           </form>
+
+                       </div>
+
+                       <div className="space-y-4">
+
+                           {reviews.length === 0 ? (
+
+                               <div className="text-center py-10 text-gray-500">
+
+                                   No reviews yet. Be the first to review!
+
+                               </div>
+
+                           ) : (
+
+                               reviews.map((review) => (
+
+                                   <div
+
+key={review._id}
+
+className="w-full bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300"
+
+                                   >
+
+                                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-5">
+
+                                           <div className="flex items-center gap-3 min-w-0">
+
+                                               <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+
+                                                   {(review.username)
+
+                                                       .charAt(0)
+
+                                                       .toUpperCase()}
+
+                                               </div>
+
+                                               <div className="min-w-auto">
+
+                                                   <p className="font-semibold text-gray-900 truncate">
+
+                                                       {review.username}
+
+                                                   </p>
+
+                                                   <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+
+                                                       Student Review
+
+                                                   </p>
+
+                                               </div>
+
+                                           </div>
+
+                                           <span className="text-xs sm:text-sm text-gray-400 whitespace-nowrap sm:pt-1">
+
+                                               {review.createdAt
+
+                                                   ? new Date(
+
+                                                       review.createdAt
+
+                                                   ).toLocaleDateString(
+
+                                                       "en-IN",
+
+                                                       {
+
+                                                           day: "2-digit",
+
+                                                           month: "short",
+
+                                                           year: "numeric",
+
+                                                       }
+
+                                                   )
+
+                                                   : ""}
+
+                                           </span>
+
+                                       </div>
+
+                                       <div className="flex items-center gap-3 mb-4">
+
+                                           <div className="flex items-center gap-1">
+
+                                               {[1, 2, 3, 4, 5].map(
+
+                                                   (star) => (
+
+                                                       <span
+
+key={star}
+
+className={`text-lg sm:text-xl ${star <=
+
+                                                               Number(
+
+                                                                   review.rating
+
+                                                               )
+
+                                                               ? "text-yellow-400"
+
+                                                               : "text-gray-200"
+
+                                                               }`}
+
+                                                       >
+
+                                                           ★
+
+                                                       </span>
+
+                                                   )
+
+                                               )}
+
+                                           </div>
+
+                                           <span className="text-sm font-semibold text-gray-700 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-full">
+
+                                               {review.rating}/5
+
+                                           </span>
+
+                                       </div>
+
+                                       <div className="border-l-4 border-blue-500 bg-gray-50 rounded-r-xl px-4 sm:px-5 py-4">
+
+                                           <p className="text-sm sm:text-base text-gray-700 leading-7 break-words">
+
+                                               {review.review}
+
+                                           </p>
+
+                                       </div>
+
+                                       <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
+
+                                           <span className="text-xs text-gray-400">
+
+                                               Verified Review
+
+                                           </span>
+
+                                           <div className="relative inline-block">
+
+                                               <div className="relative inline-block">
+
+                                                   <span
+
+onClick={() =>
+
+                                                           setOpenMenuId(
+
+                                                               openMenuId === review._id ? null : review._id
+
+                                                           )
+
+                                                       }
+
+className="text-xs text-gray-400 cursor-pointer"
+
+                                                   >
+
+                                                       <CircleChevronUp size={18} />
+
+                                                   </span>
+
+                                                   {openMenuId === review._id && currentUser?.role === "admin" && (
+
+                                                       <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
+
+                                                           <button
+
+onClick={() => {
+
+                                                                   handleDeleteReview(review._id);
+
+                                                                   setOpenMenuId(null);
+
+                                                               }}
+
+className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
+
+                                                           >
+
+                                                               Delete
+
+                                                           </button>
+
+                                                       </div>
+
+                                                   )}
+
+                                               </div>
+
+                                           </div>
+
+                                       </div>
+
+                                   </div>
+
+                               ))
+
+                           )}
+
+                       </div>
+
+                   </section>
+
+               </div>
+
+           </section>
+
+       );
 
 };
 

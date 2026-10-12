@@ -564,7 +564,7 @@ function Hero() {
                   style={{ animationDelay: "0.28s" }}
                 >
                   <a
-                    href="/colleges"
+                    href="/college"
                     className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition"
                   >
                     Explore Colleges
@@ -583,7 +583,7 @@ function Hero() {
 
                 {/* Search */}
 
-                <div
+                {/* <div
                   className="hero-in mt-8 max-w-xl"
                   style={{ animationDelay: "0.36s" }}
                 >
@@ -602,13 +602,13 @@ function Hero() {
                     />
 
                     <a
-                      href="/colleges"
+                      href="/college"
                       className="px-4 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-blue-600 transition"
                     >
                       Search
                     </a>
                   </div>
-                </div>
+                </div> */}
 
 
                 {/* Stats */}
@@ -1001,7 +1001,7 @@ function Hero() {
 
 
               <a
-                href="/roadmap/syllabus"
+                href="/roadmap"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gray-900 text-white font-semibold hover:bg-blue-600 transition"
               >
                 Explore your roadmap

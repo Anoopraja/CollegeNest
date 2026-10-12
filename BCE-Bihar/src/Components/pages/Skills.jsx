@@ -86,7 +86,7 @@ const skillDomains = [
       "React Native Developer",
       "Mobile Engineer",
     ],
-     playlist: ["https://www.youtube.com/playlist?list=PLMYMBJaozz3k",],
+     playlist: ["https://youtube.com/playlist?list=PLRAV69dS1uWSjBBJ-egNNOd4mdblt1P4c&si=X2VuCTyZpdalxAi1"],
   },
 
   {
@@ -517,7 +517,7 @@ const Skills = () => {
           gsap.from(card, {
             opacity: 0,
             y: 45,
-            duration: 0.65,
+            duration: 0.25,
             delay: (index % 3) * 0.08,
             ease: "power3.out",
             scrollTrigger: {
