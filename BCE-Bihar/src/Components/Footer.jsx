@@ -20,7 +20,7 @@ const Footer = () => {
                   CollegeNest
                 </h2>
                 <p className="text-[11px] text-slate-500">
-                  Engineering decisions made easy
+                  Engineering decisions made eassy
                 </p>
               </div>
             </div>
