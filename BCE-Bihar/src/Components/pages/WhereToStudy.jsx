@@ -126,7 +126,7 @@ const WhereToStudy = () => {
               </h3>
 
               <p className="text-sm text-gray-600 mt-2 max-w-xl">
-                Share a teacher, mentor or tutor who helped
+                Share a teacher, mentor and tutor who helped
                 you learn a particular skill and help other
                 students discover them.
               </p>
