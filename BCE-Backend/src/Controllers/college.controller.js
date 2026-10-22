@@ -1,7 +1,33 @@
 import College from "../Models/college.model.js"
-import dotenv from "dotenv";
+// import redis from "../../config/redis/redis.js"
 
+// export const getColleges = async (req, res) => {
+//   try {
+//     const cached = await redis.get("college");
 
+//     if (cached) {
+//       return res.json({
+//         source: "redis",
+//         data: JSON.parse(cached),
+//       });
+//     }
+
+//     const college = await College.find().lean();
+
+//     await redis.set("college", JSON.stringify(college), {
+//       EX: 300, // Cache for 5 minutes
+//     });
+
+//     return res.json({
+//       source: "mongodb",
+//       data: college,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: "Failed to fetch colleges",
+//     });
+//   }
+// };
 
 const getAllCollege = async (req,res) => {
     try{
