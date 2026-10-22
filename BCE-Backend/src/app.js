@@ -4,6 +4,7 @@ import adminRoute from "./Routes/admin.route.js"
 import collegeRoute from "./Routes/college.route.js"
 import reviewRoute from "./Routes/review.route.js"
 import imageRoute from "./Routes/image.route.js"
+import home from "./Routes/home.route.js"
 import cookieParser from "cookie-parser"
 import cors from "cors";
 
@@ -17,6 +18,7 @@ app.use(cors({
     ],
     credentials: true
 }));
+app.use("/", home);
 
 
 app.use("/user", userRoute)
