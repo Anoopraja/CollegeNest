@@ -21,8 +21,8 @@ function loadScript(src) {
 const Colleges = () => {
 
   const [search, setSearch] = useState("");
-  const [colleges, setColleges] = useState([]);
-  const [result, setResult] = useState([]);
+  const [colleges, setColleges] = useState([""]);
+  const [result, setResult] = useState([""]);
 
   const gsapRef = useRef(null);
   const headerRef = useRef(null);
@@ -30,28 +30,28 @@ const Colleges = () => {
   const debounceRef = useRef(null);
 
 
+  const getColleges = async () => {
+
+    try {
+
+      const response = await api.get("/college");
+
+      console.log("Backend response:", response.data);
+
+      const collegeData = response.data.data.college || [];
+
+      setColleges(collegeData);
+      setResult(collegeData);
+
+    } catch (error) {
+
+      console.log("College fetch error:", error);
+
+    }
+
+  };
   useEffect(() => {
 
-    const getColleges = async () => {
-
-      try {
-
-        const response = await api.get("/college");
-
-        console.log("Backend response:", response.data);
-
-        const collegeData = response.data.data || [];
-
-        setColleges(collegeData);
-        setResult(collegeData);
-
-      } catch (error) {
-
-        console.log("College fetch error:", error);
-
-      }
-
-    };
 
     getColleges();
 
@@ -398,7 +398,7 @@ const Colleges = () => {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
 
-            {result.map((item) => (
+            {colleges.map((item) => (
 
               <div
                 key={item._id}

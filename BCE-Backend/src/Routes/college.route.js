@@ -5,9 +5,9 @@ import adminOnly from "../middleware/route.middleware.js"
 
 const route = express.Router();
 
-route.patch("/update/:id",adminOnly, updateCollegeData)
-route.post("/addcollege",addCollege)
-route.get("/:slug",getCollegeById)
 route.get("/", getAllCollege)
+route.post("/addcollege",addCollege)
+route.patch("/update/:id",adminOnly, updateCollegeData)
+route.get("/:slug",getCollegeById)
 
 export default route ;

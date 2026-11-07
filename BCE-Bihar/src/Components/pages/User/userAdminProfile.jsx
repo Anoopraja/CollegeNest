@@ -10,7 +10,7 @@ function AdminProfile() {
   const [length, setLength] = useState(0);
   // const [reviewLength, setReviewLength] = useState(0);
   const [rLength, setRLength] = useState(0);
-
+  const [uLength, setULength] = useState(0)
   const handleLogout = async () => {
     try {
       await api.post("/user/logout");
@@ -39,7 +39,22 @@ function AdminProfile() {
   useEffect(() => {
     reviewLength();
   }, []);
+  
+const getUserLength = async () => {
+  try {
+    const response = await api.get("/user/alluser");
 
+    const userNo = response.data.data.length;
+    setULength(userNo);
+
+  } catch (error) {
+    console.error("Error fetching user count:", error);
+  }
+};
+
+useEffect(() => {
+  getUserLength();
+}, []);
 
   const collegeLength = async () => {
     try {
@@ -183,14 +198,14 @@ function AdminProfile() {
 
           <StatCard
             title="Users"
-            value={user ? 1 : 0}
+            value={uLength}
             description="Registered users"
           />
 
           <StatCard
-            title="Reports"
+            title="Blocks"
             value="24"
-            description="Pending reports"
+            description="Block account"
           />
 
         </div>

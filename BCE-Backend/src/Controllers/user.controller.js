@@ -217,21 +217,29 @@ const getCurrentAdmin = async (req,res) => {
 
 const getAllUser = async (req, res) => {
     try {
-        const AllUser = await User.find()
-        res.status(200).json({
+        const [AllUser, length] = await Promise.all([
+            User.find(),
+            User.countDocuments()
+        ]);
+
+        return res.status(200).json({
             success: true,
             message: "All users fetched successfully",
-            data: AllUser,
+            data: {
+                users: AllUser,
+                length
+            }
         });
-    }
-    catch (error) {
-        console.log("user Fetching ERROR:", error);
-        res.status(500).json({
+
+    } catch (error) {
+        console.log("User Fetching ERROR:", error);
+
+        return res.status(500).json({
             success: false,
             message: error.message
         });
     }
-}
+};
 
 // const getUserById = async (req, res) => {
 //     try {
