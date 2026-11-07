@@ -55,12 +55,29 @@ const deleteReview = async (req, res) => {
 };
 
 const getAllReview = async (req, res) => {
-    cosnt = await Review.find()
-    return res.status(200).json({
-        success: true,
-        message: "ye rha apka pura review jitna db me hai"
-    })
-}
+    try {
+        const [count, length] = await Promise.all([
+            Review.find(),
+            Review.countDocuments()
+        ]);
+
+        return res.status(200).json({
+            success: true,
+            message: "All reviews fetched successfully",
+            data: {
+                count,
+                length
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 
 
 const getReviewById = async (req, res) => {

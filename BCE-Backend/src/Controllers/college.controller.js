@@ -6,11 +6,15 @@ import dotenv from "dotenv";
 const getAllCollege = async (req,res) => {
     try{
         const college = await College.find()
+        const length = await College.countDocuments()
 
         return res.status(200).json({
             success:true,
             message:"ye raha apka pura college",
-            data:college
+            data:{
+                college,   
+                length
+            }
         })
     }
     catch(error){

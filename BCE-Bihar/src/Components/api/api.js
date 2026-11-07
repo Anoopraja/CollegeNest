@@ -5,7 +5,7 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL ||
         (import.meta.env.DEV
             ? "http://localhost:3000"
-            : "https://universal-j7iy.onrender.com"),
+            : "https://api.anooplofi.me/"),
     withCredentials: true
 
 });

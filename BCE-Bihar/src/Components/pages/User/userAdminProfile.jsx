@@ -6,7 +6,10 @@ function AdminProfile() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState(null);
-  const [college] = useState([]);
+  // const [college] = useState([]);
+  const [length, setLength] = useState(0);
+  // const [reviewLength, setReviewLength] = useState(0);
+  const [rLength, setRLength] = useState(0);
 
   const handleLogout = async () => {
     try {
@@ -19,7 +22,42 @@ function AdminProfile() {
       alert("Logout failed. Please try again.");
     }
   };
+  // useEffect(() => {
+  //   collegeLength();
+  // }, []);
 
+  const reviewLength = async () => {
+    try {
+      const length = await api.get("/review/allreview");
+      const reviewsNumber = length.data.data.length; 
+      setRLength(reviewsNumber);
+
+    } catch (error) {
+      console.error("Error fetching review length:", error);
+    }
+  }
+  useEffect(() => {
+    reviewLength();
+  }, []);
+
+
+  const collegeLength = async () => {
+    try {
+      const response = await api.get("/college");
+
+      const length = response.data.data.length;
+
+      setLength(length);
+
+    } catch (error) {
+      console.error("Error fetching college length:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    collegeLength();
+  }, []);
   useEffect(() => {
     const getAdmin = async () => {
       try {
@@ -133,13 +171,13 @@ function AdminProfile() {
 
           <StatCard
             title="Colleges"
-            value={college.length}
+            value={length}
             description="Listed colleges"
           />
 
           <StatCard
             title="Reviews"
-            value="5,240"
+            value={rLength}
             description="Total reviews"
           />
 
