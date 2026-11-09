@@ -6,7 +6,7 @@ import adminOnly from "../middleware/route.middleware.js"
 const route = express.Router();
 
 route.get("/", getAllCollege)
-route.post("/addcollege",addCollege)
+route.post("/addcollege",adminOnly, addCollege)
 route.patch("/update/:id",adminOnly, updateCollegeData)
 route.get("/:slug",getCollegeById)
 

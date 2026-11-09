@@ -27,6 +27,19 @@ function AdminProfile() {
   //   collegeLength();
   // }, []);
 
+  const manageColleges = () => {
+
+  }
+ 
+
+  const manageReviews = () => {
+
+  }
+ 
+
+  const manageUsers = () => {
+    
+  }
  
 
   const reviewLength = async () => {
@@ -273,24 +286,29 @@ useEffect(() => {
               title="Manage Colleges"
               description="Add, edit or remove colleges"
               icon="🏫"
+              onClick={manageColleges}
             />
+            
 
             <AdminAction
               title="Manage Reviews"
               description="Moderate student reviews"
               icon="💬"
+              onClick={manageReviews}
             />
 
             <AdminAction
               title="Manage Users"
               description="View and manage users"
               icon="👥"
+              onClick={manageUsers}
             />
 
-            <AdminAction
+            {/* <AdminAction
               title="Reports"
               description="Review reported content"
               icon="⚠️"
+
             />
 
             <AdminAction
@@ -303,7 +321,7 @@ useEffect(() => {
               title="Platform Settings"
               description="Configure CollegeNest"
               icon="⚙️"
-            />
+            /> */}
             
 
           </div>
