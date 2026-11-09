@@ -217,10 +217,19 @@ const getCurrentAdmin = async (req,res) => {
 
 const getAllUser = async (req, res) => {
     try {
+          // 1. Check cache
+        const cachedData = cache.get("all-users");
+
+        if (cachedData !== undefined) {
+            console.log("REVIEW CACHE HIT");
+            return res.status(200).json(cachedData);
+        }
         const [AllUser, length] = await Promise.all([
             User.find(),
             User.countDocuments()
         ]);
+
+        cache.set("all_users", response, 120);
 
         return res.status(200).json({
             success: true,

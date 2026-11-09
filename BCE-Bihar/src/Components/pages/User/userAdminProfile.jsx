@@ -26,6 +26,7 @@ function AdminProfile() {
   // useEffect(() => {
   //   collegeLength();
   // }, []);
+  
 
   const manageColleges = () => {
 

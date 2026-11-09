@@ -1,35 +1,54 @@
 import College from "../Models/college.model.js"
 import dotenv from "dotenv";
+import cache from "../config/cache.js";
 
 
+const getAllCollege = async (req, res) => {
+    try {
+        // 1. Check cache
+        const cachedData = cache.get("all_colleges");
 
-const getAllCollege = async (req,res) => {
-    try{
-        const college = await College.find()
-        const length = await College.countDocuments()
+        if (cachedData) {
+            console.log("CACHE HIT");
+            return res.status(200).json(cachedData);
+        }
 
-        return res.status(200).json({
-            success:true,
-            message:"ye raha apka pura college",
-            data:{
-                college,   
+        console.log("CACHE MISS");
+
+        // 2. Fetch data from MongoDB
+        const college = await College.find();
+
+        const length = await College.countDocuments();
+
+        // 3. Prepare response
+        const response = {
+            success: true,
+            message: "ye raha apka pura college",
+            data: {
+                college,
                 length
             }
-        })
+        };
+
+        // 4. Store response in cache
+        cache.set("all_colleges", response, 300);
+
+        return res.status(200).json(response);
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
-    catch(error){
-        res.status(400).json({
-            success:false,
-            message:"try me kuch galat hai sayad"
-        })
-    }
-}
+};
 
 const getCollegeById = async (req, res) => {
     try {
         const { slug } = req.params;
 
         const college = await College.findOne({ slug });
+        cache.del("all_colleges");
 
         if (!college) {
             return res.status(404).json({
@@ -107,6 +126,8 @@ const addCollege = async (req, res) => {
                 branches,
                 facilities,
         })
+                cache.del("all_colleges");
+
         return res.status(200).json({
             success: true,
             message: "ho gya add college ",

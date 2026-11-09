@@ -56,10 +56,20 @@ const deleteReview = async (req, res) => {
 
 const getAllReview = async (req, res) => {
     try {
+
+         // 1. Check cache
+        const cachedData = cache.get("all_reviews");
+
+        if (cachedData !== undefined) {
+            console.log("REVIEW CACHE HIT");
+            return res.status(200).json(cachedData);
+        }
         const [count, length] = await Promise.all([
             Review.find(),
             Review.countDocuments()
         ]);
+          // 3. Save in cache
+        cache.set("all_reviews", response, 120);
 
         return res.status(200).json({
             success: true,

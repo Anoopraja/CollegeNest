@@ -82,7 +82,9 @@ const Navbar = () => {
               src="/logo.jpg"
               alt="Logo"
             /> */}
-            <GraduationCap size={36} className="text-blue-600" />
+            <GraduationCap size={36} 
+            onClick={() => navigate("/")}
+            className="text-blue-600" />
 
           </div>
 
