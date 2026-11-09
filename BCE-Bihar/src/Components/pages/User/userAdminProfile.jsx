@@ -10,7 +10,8 @@ function AdminProfile() {
   const [length, setLength] = useState(0);
   // const [reviewLength, setReviewLength] = useState(0);
   const [rLength, setRLength] = useState(0);
-  const [uLength, setULength] = useState(0)
+  const [uLength, setULength] = useState(0);
+
   const handleLogout = async () => {
     try {
       await api.post("/user/logout");
@@ -25,6 +26,8 @@ function AdminProfile() {
   // useEffect(() => {
   //   collegeLength();
   // }, []);
+
+ 
 
   const reviewLength = async () => {
     try {
@@ -301,6 +304,7 @@ useEffect(() => {
               description="Configure CollegeNest"
               icon="⚙️"
             />
+            
 
           </div>
         </div>

@@ -21,7 +21,7 @@ function loadScript(src) {
 const Colleges = () => {
 
   const [search, setSearch] = useState("");
-  const [colleges, setColleges] = useState([""]);
+  const [colleges, setColleges] = useState([]);
   const [result, setResult] = useState([""]);
 
   const gsapRef = useRef(null);
@@ -380,16 +380,32 @@ const Colleges = () => {
 
         {result.length === 0 ? (
 
-          <div className="text-center py-20 border border-dashed border-gray-200 rounded-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {Array.from({ length: 6 }).map((_, index) => (
+    <div
+      key={index}
+      className="border border-gray-200 rounded-2xl p-4 space-y-4 animate-pulse"
+    >
+      {/* Image Skeleton */}
+      <div className="h-40 bg-gray-200 rounded-xl" />
 
-            <p className="text-gray-500">
-              {colleges.length === 0
-                ? "Loading colleges..."
-                : `No colleges match "${search}". Try a different name.`
-              }
-            </p>
+      {/* College Name */}
+      <div className="h-5 bg-gray-200 rounded-md w-3/4" />
 
-          </div>
+      {/* Location */}
+      {/* <div className="h-4 bg-gray-200 rounded-md w-1/2" /> */}
+
+      {/* Description */}
+      {/* <div className="space-y-2">
+        <div className="h-3 bg-gray-200 rounded-md w-full" />
+        <div className="h-3 bg-gray-200 rounded-md w-5/6" />
+      </div> */}
+
+      {/* Button */}
+      <div className="h-9 bg-gray-200 rounded-lg w-1/3" />
+    </div>
+  ))}
+</div>
 
         ) : (
 

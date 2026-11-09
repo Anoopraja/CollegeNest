@@ -7,6 +7,7 @@ import {
   Users,
   University,
   Book,
+  GraduationCap,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -21,11 +22,11 @@ const Navbar = () => {
         const { data } = await api.get("/admin/me");
         setUser(data.admin);
         return;
-      } catch(adminError) {
+      } catch (adminError) {
         try {
           const { data } = await api.get("/user/me");
           setUser(data.user);
-        } catch(userError){
+        } catch (userError) {
           setUser(null);
         }
       }
@@ -76,17 +77,19 @@ const Navbar = () => {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-auto rounded-lg flex items-center justify-center text-white font-bold">
-            <img
+            {/* <img
               className="h-auto rounded-2xl"
               src="/logo.jpg"
               alt="Logo"
-            />
+            /> */}
+            <GraduationCap size={36} className="text-blue-600" />
+
           </div>
 
           <div className="hidden sm:block">
-            <h1 className="font-bold text-gray-900">
-              CollegeNest
-            </h1>
+             <span className="text-2xl font-extrabold tracking-tight">
+              College<span className="text-blue-600">Nest</span>
+            </span>
 
             <p className="text-xs text-gray-500">
               Engineering decision made easy
@@ -149,19 +152,19 @@ const Navbar = () => {
           {/* Profile */}
           {user && (
             <NavLink
-            to={
+              to={
                 user.role === "admin"
                   ? `/admin/profile/${user.id}`
                   : `/user/profile/${user.id}`
               }
             >
-            {/* // <button type="button" onClick={handleProfile}> */}
-                <img
-                  className="h-10 hover:opacity-75 hidden lg:block rounded-full"
-                  src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
-                  alt="Profile"
-                />
-            {/* // </button> */}
+              {/* // <button type="button" onClick={handleProfile}> */}
+              <img
+                className="h-10 hover:opacity-75 hidden lg:block rounded-full"
+                src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
+                alt="Profile"
+              />
+              {/* // </button> */}
             </NavLink>
           )}
 
