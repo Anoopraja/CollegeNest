@@ -641,15 +641,19 @@ const Skills = () => {
       <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-6">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold">
-              Explore Career Paths
-            </h2>
 
             <p className="text-gray-500 mt-2 text-sm sm:text-base">
-              Pick a domain and explore what you need to learn.
+              if you reach this page, it means you are interested in exploring career paths.
+              I am a fullstack developer from spnrec from 2025 batch, i have create this webapplication for my junior for my beu 2026 or above.
+              on a serious note, dont relay on your college acadmics , if you are a CSE and want to be place in a good company then
+              student just pick one domain and start learning it, you will be a master in that domain in 6 months if you are consistent.
+              job market is very competitive, so you have to be a master in one domain rather than a jack of all trades.
             </p>
           </div>
         </div>
+            <h2 className="text-2xl sm:text-3xl font-bold py-3">
+              Explore Career Paths
+            </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {skillDomains.map((domain, index) => {
