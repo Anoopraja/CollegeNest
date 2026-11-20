@@ -455,6 +455,10 @@ const skillDomains = [
   },
 ];
 
+// const domain = () => {
+//   return skillDomains?.data?.length ?? 0;
+// };
+
 // ------------------------------------------------------
 // SKILLS PAGE
 // ------------------------------------------------------
@@ -645,9 +649,14 @@ const Skills = () => {
             <p className="text-gray-500 mt-2 text-sm sm:text-base">
               if you reach this page, it means you are interested in exploring career paths.
               I am a fullstack developer from spnrec from 2025 batch, i have create this webapplication for my junior for my beu 2026 or above.
-              on a serious note, dont relay on your college acadmics , if you are a CSE and want to be place in a good company then
+              on a serious note, dont relay on your college acadmics, if you are a CSE and want to be place in a good company then
               student just pick one domain and start learning it, you will be a master in that domain in 6 months if you are consistent.
               job market is very competitive, so you have to be a master in one domain rather than a jack of all trades.
+            </p>
+            {/* <br></br> */}
+            <p className="text-gray-500 mt-2 text-sm sm:text-base">
+              In your hand 4 year are available, try every skill and find in which domain you are interested and start learning it, you will be a master in that domain in 6 months if you are consistent.
+              if you are not into GATE prepration just study enough to pass the semster exam and maintain your CGPA, because placement is not only about CGPA, but also about your skills and projects. 
             </p>
           </div>
         </div>

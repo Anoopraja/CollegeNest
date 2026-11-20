@@ -194,35 +194,45 @@ const Home = () => {
 
       {/* ABOUT SECTION */}
       <section
-        id="about"
-        className="relative bg-white px-5 py-24 text-center"
+  id="about"
+  className="relative bg-white px-5 py-24 text-center"
+>
+  <div className="max-w-3xl mx-auto">
+    <span className="inline-block bg-blue-50 text-blue-700 px-5 py-2 rounded-full text-sm font-bold">
+      ABOUT COLLEGENEST
+    </span>
+
+    <h2 className="text-4xl md:text-5xl font-extrabold mt-6 text-slate-900">
+      Build Skills. Shape Your{" "}
+      <span className="text-blue-600">Future.</span>
+    </h2>
+
+    <p className="text-slate-600 text-lg leading-relaxed mt-6">
+      CollegeNest helps engineering students discover the right skills,
+      explore learning resources, and follow structured roadmaps to
+      achieve their career goals. Whether you're starting with programming
+      or preparing for placements, find the guidance you need to grow.
+    </p>
+
+    <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mt-10">
+      <a
+        href="/skills"
+        className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
       >
-        <div className="max-w-3xl mx-auto">
-          <span className="inline-block bg-blue-50 text-blue-700 px-5 py-2 rounded-full text-sm font-bold">
-            ABOUT COLLEGENEST
-          </span>
+        Explore Skills
+        {/* <ArrowRight size={19} /> */}
+      </a>
 
-          <h2 className="text-4xl md:text-5xl font-extrabold mt-6">
-            What is <span className="text-blue-600">CollegeNest?</span>
-          </h2>
-
-          <p className="text-slate-600 text-lg leading-relaxed mt-6">
-            CollegeNest is a student-focused platform that helps engineering
-            students discover colleges, understand campus life through
-            student reviews and plan their academic journey.
-          </p>
-
-          <div className="flex justify-center mt-10">
-            <a
-              href="#colleges"
-              className="flex items-center gap-2 text-blue-600 font-bold"
-            >
-              Explore what we offer
-              <ArrowRight size={19} />
-            </a>
-          </div>
-        </div>
-      </section>
+      <a
+        href="/roadmap"
+        className="flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all"
+      >
+        Explore Roadmaps
+        {/* <ArrowRight size={19} /> */}
+      </a>
+    </div>
+  </div>
+</section>
 
       {/* STACKING INTRODUCTION PANELS */}
       <section className="relative px-4 md:px-8 pb-24">
