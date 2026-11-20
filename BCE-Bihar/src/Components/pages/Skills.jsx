@@ -86,7 +86,7 @@ const skillDomains = [
       "React Native Developer",
       "Mobile Engineer",
     ],
-     playlist: ["https://youtube.com/playlist?list=PLRAV69dS1uWSjBBJ-egNNOd4mdblt1P4c&si=X2VuCTyZpdalxAi1"],
+    playlist: ["https://youtube.com/playlist?list=PLRAV69dS1uWSjBBJ-egNNOd4mdblt1P4c&si=X2VuCTyZpdalxAi1"],
   },
 
   {
@@ -850,17 +850,24 @@ const Skills = () => {
                 </div>
               </div>
               <div className="mt-8 pt-7 border-t border-gray-100 flex flex-wrap gap-2">
-                {selectedDomain.playlist.map((playlist) => (
-                  <a
-                    href={playlist}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 transition"
-                  >
-                    Watch Playlist
-                  </a>
-                ))}
+                {selectedDomain.playlist?.length > 0 ? (
+                  selectedDomain.playlist.map((playlist, index) => (
+                    <a
+                      key={index}
+                      href={playlist}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 transition"
+                    >
+                      Watch Playlist
+                    </a>
+                  ))
+                ) : (
+                  <span className="px-3 py-2 rounded-lg border border-orange-200 bg-orange-50 text-sm text-orange-600">
+                    Coming Soon
+                  </span>
+                )}
               </div>
 
               {/* Career Opportunities */}
