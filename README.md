@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Features
+## 🚀 Feature
 
 ### 👨‍🎓 Student Features
 
