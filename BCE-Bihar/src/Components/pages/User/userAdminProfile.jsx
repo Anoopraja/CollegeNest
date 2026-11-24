@@ -1,382 +1,596 @@
+
 import { useEffect, useState } from "react";
-import api from "../../api/api.js";
 import { useNavigate } from "react-router-dom";
+import {
+  LayoutDashboard,
+  GraduationCap,
+  MessageSquare,
+  Users,
+  PlusCircle,
+  Settings,
+  UserRound,
+  ShieldCheck,
+  LogOut,
+  Mail,
+  CalendarDays,
+  Phone,
+  Activity,
+  ArrowUpRight,
+  RefreshCw,
+} from "lucide-react";
+
+import api from "../../api/api.js";
+
+// Change these paths according to your App.jsx routes.
+const ADMIN_ROUTES = {
+  dashboard: "/admin",
+  colleges: "/admin/colleges",
+  addCollege: "/admin/college/add",
+  reviews: "/admin/reviews",
+  users: "/admin/users",
+  profile: "/admin/profile",
+  settings: "/admin/settings",
+};
+
+function getCount(response, collectionKeys = []) {
+  const body = response?.data;
+  const payload = body?.data ?? body;
+
+  if (typeof payload === "number") return payload;
+
+  if (Array.isArray(payload)) return payload.length;
+
+  if (payload && typeof payload === "object") {
+    // Supports APIs returning { data: { length: 10 } }
+    if (typeof payload.length === "number") {
+      return payload.length;
+    }
+
+    if (typeof payload.count === "number") {
+      return payload.count;
+    }
+
+    if (typeof payload.total === "number") {
+      return payload.total;
+    }
+
+    for (const key of collectionKeys) {
+      if (Array.isArray(payload[key])) {
+        return payload[key].length;
+      }
+    }
+  }
+
+  return 0;
+}
+
+function formatDate(date) {
+  if (!date) return "Not available";
+
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return "Not available";
+  }
+
+  return parsedDate.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
 
 function AdminProfile() {
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
+
   const [user, setUser] = useState(null);
-  // const [college] = useState([]);
-  const [length, setLength] = useState(0);
-  // const [reviewLength, setReviewLength] = useState(0);
-  const [rLength, setRLength] = useState(0);
-  const [uLength, setULength] = useState(0);
 
-  const handleLogout = async () => {
-    try {
-      await api.post("/user/logout");
+  const [stats, setStats] = useState({
+    colleges: 0,
+    reviews: 0,
+    users: 0,
+  });
 
-      navigate("/user/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
+  const [loading, setLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
 
-      alert("Logout failed. Please try again.");
-    }
-  };
-  // useEffect(() => {
-  //   collegeLength();
-  // }, []);
-
-  const manageColleges = () => {
-
-  }
- 
-
-  const manageReviews = () => {
-
-  }
- 
-
-  const manageUsers = () => {
-    
-  }
- 
-
-  const reviewLength = async () => {
-    try {
-      const length = await api.get("/review/allreview");
-      const reviewsNumber = length.data.data.length; 
-      setRLength(reviewsNumber);
-
-    } catch (error) {
-      console.error("Error fetching review length:", error);
-    }
-  }
+  // Admin authentication
   useEffect(() => {
-    reviewLength();
-  }, []);
-  
-const getUserLength = async () => {
-  try {
-    const response = await api.get("/user/alluser");
+    let active = true;
 
-    const userNo = response.data.data.length;
-    setULength(userNo);
-
-  } catch (error) {
-    console.error("Error fetching user count:", error);
-  }
-};
-
-useEffect(() => {
-  getUserLength();
-}, []);
-
-  const collegeLength = async () => {
-    try {
-      const response = await api.get("/college");
-
-      const length = response.data.data.length;
-
-      setLength(length);
-
-    } catch (error) {
-      console.error("Error fetching college length:", error);
-    }
-  };
-
-
-  useEffect(() => {
-    collegeLength();
-  }, []);
-  useEffect(() => {
     const getAdmin = async () => {
       try {
-        const { data } = await api.get("/admin/me");
-        if (data.admin?.role !== "admin") {
+        const response = await api.get("/admin/me");
+        const data = response.data;
+
+        const admin =
+          data.admin ||
+          data.user ||
+          data.data?.admin ||
+          data.data?.user;
+
+        if (!admin || admin.role !== "admin") {
           navigate("/user/login");
           return;
         }
-        setUser(data.admin);
-      } catch {
+
+        if (active) {
+          setUser(admin);
+        }
+      } catch (error) {
+        console.error("Admin authentication failed:", error);
         navigate("/admin/login");
+      } finally {
+        if (active) setLoading(false);
       }
     };
 
     getAdmin();
+
+    return () => {
+      active = false;
+    };
   }, [navigate]);
 
-  // const getUser = async () => {
-  //   try {
-  //     const { data: userData } = await api.get("/user/alluser");
-  //     const { data: collegeData } = await api.get("/college");
-  //     console.log("USER DATA:", userData);
-  //     console.log("COLLEGE DATA:", collegeData);
+  // Fetch platform statistics
+  const fetchStats = async () => {
+    setStatsLoading(true);
 
-  //     setUser(userData.user);
-  //     setCollege(collegeData.college);
+    const requests = await Promise.allSettled([
+      api.get("/college"),
+      api.get("/review/allreview"),
+      api.get("/user/alluser"),
+    ]);
 
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //     setStats(null);
-  //     navigate("/user/login");
-  //   }
-  // };
-  return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    const [collegeResult, reviewResult, userResult] = requests;
 
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            Admin Profile
-          </h1>
+    setStats({
+      colleges:
+        collegeResult.status === "fulfilled"
+          ? getCount(collegeResult.value, ["colleges", "college"])
+          : 0,
 
-          <p className="mt-1 text-gray-500">
-            Manage your account and CollegeNest platform activity.
+      reviews:
+        reviewResult.status === "fulfilled"
+          ? getCount(reviewResult.value, ["reviews", "review"])
+          : 0,
+
+      users:
+        userResult.status === "fulfilled"
+          ? getCount(userResult.value, ["users", "user"])
+          : 0,
+    });
+
+    requests.forEach((result, index) => {
+      if (result.status === "rejected") {
+        console.error(
+          `Failed to fetch statistic ${index + 1}:`,
+          result.reason
+        );
+      }
+    });
+
+    setStatsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  // Logout
+  const handleLogout = async () => {
+    try {
+      await api.post("/user/logout");
+      navigate("/user/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed. Please try again.");
+    }
+  };
+
+  const initials = user?.username
+    ? user.username
+        .split(" ")
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "AD";
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-sm text-gray-500">
+            Loading admin profile...
           </p>
         </div>
+      </div>
+    );
+  }
 
-        {/* Profile Card */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+  if (!user) return null;
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+  const adminActions = [
+    {
+      title: "Manage Colleges",
+      description: "View, edit and remove college listings.",
+      icon: GraduationCap,
+      color: "blue",
+      path: ADMIN_ROUTES.colleges,
+    },
+    {
+      title: "Add New College",
+      description: "Add a new college to CollegeNest.",
+      icon: PlusCircle,
+      color: "green",
+      path: ADMIN_ROUTES.addCollege,
+    },
+    {
+      title: "Manage Reviews",
+      description: "Review and moderate student feedback.",
+      icon: MessageSquare,
+      color: "orange",
+      path: ADMIN_ROUTES.reviews,
+    },
+    {
+      title: "Manage Users",
+      description: "View registered users and manage accounts.",
+      icon: Users,
+      color: "purple",
+      path: ADMIN_ROUTES.users,
+    },
+    {
+      title: "Admin Profile",
+      description: "View your administrator account details.",
+      icon: UserRound,
+      color: "indigo",
+      path: ADMIN_ROUTES.profile,
+    },
+    {
+      title: "Platform Settings",
+      description: "Manage platform configuration.",
+      icon: Settings,
+      color: "gray",
+      path: ADMIN_ROUTES.settings,
+    },
+  ];
 
-            {/* Avatar */}
-            <div className="w-24 h-24 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0">
-              <span className="text-3xl font-bold text-white">
-                CN
+  return (
+    <div className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div>
+            <div className="flex items-center gap-2 text-blue-600 mb-2">
+              <LayoutDashboard size={18} />
+              <span className="text-sm font-semibold">
+                COLLEGENEST ADMIN PANEL
               </span>
             </div>
 
-            {/* Admin Info */}
-            <div className="flex-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Admin Dashboard
+            </h1>
+
+            <p className="text-gray-500 mt-1">
+              Manage your CollegeNest platform from one place.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={fetchStats}
+              disabled={statsLoading}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition disabled:opacity-50"
+            >
+              <RefreshCw
+                size={16}
+                className={statsLoading ? "animate-spin" : ""}
+              />
+              Refresh
+            </button>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
+            >
+              <LogOut size={17} />
+              Logout
+            </button>
+          </div>
+        </div>
+
+        {/* Admin Profile */}
+        <section className="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+
+            <div className="w-24 h-24 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-blue-100">
+              <span className="text-3xl font-bold text-white">
+                {initials}
+              </span>
+            </div>
+
+            <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-3">
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {user?.username || "CollegeNest Admin"}
+                  {user.username || "CollegeNest Admin"}
                 </h2>
 
-                <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-700">
-                  ADMIN
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">
+                  <ShieldCheck size={14} />
+                  ADMINISTRATOR
                 </span>
               </div>
 
               <p className="text-gray-500 mt-1">
-                Platform Administrator
+                CollegeNest Platform Administrator
               </p>
 
-              <p className="text-sm text-gray-400 mt-2">
-                {user?.email || ""}
-              </p>
-
-              <div className="flex items-center gap-2 mt-3">
-                <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                <span className="text-sm text-green-600 font-medium">
-                  Active
+              <div className="flex flex-wrap gap-x-5 gap-y-2 mt-4 text-sm text-gray-500">
+                <span className="flex items-center gap-2">
+                  <Mail size={15} />
+                  {user.email || "Email not available"}
                 </span>
+
+                {user.phone && (
+                  <span className="flex items-center gap-2">
+                    <Phone size={15} />
+                    {user.phone}
+                  </span>
+                )}
               </div>
             </div>
 
-            {/* Edit Button */}
-            {/* <button
-              onClick={() => setIsEditing(!isEditing)}
-              className="px-5 py-2.5 rounded-xl border border-gray-300
-                         text-sm font-medium text-gray-700
-                         hover:bg-gray-50 transition"
-            >
-              {isEditing ? "Cancel" : "Edit Profile"}
-            </button> */}
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="lg:hidden block bg-red-600 text-white px-5 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-red-700 hover:shadow-md active:scale-95"
-            >
-              Logout
-            </button>
-
+            <div className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2.5 rounded-xl self-start md:self-center">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-sm font-semibold">
+                Active Account
+              </span>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Platform Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        {/* Platform Statistics */}
+        <section className="mt-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">
+                Platform Overview
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                Live statistics from your database.
+              </p>
+            </div>
 
-          <StatCard
-            title="Colleges"
-            value={length}
-            description="Listed colleges"
-          />
+            <span className="text-xs text-gray-400">
+              {statsLoading ? "Updating..." : "Statistics loaded"}
+            </span>
+          </div>
 
-          <StatCard
-            title="Reviews"
-            value={rLength}
-            description="Total reviews"
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <StatCard
+              title="Total Colleges"
+              value={stats.colleges}
+              description="Colleges listed on CollegeNest"
+              icon={GraduationCap}
+              color="blue"
+              loading={statsLoading}
+            />
 
-          <StatCard
-            title="Users"
-            value={uLength}
-            description="Registered users"
-          />
+            <StatCard
+              title="Total Reviews"
+              value={stats.reviews}
+              description="Student reviews submitted"
+              icon={MessageSquare}
+              color="orange"
+              loading={statsLoading}
+            />
 
-          <StatCard
-            title="Blocks"
-            value="24"
-            description="Block account"
-          />
-
-        </div>
+            <StatCard
+              title="Registered Users"
+              value={stats.users}
+              description="Total registered platform users"
+              icon={Users}
+              color="green"
+              loading={statsLoading}
+            />
+          </div>
+        </section>
 
         {/* Account Information */}
-        <div className="bg-white border border-gray-200 rounded-2xl mt-6 overflow-hidden">
-
-          <div className="px-6 py-5 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Account Information
+        <section className="mt-8 bg-white border border-gray-200 rounded-2xl overflow-hidden">
+          <div className="px-6 py-5 border-b border-gray-100">
+            <h2 className="text-lg font-bold text-gray-900">
+              Administrator Information
             </h2>
-
             <p className="text-sm text-gray-500 mt-1">
-              Your CollegeNest administrator account details.
+              Details associated with your admin account.
             </p>
           </div>
 
-          <div className="divide-y divide-gray-100">
-
+          <div className="grid sm:grid-cols-2">
             <InfoRow
               label="Full Name"
-              value={user?.username || ""}
+              value={user.username || "Not available"}
             />
 
             <InfoRow
-              label="Email"
-              value={user?.email || ""}
+              label="Email Address"
+              value={user.email || "Not available"}
             />
 
             <InfoRow
-              label="Role"
-              value={user?.role || "admin"}
+              label="Account Role"
+              value={user.role || "admin"}
+            />
+
+            <InfoRow
+              label="Phone Number"
+              value={user.phone || "Not provided"}
+            />
+
+            <InfoRow
+              label="Account ID"
+              value={user._id || user.id || "Not available"}
+            />
+
+            <InfoRow
+              label="Member Since"
+              value={formatDate(user.createdAt)}
             />
 
             <InfoRow
               label="Account Status"
               value="Active"
             />
-
-            <InfoRow
-              label="Member Since"
-              value="September 2026"
-            />
-
           </div>
-        </div>
+        </section>
 
         {/* Admin Actions */}
-        <div className="bg-white border border-gray-200 rounded-2xl mt-6 p-6">
-
-          <h2 className="text-lg font-semibold text-gray-900">
-            Admin Actions
-          </h2>
-
-          <p className="text-sm text-gray-500 mt-1 mb-5">
-            Quickly access important platform management tools.
-          </p>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-
-            <AdminAction
-              title="Manage Colleges"
-              description="Add, edit or remove colleges"
-              icon="🏫"
-              onClick={manageColleges}
-            />
-            
-
-            <AdminAction
-              title="Manage Reviews"
-              description="Moderate student reviews"
-              icon="💬"
-              onClick={manageReviews}
-            />
-
-            <AdminAction
-              title="Manage Users"
-              description="View and manage users"
-              icon="👥"
-              onClick={manageUsers}
-            />
-
-            {/* <AdminAction
-              title="Reports"
-              description="Review reported content"
-              icon="⚠️"
-
-            />
-
-            <AdminAction
-              title="Community"
-              description="Moderate community posts"
-              icon="🌐"
-            />
-
-            <AdminAction
-              title="Platform Settings"
-              description="Configure CollegeNest"
-              icon="⚙️"
-            /> */}
-            
-
+        <section className="mt-8">
+          <div className="mb-5">
+            <h2 className="text-xl font-bold text-gray-900">
+              Platform Management
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Access all available administration tools.
+            </p>
           </div>
-        </div>
 
-        {/* Security */}
-        {/* <div className="bg-white border border-gray-200 rounded-2xl mt-6 p-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {adminActions.map((action) => (
+              <AdminAction
+                key={action.title}
+                {...action}
+                onClick={() => navigate(action.path)}
+              />
+            ))}
+          </div>
+        </section>
 
-          <h2 className="text-lg font-semibold text-gray-900">
-            Security
-          </h2>
+        {/* Security Information */}
+        <section className="mt-8 bg-gray-900 rounded-2xl p-6 sm:p-8 text-white">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                <ShieldCheck size={24} />
+              </div>
 
-          <div className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-
-            <div>
-              <p className="font-medium text-gray-900">
-                Administrator account
-              </p>
-
-              <p className="text-sm text-gray-500 mt-1">
-                Keep your admin credentials secure.
-              </p>
+              <div>
+                <h2 className="font-bold text-lg">
+                  Account Security
+                </h2>
+                <p className="text-sm text-gray-400 mt-1">
+                  Your administrator account has access to platform management.
+                </p>
+              </div>
             </div>
 
-            <button
-              className="px-5 py-2.5 rounded-xl bg-gray-900
-                         text-white text-sm font-medium
-                         hover:bg-gray-800 transition"
-            >
-              Change Password
-            </button>
-
+            <div className="text-sm text-green-400 flex items-center gap-2">
+              <Activity size={17} />
+              Account Active
+            </div>
           </div>
-        </div> */}
+        </section>
 
+        <p className="text-center text-xs text-gray-400 mt-8">
+          CollegeNest Admin Dashboard
+        </p>
       </div>
     </div>
   );
 }
 
 
-/* ---------------- Components ---------------- */
+// Animated Statistics Card
+function StatCard({
+  title,
+  value,
+  description,
+  icon: Icon,
+  color,
+  loading,
+}) {
+  const [displayValue, setDisplayValue] = useState(0);
 
-function StatCard({ title, value, description }) {
+  useEffect(() => {
+    const target = Math.max(0, Number(value) || 0);
+
+    if (loading) {
+      setDisplayValue(0);
+      return;
+    }
+
+    if (target === 0) {
+      setDisplayValue(0);
+      return;
+    }
+
+    let animationFrame;
+    const duration = 1200;
+    let startTime = null;
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = Math.min(
+        (timestamp - startTime) / duration,
+        1
+      );
+
+      // Ease-out animation
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+      setDisplayValue(
+        Math.floor(easedProgress * target)
+      );
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      } else {
+        setDisplayValue(target);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [value, loading]);
+
+  const colors = {
+    blue: "bg-blue-50 text-blue-600",
+    orange: "bg-orange-50 text-orange-600",
+    green: "bg-green-50 text-green-600",
+  };
+
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-5">
-      <p className="text-sm text-gray-500">
-        {title}
-      </p>
+    <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-gray-500">
+            {title}
+          </p>
 
-      <p className="text-2xl font-bold text-gray-900 mt-2">
-        {value}
-      </p>
+          <p className="text-3xl font-bold text-gray-900 mt-3 tabular-nums">
+            {loading ? (
+              <span className="inline-block w-16 h-8 rounded bg-gray-100 animate-pulse" />
+            ) : (
+              displayValue.toLocaleString("en-IN")
+            )}
+          </p>
+        </div>
 
-      <p className="text-xs text-gray-400 mt-1">
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colors[color]}`}>
+          <Icon size={23} />
+        </div>
+      </div>
+
+      <p className="text-xs text-gray-400 mt-4">
         {description}
       </p>
     </div>
@@ -384,52 +598,65 @@ function StatCard({ title, value, description }) {
 }
 
 
+// Account Information Row
 function InfoRow({ label, value }) {
   return (
-    <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-8">
-
-      <span className="text-sm text-gray-500 sm:w-40">
+    <div className="px-6 py-4 border-b border-gray-100">
+      <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
         {label}
-      </span>
+      </p>
 
-      <span className="text-sm font-medium text-gray-900">
+      <p className="text-sm font-semibold text-gray-800 mt-1 break-all">
         {value}
-      </span>
-
+      </p>
     </div>
   );
 }
 
 
-function AdminAction({ title, description, icon }) {
+// Admin Action Card
+function AdminAction({
+  title,
+  description,
+  icon: Icon,
+  color,
+  onClick,
+}) {
+  const colors = {
+    blue: "bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white",
+    green: "bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white",
+    orange: "bg-orange-50 text-orange-600 group-hover:bg-orange-500 group-hover:text-white",
+    purple: "bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white",
+    indigo: "bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white",
+    gray: "bg-gray-100 text-gray-600 group-hover:bg-gray-800 group-hover:text-white",
+  };
+
   return (
     <button
-      className="text-left p-4 rounded-xl border border-gray-200
-                 hover:border-blue-300 hover:bg-blue-50/40
-                 transition group"
+      type="button"
+      onClick={onClick}
+      className="group w-full text-left bg-white border border-gray-200 rounded-2xl p-5 hover:border-blue-300 hover:shadow-lg transition-all duration-300"
     >
-      <div className="flex items-start gap-4">
-
-        <div className="w-10 h-10 rounded-lg bg-gray-100
-                        flex items-center justify-center
-                        group-hover:bg-blue-100 transition">
-          {icon}
+      <div className="flex items-start justify-between gap-4">
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${colors[color]}`}>
+          <Icon size={23} />
         </div>
 
-        <div>
-          <h3 className="font-medium text-gray-900">
-            {title}
-          </h3>
-
-          <p className="text-xs text-gray-500 mt-1">
-            {description}
-          </p>
-        </div>
-
+        <ArrowUpRight
+          size={19}
+          className="text-gray-300 group-hover:text-blue-600 transition"
+        />
       </div>
+
+      <h3 className="font-bold text-gray-900 mt-5">
+        {title}
+      </h3>
+
+      <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+        {description}
+      </p>
     </button>
   );
 }
-
 
 export default AdminProfile;
