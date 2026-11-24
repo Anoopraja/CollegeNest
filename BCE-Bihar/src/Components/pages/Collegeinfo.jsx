@@ -1,2254 +1,692 @@
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+import {
+    MapPin, Star, Phone, Mail, Globe, Pencil, X, Trash2, Upload, GraduationCap,
+    Building2, CalendarDays, BadgeCheck, MoreVertical, Camera, ShieldCheck,
+} from "lucide-react";
 import uploadImage from "../../utils/cloudnary";
-
 import api from "../api/api.js";
 
-import { CircleChevronUp } from "lucide-react";
+/* ---------- helpers ---------- */
+const toList = (v) => {
+    if (Array.isArray(v)) return v.length ? v : [""];
+    if (typeof v === "string" && v.trim()) return v.split(",").map((s) => s.trim());
+    return [""];
+};
 
+const buildForm = (c = {}) => ({
+    name: c.name || "", shortName: c.shortName || "", slug: c.slug || "",
+    district: c.district || "", address: c.address || "", location: c.location || "",
+    state: c.state || "", established: c.established ?? "", type: c.type || "",
+    ownership: c.ownership || "", university: c.university || "", approval: c.approval || "",
+    campus: c.campus || "", website: c.website || "", email: c.email || "", phone: c.phone || "",
+    image: c.image || "", logo: c.logo || "", rating: c.rating ?? "", admission: c.admission || "",
+    about: c.about || "", branches: toList(c.branches), facilities: toList(c.facilities),
+});
+
+const FIELDS = [
+    ["name", "College name", "text"], ["shortName", "Short name", "text"],
+    ["slug", "Slug", "text"], ["district", "District", "text"],
+    ["address", "Address", "text"], ["location", "Location", "text"],
+    ["state", "State", "text"], ["established", "Established", "number"],
+    ["type", "College type", "text"], ["ownership", "Ownership", "text"],
+    ["university", "University", "text"], ["approval", "Approval", "text"],
+    ["campus", "Campus", "text"], ["website", "Website", "text"],
+    ["email", "Email", "email"], ["phone", "Phone", "text"],
+    ["image", "Banner image URL", "text"], ["logo", "Logo URL", "text"],
+    ["rating", "Rating", "number"], ["admission", "Admission", "text"],
+];
+
+const input =
+    "w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-blue-950 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
+
+const Stars = ({ value, size = 16 }) => (
+    <div className="flex gap-0.5">
+        {[1, 2, 3, 4, 5].map((s) => (
+            <Star
+                key={s}
+                size={size}
+                className={s <= Math.round(value) ? "fill-amber-400 text-amber-400" : "fill-slate-200 text-slate-200"}
+            />
+        ))}
+    </div>
+);
+
+const Heading = ({ id, title, note }) => (
+    <div id={id} className="mb-6 scroll-mt-24">
+        <h2 className="font-serif text-3xl font-semibold tracking-tight text-blue-950 sm:text-4xl">{title}</h2>
+        {note && <p className="mt-1.5 text-slate-500">{note}</p>}
+    </div>
+);
+
+const ListEditor = ({ label, singular, items, onChange }) => (
+    <div className="mt-6">
+        <p className="mb-2 text-sm font-medium text-slate-700">{label}</p>
+        <div className="space-y-2">
+            {items.map((item, i) => (
+                <div key={`${singular}-${i}`} className="flex gap-2">
+                    <input
+                        className={input}
+                        value={item}
+                        placeholder={`${singular} ${i + 1}`}
+                        onChange={(e) => onChange(items.map((x, j) => (j === i ? e.target.value : x)))}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => onChange(items.filter((_, j) => j !== i))}
+                        className="rounded-xl border border-slate-200 px-3 text-slate-400 transition hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+                        aria-label={`Remove ${singular}`}
+                    >
+                        <X size={16} />
+                    </button>
+                </div>
+            ))}
+        </div>
+        <button
+            type="button"
+            onClick={() => onChange([...items, ""])}
+            className="mt-3 text-sm font-semibold text-blue-600 hover:text-blue-700"
+        >
+            + Add {singular.toLowerCase()}
+        </button>
+    </div>
+);
+
+/* ---------- component ---------- */
 const CollegeInfo = () => {
-
     const { id } = useParams();
-
     const navigate = useNavigate();
 
-    // =========================
-
-    // COLLEGE
-
-    // =========================
-
     const [college, setCollege] = useState(null);
-
-    const [collegeLoading, setCollegeLoading] = useState(true);
-
-    const [openMenuId, setOpenMenuId] = useState(null);
-
+    const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
-
-    // =========================
-
-    // EDIT COLLEGE
-
-    // =========================
+    const isAdmin = currentUser?.role === "admin";
 
     const [editing, setEditing] = useState(false);
-
     const [saving, setSaving] = useState(false);
-
-    const [editForm, setEditForm] = useState({
-
-        name: "",
-
-        shortName: "",
-
-        slug: "",
-
-        distric: "",
-
-        addres: "",
-
-        locatio: "",
-
-        stat: "",
-
-        establishe: "",
-
-        typ: "",
-
-        ownershi: "",
-
-        university: "",
-
-        approval: "",
-
-        campus: "",
-
-        website: "",
-
-        email: "",
-
-        phone: "",
-
-        image: "",
-
-        logo: "",
-
-        rating: "",
-
-        admission: "",
-
-        about: "",
-
-        branches: [""],
-
-        facilities: [""],
-
-    });
-
-    // =========================
-
-    // GALLERY
-
-    // =========================
-
-    const [selectedImage, setSelectedImage] = useState(null);
-
-    const [image, setImage] = useState(null);
+    const [form, setForm] = useState(buildForm());
 
     const [images, setImages] = useState([]);
-
+    const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
-
-    // =========================
-
-    // REVIEWS
-
-    // =========================
+    const [lightbox, setLightbox] = useState(null);
 
     const [reviews, setReviews] = useState([]);
-
     const [reviewText, setReviewText] = useState("");
-
     const [rating, setRating] = useState(0);
+    const [hoverRating, setHoverRating] = useState(0);
+    const [submitting, setSubmitting] = useState(false);
+    const [menuId, setMenuId] = useState(null);
 
-    const [submittingReview, setSubmittingReview] = useState(false);
-
+    /* ----- load ----- */
     useEffect(() => {
-
-        const getCurrentUser = async () => {
-
-            try {
-
-                const { data } = await api.get("/user/me");
-
-                setCurrentUser(data.user || null);
-
-            } catch {
-
-                setCurrentUser(null);
-
-            }
-
-        };
-
-        getCurrentUser();
-
+        api.get("/user/me").then(({ data }) => setCurrentUser(data.user || null)).catch(() => setCurrentUser(null));
     }, []);
 
-    const handleEditChange = (e) => {
-
-        const { name, value } = e.target;
-
-        setEditForm((prev) => ({
-
-            ...prev,
-
-            [name]: value
-
-        }));
-
-    };
-
-    const startEditing = () => {
-
-        setEditForm({
-
-            name: college?.name || "",
-
-            shortName: college?.shortName || "",
-
-            slug: college?.slug || "",
-
-            district: college?.district || "",
-
-            address: college?.address || "",
-
-            location: college?.location || "",
-
-            state: college?.state || "",
-
-            established: college?.established || "",
-
-            type: college?.type || "",
-
-            ownership: college?.ownership || "",
-
-            university: college?.university || "",
-
-            approval: college?.approval || "",
-
-            campus: college?.campus || "",
-
-            website: college?.website || "",
-
-            email: college?.email || "",
-
-            phone: college?.phone || "",
-
-            image: college?.image || "",
-
-            logo: college?.logo || "",
-
-            rating: college?.rating || "",
-
-            admission: college?.admission || "",
-
-            about: college?.about || "",
-
-            branches: Array.isArray(college?.branches) ? college.branches : (typeof college?.branches === "string" && college.branches.trim() ? college.branches.split(",").map((item) => item.trim()) : [""]),
-
-            facilities: Array.isArray(college?.facilities) ? college.facilities : (typeof college?.facilities === "string" && college.facilities.trim() ? college.facilities.split(",").map((item) => item.trim()) : [""]),
-
-        });
-
-        setEditing(true);
-
-    };
-
-    const updateCollege = async () => {
-
-        try {
-
-            // if(user?.role !== "admin"){
-
-            //     console("you are not allowed to do change any this")
-
-            // }
-
-            if (!college?._id) {
-
-                alert("College ID not found");
-
-                return;
-
-            }
-
-            setSaving(true);
-
-            const { data } = await api.patch(
-
-                `/college/update/${college._id}`,
-
-                {
-
-                    ...editForm,
-                    branches: (Array.isArray(editForm.branches) ? editForm.branches : []).map((item) => item.trim()).filter(Boolean),
-                    facilities: (Array.isArray(editForm.facilities) ? editForm.facilities : []).map((item) => item.trim()).filter(Boolean),
-
-                    rating: Number(editForm.rating),
-
-                    established: Number(editForm.established)
-
-                }
-
-            );
-
-            // alert("Updated college:");
-
-            console.log(data.college)
-
-            const updatedCollege = data.college || data.data;
-
-            if (updatedCollege) {
-
-                setCollege(updatedCollege);
-
-            }
-
-            setEditing(false);
-
-            alert("College updated successfully");
-
-        } catch (error) {
-
-            console.error("College update failed:", error);
-
-            alert(error.response?.data?.message || "College update failed");
-
-        } finally {
-
-            setSaving(false);
-
-        }
-
-    };
-
-    // =========================
-
-    // GET SINGLE COLLEGE
-
-    // =========================
-
     useEffect(() => {
-
-        const getCollege = async () => {
-
+        if (!id) return;
+        (async () => {
             try {
-
-                setCollegeLoading(true);
-
-                const response = await api.get(`/college/${id}`);
-
-                console.log("Single college response:", response.data.data);
-
-                const collegeData =
-
-                    response.data.college ||
-
-                    response.data.data;
-
-                setCollege(collegeData || null);
-
-                if (collegeData) {
-
-                    setEditForm({
-
-                        name: collegeData.name || "",
-
-                        shortName: collegeData.shortName || "",
-
-                        location: collegeData.location || "",
-
-                        rating: collegeData.rating ?? "",
-
-                        established: collegeData.established ?? "",
-
-                        type: collegeData.type || "",
-
-                        campus: collegeData.campus || "",
-
-                        university: collegeData.university || "",
-
-                        approval: collegeData.approval || "",
-
-                        phone: collegeData.phone || "",
-
-                        email: collegeData.email || "",
-
-                        website: collegeData.website || "",
-                        about: collegeData.about || "",
-                        slug: collegeData.slug || "",
-                        district: collegeData.district || "",
-                        address: collegeData.address || "",
-                        state: collegeData.state || "",
-                        ownership: collegeData.ownership || "",
-                        admission: collegeData.admission || "",
-                        image: collegeData.image || "",
-                        logo: collegeData.logo || "",
-                        branches: Array.isArray(collegeData.branches) ? collegeData.branches : (typeof collegeData.branches === "string" && collegeData.branches.trim() ? collegeData.branches.split(",").map((item) => item.trim()) : [""]),
-                        facilities: Array.isArray(collegeData.facilities) ? collegeData.facilities : (typeof collegeData.facilities === "string" && collegeData.facilities.trim() ? collegeData.facilities.split(",").map((item) => item.trim()) : [""])
-                    });
-
-                }
-
-            } catch (error) {
-
-                console.error(
-
-                    "College fetch error:",
-
-                    error
-
-                );
-
+                setLoading(true);
+                const { data } = await api.get(`/college/${id}`);
+                setCollege(data.college || data.data || null);
+            } catch (e) {
+                console.error("College fetch error:", e);
                 setCollege(null);
-
             } finally {
-
-                setCollegeLoading(false);
-
+                setLoading(false);
             }
-
-        };
-
-        if (id) {
-
-            getCollege();
-
-        }
-
+        })();
     }, [id]);
 
-    // =========================
-
-    // FILE SELECT
-
-    // =========================
-
-    const handleFileChange = async (e) => {
-
+    const fetchImages = useCallback(async (cid) => {
         try {
-
-            // Check login first
-
-            const { data } = await api.get("/user/me");
-
-            const user = data.user;
-
-            if (!user) {
-
-                alert("Please login first");
-
-                navigate("/user/login");
-
-                return;
-
-            }
-
-            const selectedFile = e.target.files[0];
-
-            if (!selectedFile) return;
-
-            setImage(selectedFile);
-
-        } catch (error) {
-
-            console.error("Login check failed:", error);
-
-            alert("Please login first");
-
-            navigate("/user/login");
-
+            const { data } = await api.get(`/image/${cid}`);
+            setImages(data.data || []);
+        } catch (e) {
+            console.error("Images fetch failed:", e.response?.data || e);
         }
+    }, []);
 
+    useEffect(() => {
+        if (!college?._id) return;
+        fetchImages(college._id);
+        api.get(`/review/${college._id}`)
+            .then(({ data }) => setReviews(data.data || []))
+            .catch((e) => console.error("Reviews fetch failed:", e.response?.data || e));
+    }, [college?._id, fetchImages]);
+
+    /* ----- review stats ----- */
+    const stats = useMemo(() => {
+        const counts = [0, 0, 0, 0, 0];
+        reviews.forEach((r) => {
+            const n = Math.round(Number(r.rating));
+            if (n >= 1 && n <= 5) counts[n - 1] += 1;
+        });
+        const avg = reviews.length
+            ? reviews.reduce((s, r) => s + Number(r.rating || 0), 0) / reviews.length
+            : Number(college?.rating || 0);
+        return { counts, avg };
+    }, [reviews, college?.rating]);
+
+    /* ----- actions ----- */
+    const openEditor = () => {
+        if (!isAdmin) return;
+        setForm(buildForm(college));
+        setEditing(true);
     };
 
-    // =========================
+    const clean = (l) => l.map((s) => s.trim()).filter(Boolean);
 
-    // UPLOAD IMAGE
-
-    // =========================
-
-    const handleUpload = async () => {
-
-        if (!image) {
-
-            alert("Pehle image select karo");
-
-            return;
-
-        }
-
-        if (!college?._id) {
-
-            alert("College data not loaded");
-
-            return;
-
-        }
-
+    const saveCollege = async () => {
+        if (!isAdmin || !college?._id) return;
         try {
-
-            setUploading(true);
-
-            // 1. Upload image to Cloudinary
-
-            const uploadedImage = await uploadImage(image);
-
-            const uploadedImageUrl = uploadedImage.imageUrl;
-
-            console.log(
-
-                "Cloudinary URL:",
-
-                uploadedImageUrl
-
-            );
-
-            // 2. Save image URL in backend
-
-            await api.post("/image", {
-
-                collegeId: college._id,
-
-                imageUrl: uploadedImageUrl,
-
-                publicId: uploadedImage.publicId,
-
+            setSaving(true);
+            const { data } = await api.patch(`/college/update/${college._id}`, {
+                ...form,
+                branches: clean(form.branches),
+                facilities: clean(form.facilities),
+                rating: Number(form.rating),
+                established: Number(form.established),
             });
-
-            // 3. Display uploaded image
-
-            // 4. Add image to gallery immediately
-
-            setImages((prev) => [
-
-                {
-
-                    _id: Date.now().toString(),
-
-                    imageUrl: uploadedImageUrl,
-
-                },
-
-                ...prev,
-
-            ]);
-
-            // 5. Clear selected file
-
-            setImage(null);
-
-            alert("Image uploaded and saved!");
-
-        } catch (error) {
-
-            console.error(
-
-                "Upload error:",
-
-                error
-
-            );
-
-            alert(
-
-                error.response?.data?.message ||
-
-                error.message ||
-
-                "Image upload failed"
-
-            );
-
+            const updated = data.college || data.data;
+            if (updated) setCollege(updated);
+            setEditing(false);
+        } catch (e) {
+            alert(e.response?.data?.message || "College update failed");
         } finally {
-
-            setUploading(false);
-
+            setSaving(false);
         }
-
     };
 
-    // =========================
+    const requireLogin = () => {
+        if (currentUser) return true;
+        alert("Please login first");
+        navigate("/user/login");
+        return false;
+    };
 
-    // GET GALLERY IMAGES
-
-    // =========================
-
-    useEffect(() => {
-
-        const getImages = async () => {
-
-            try {
-
-                if (!college?._id) return;
-
-                const { data } = await api.get(
-
-                    `/image/${college._id}`
-
-                );
-
-                console.log("Images response:", data);
-
-                setImages(data.data || []);
-
-            } catch (error) {
-
-                console.error(
-
-                    "Images fetch failed:",
-
-                    error.response?.data || error
-
-                );
-
-            }
-
-        };
-
-        getImages();
-
-    }, [college?._id]);
-
-    // =========================
-
-    // GET REVIEWS
-
-    // =========================
-
-    useEffect(() => {
-
-        const getReviews = async () => {
-
-            try {
-
-                if (!college?._id) return;
-
-                const { data } = await api.get(
-
-                    `/review/${college._id}`
-
-                );
-
-                console.log("Reviews response:", data);
-
-                setReviews(data.data || []);
-
-            } catch (error) {
-
-                console.error(
-
-                    "Reviews fetch failed:",
-
-                    error.response?.data || error
-
-                );
-
-            }
-
-        };
-
-        getReviews();
-
-    }, [college?._id]);
-
-    // =========================
-
-    // REVIEW SUBMIT
-
-    // =========================
-
-    const handleReviewSubmit = async (e) => {
-
+    const submitReview = async (e) => {
         e.preventDefault();
-
-        if (!reviewText.trim()) {
-
-            alert("Please write a review");
-
-            return;
-
-        }
-
-        if (!rating) {
-
-            alert("Please select a rating");
-
-            return;
-
-        }
-
-        if (!college?._id) {
-
-            alert("College data not loaded");
-
-            return;
-
-        }
-
+        if (!requireLogin()) return;
+        if (!rating) return alert("Please select a rating");
+        if (!reviewText.trim()) return alert("Please write a review");
         try {
-
-            setSubmittingReview(true);
-
-            // Check login
-
-            const { data } = await api.get(
-
-                "/user/me"
-
-            );
-
-            const user = data.user;
-
-            if (!user) {
-
-                alert("Please login first");
-
-                navigate("/user/login");
-
-                return;
-
-            }
-
-            console.log(
-
-                "Logged in user:",
-
-                user
-
-            );
-
-            // Submit review
-
-            const { data: reviewResponse } =
-
-                await api.post(
-
-                    "/review/write",
-
-                    {
-
-                        collegeId: college._id,
-
-                        userId: user._id || user.id,
-
-                        username: user.username || user.name || "Anonymous User",
-
-                        rating: Number(rating),
-
-                        review: reviewText.trim(),
-
-                    }
-
-                );
-
-            console.log(
-
-                "Review response:",
-
-                reviewResponse
-
-            );
-
-            console.log("REVIEW DATA:", {
-
+            setSubmitting(true);
+            const { data } = await api.post("/review/write", {
                 collegeId: college._id,
-
-                userId: user._id || user.id,
-
-                username: user.username || user.name || "Anonymous User",
-
+                userId: currentUser._id || currentUser.id,
+                username: currentUser.username || currentUser.name || "Anonymous User",
                 rating: Number(rating),
-
                 review: reviewText.trim(),
-
             });
-
-            const newReview =
-
-                reviewResponse.data;
-
-            if (newReview) {
-
-                setReviews((prev) => [
-
-                    newReview,
-
-                    ...prev,
-
-                ]);
-
-            }
-
+            if (data.data) setReviews((p) => [data.data, ...p]);
             setReviewText("");
-
-            setRating(5);
-
-            alert(
-
-                "Review submitted successfully!"
-
-            );
-
-        } catch (error) {
-
-            console.error(
-
-                "Review submit error:",
-
-                error
-
-            );
-
-            alert(
-
-                error.response?.data?.message ||
-
-                error.message ||
-
-                "Review submission failed"
-
-            );
-
-        } finally {
-
-            setSubmittingReview(false);
-
-        }
-
-    };
-
-    const handleDeleteReview = async (Id) => {
-
-        if (currentUser?.role !== "admin") return;
-
-        try {
-
-            await api.delete(`/review/delete/${Id}`);
-
-            setReviews((prev) => prev.filter((review) => review._id !== Id));
-
-            console.log("Review delete ho gaya");
-
+            setRating(0);
         } catch (err) {
-
-            console.log("Review delete karne me error:", err);
-
+            alert(err.response?.data?.message || err.message || "Review submission failed");
+        } finally {
+            setSubmitting(false);
         }
-
     };
 
-    const handleDeleteImage = async (Id) => {
-
-        if (currentUser?.role !== "admin") return;
-
+    const deleteReview = async (rid) => {
+        if (!isAdmin) return;
         try {
-
-            console.log("delete hone hi wala hai")
-
-            await api.delete(`/image/delete/${Id}`)
-
-            console.log("image delete ho gya")
-
-            setImages((prev) =>
-
-                prev.filter((item) => item._id !== Id)
-
-            );
-
-            setSelectedImage(null);
-
+            await api.delete(`/review/delete/${rid}`);
+            setReviews((p) => p.filter((r) => r._id !== rid));
+        } catch (e) {
+            console.error("Review delete failed:", e);
         }
+    };
 
-        catch {
+    const pickFile = (e) => {
+        if (!requireLogin()) return;
+        const f = e.target.files[0];
+        if (f) setFile(f);
+    };
 
-            alert("nhi hua delete")
-
+    const upload = async () => {
+        if (!file) return alert("Please choose an image first");
+        try {
+            setUploading(true);
+            const up = await uploadImage(file);
+            await api.post("/image", { collegeId: college._id, imageUrl: up.imageUrl, publicId: up.publicId });
+            setFile(null);
+            await fetchImages(college._id);
+        } catch (err) {
+            alert(err.response?.data?.message || err.message || "Image upload failed");
+        } finally {
+            setUploading(false);
         }
+    };
 
-    }
+    const deleteImage = async (iid) => {
+        if (!isAdmin) return;
+        try {
+            await api.delete(`/image/delete/${iid}`);
+            setImages((p) => p.filter((i) => i._id !== iid));
+            setLightbox(null);
+        } catch {
+            alert("Image could not be deleted");
+        }
+    };
 
-    // =========================
+    const jump = (anchor) => document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth" });
 
-    // LOADING
-
-    // =========================
-
-    if (collegeLoading) {
-
+    /* ----- states ----- */
+    if (loading) {
         return (
-
-            <div className="min-h-[60vh] flex items-center justify-center">
-
-                <div className="text-center">
-
-                    <div className="text-5xl mb-4">
-
-                        🎓
-
-                    </div>
-
-                    <p className="text-gray-500">
-
-                        Loading college...
-
-                    </p>
-
-                </div>
-
+            <div className="flex min-h-[70vh] items-center justify-center">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
             </div>
-
         );
-
     }
-
-    // =========================
-
-    // COLLEGE NOT FOUND
-
-    // =========================
 
     if (!college) {
-
         return (
-
-            <div className="min-h-[60vh] flex items-center justify-center px-6">
-
-                <div className="text-center">
-
-                    <div className="text-6xl mb-5">
-
-                        🎓
-
-                    </div>
-
-                    <h2 className="text-3xl font-bold text-gray-900">
-
-                        College Not Found
-
-                    </h2>
-
-                    <p className="text-gray-500 mt-2">
-
-                        The college you're looking for doesn't exist.
-
-                    </p>
-
-                </div>
-
+            <div className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
+                <GraduationCap size={48} className="text-slate-300" />
+                <h2 className="mt-4 font-serif text-3xl font-semibold text-blue-950">College not found</h2>
+                <p className="mt-2 text-slate-500">This college may have been removed or the link is wrong.</p>
             </div>
-
         );
-
     }
 
+    const branches = toList(college.branches).filter(Boolean);
+    const facilities = toList(college.facilities).filter(Boolean);
+    const place = [college.address, college.district, college.state].filter(Boolean).join(", ");
+
+    const facts = [
+        ["Established", college.established, CalendarDays],
+        ["Type", college.type, Building2],
+        ["Campus", college.campus, MapPin],
+        ["Approval", college.approval, ShieldCheck],
+    ];
+
+    const navItems = [
+        ["Overview", "overview"], ["Write a review", "write-review"],
+        ["Upload", "upload"], ["Gallery", "gallery"], ["Reviews", "reviews"],
+    ];
+
     return (
-
-        <section className="bg-white pb-10 min-h-screen">
-
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6">
-
-                <div className="relative h-[280px] sm:h-[380px] overflow-hidden rounded-3xl shadow-xl">
-
-                    <img
-
-                        src={
-
-                            college.image ||
-
-                            "/default-college.jpg"
-
-                        }
-
-                        alt={college.name}
-
-                        className="w-full h-full object-cover"
-
-                    />
-
-                    <div className="absolute inset-0 bg-black/45" />
-
-                    <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-white">
-
-                        <div className="max-w-4xl">
-
-                            <span className="inline-block bg-blue-600 px-4 py-1.5 rounded-full text-sm font-medium mb-3">
-
-                                {college.shortName ||
-
-                                    "Engineering College"}
-
-                            </span>
-
-                            <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
-
-                                {college.name}
-
-                            </h1>
-
-                            <div className="flex flex-wrap gap-3 sm:gap-5 mt-4 text-sm sm:text-base">
-
-                                <span className="flex items-center gap-2">
-
-                                    📍 {college.location}
-
-                                </span>
-
-                                <span className="flex items-center gap-2">
-
-                                    ⭐ {college.rating}/5
-
-                                </span>
-
-                            </div>
-
+        <section className="min-h-screen bg-blue-50/50 pb-20 text-slate-800">
+            {/* ===== 1. BANNER ===== */}
+            <header className="relative h-[460px] w-full overflow-hidden bg-blue-950 sm:h-[520px]">
+                <img src={college.image || "/default-college.jpg"} alt={college.name} className="h-full w-full object-cover opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-950 via-blue-900/55 to-blue-900/10" />
+                <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+                    <div className="flex flex-col gap-6 sm:flex-row sm:items-end">
+                        <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/30 bg-white shadow-2xl">
+                            {college.logo ? (
+                                <img src={college.logo} alt="" className="h-full w-full object-cover" />
+                            ) : (
+                                <GraduationCap size={40} className="text-slate-400" />
+                            )}
                         </div>
-
+                        <div className="min-w-0 text-white">
+                            <p className="text-sm font-medium text-blue-200">{college.shortName || "Engineering college"}</p>
+                            <h1 className="mt-1 font-serif text-4xl font-semibold leading-tight sm:text-6xl">{college.name}</h1>
+                            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-200">
+                                <span className="flex items-center gap-1.5"><MapPin size={16} /> {college.location}</span>
+                                <span className="flex items-center gap-2">
+                                    <Stars value={stats.avg} />
+                                    <span className="font-semibold text-white">{stats.avg ? stats.avg.toFixed(1) : "–"}</span>
+                                    <span className="text-slate-300">({reviews.length} reviews)</span>
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </header>
 
+            {/* sticky nav */}
+            <nav className="sticky top-0 z-30 border-b border-slate-200 bg-white/85 backdrop-blur">
+                <div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 sm:px-6">
+                    {navItems.map(([label, anchor]) => (
+                        <button
+                            key={anchor}
+                            onClick={() => jump(anchor)}
+                            className="shrink-0 border-b-2 border-transparent px-4 py-3.5 text-sm font-medium text-slate-600 transition hover:border-blue-600 hover:text-blue-950"
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
+            </nav>
+
+            <div className="mx-auto max-w-7xl px-4 pt-15 sm:px-6">
+                {/* ===== 2. COLLEGE INFO ===== */}
+                <div className="relative -mt-12 grid grid-cols-2 divide-blue-100 rounded-2xl bg-white shadow-xl shadow-blue-900/5 ring-1 ring-blue-100 lg:grid-cols-4 lg:divide-x">
+                    {facts.map(([label, value, Icon]) => (
+                        <div key={label} className="flex items-center gap-4 p-5">
+                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                                <Icon size={20} />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-xs text-slate-500">{label}</p>
+                                <p className="truncate font-semibold text-blue-950">{value || "–"}</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
-            </div>
+                <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_340px]">
+                    <div className="space-y-14">
+                        <div>
+                            <Heading id="overview" title={`About ${college.shortName || "the college"}`} />
+                            <p className="max-w-3xl whitespace-pre-line text-[17px] leading-8 text-slate-700">{college.about}</p>
+                        </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-
-                {editing && (
-
-                    <div className="mb-10 bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-lg">
-
-                        <div className="flex items-center justify-between mb-6">
-
-                            <div>
-
-                                <h2 className="text-2xl font-bold text-gray-900">
-
-                                    Edit College
-
-                                </h2>
-
-                                <p className="text-sm text-gray-500 mt-1">
-
-                                    Update college information
-
-                                </p>
-
+                        <div>
+                            <Heading title="Courses offered" note="Engineering programs available at this college" />
+                            <div className="flex flex-wrap gap-3">
+                                {branches.map((b, i) => (
+                                    <span
+                                        key={`${b}-${i}`}
+                                        className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-800 shadow-sm transition hover:border-blue-300 hover:bg-blue-50"
+                                    >
+                                        <GraduationCap size={16} className="text-blue-600" /> {b}
+                                    </span>
+                                ))}
                             </div>
-
-                            <button
-
-                                type="button"
-
-                                onClick={() => setEditing(false)}
-
-                                className="text-gray-500 hover:text-gray-900 text-2xl"
-
-                            >
-
-                                ✕
-
-                            </button>
-
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-5">
-
-                            {[
-
-                                ["name", "College Name", "text"],
-
-                                ["shortName", "Short Name", "text"],
-
-                                ["slug", "Slug", "text"],
-
-                                ["district", "District", "text"],
-
-                                ["address", "Address", "text"],
-
-                                ["location", "Location", "text"],
-
-                                ["state", "State", "text"],
-
-                                ["established", "Established", "number"],
-
-                                ["type", "College Type", "text"],
-
-                                ["ownership", "Ownership", "text"],
-
-                                ["university", "University", "text"],
-
-                                ["approval", "Approval", "text"],
-
-                                ["campus", "Campus", "text"],
-
-                                ["website", "Website", "text"],
-
-                                ["email", "Email", "email"],
-
-                                ["phone", "Phone", "text"],
-
-                                ["image", "College Image", "text"],
-
-                                ["logo", "College Logo", "text"],
-
-                                ["rating", "Rating", "number"],
-
-                                ["admission", "Admission", "text"],
-
-                            ].map(([name, label, type]) => (
-
-                                <div key={name}>
-
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-
-                                        {label}
-
-                                    </label>
-
-                                    <input
-
-                                        type={type}
-
-                                        name={name}
-
-                                        value={editForm[name]}
-
-                                        onChange={handleEditChange}
-
-                                        min={name === "rating" ? "0" : undefined}
-
-                                        max={name === "rating" ? "5" : undefined}
-
-                                        step={name === "rating" ? "0.1" : undefined}
-
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-
-                                    />
-
-                                </div>
-
-                            ))}
-
+                        <div>
+                            <Heading title="Campus facilities" />
+                            <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
+                                {facilities.map((f, i) => (
+                                    <div key={`${f}-${i}`} className="flex items-center gap-3 border-b border-slate-200 py-3">
+                                        <BadgeCheck size={20} className="shrink-0 text-blue-600" />
+                                        <span className="font-medium text-slate-800">{f}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-
-                        {/* Branches: separate input for every branch */}
-                        <div className="mt-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-3">Branches</label>
-                            {(Array.isArray(editForm.branches) ? editForm.branches : [""]).map((branch, index) => (
-                                <div key={`branch-${index}`} className="flex gap-2 mb-3">
-                                    <input
-                                        type="text"
-                                        value={branch}
-                                        onChange={(e) => {
-                                            const updated = [...(Array.isArray(editForm.branches) ? editForm.branches : [])];
-                                            updated[index] = e.target.value;
-                                            setEditForm((prev) => ({ ...prev, branches: updated }));
-                                        }}
-                                        placeholder={`Branch ${index + 1}`}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    <button type="button" onClick={() => setEditForm((prev) => ({
-                                        ...prev,
-                                        branches: (Array.isArray(prev.branches) ? prev.branches : []).filter((_, i) => i !== index),
-                                    }))} className="px-4 bg-red-500 text-white rounded-xl hover:bg-red-600">Remove</button>
-                                </div>
-                            ))}
-                            <button type="button" onClick={() => setEditForm((prev) => ({
-                                ...prev,
-                                branches: [...(Array.isArray(prev.branches) ? prev.branches : []), ""],
-                            }))} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">+ Add Branch</button>
-                        </div>
-
-                        {/* Facilities: separate input for every facility */}
-                        <div className="mt-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-3">Facilities</label>
-                            {(Array.isArray(editForm.facilities) ? editForm.facilities : [""]).map((facility, index) => (
-                                <div key={`facility-${index}`} className="flex gap-2 mb-3">
-                                    <input
-                                        type="text"
-                                        value={facility}
-                                        onChange={(e) => {
-                                            const updated = [...(Array.isArray(editForm.facilities) ? editForm.facilities : [])];
-                                            updated[index] = e.target.value;
-                                            setEditForm((prev) => ({ ...prev, facilities: updated }));
-                                        }}
-                                        placeholder={`Facility ${index + 1}`}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    <button type="button" onClick={() => setEditForm((prev) => ({
-                                        ...prev,
-                                        facilities: (Array.isArray(prev.facilities) ? prev.facilities : []).filter((_, i) => i !== index),
-                                    }))} className="px-4 bg-red-500 text-white rounded-xl hover:bg-red-600">Remove</button>
-                                </div>
-                            ))}
-                            <button type="button" onClick={() => setEditForm((prev) => ({
-                                ...prev,
-                                facilities: [...(Array.isArray(prev.facilities) ? prev.facilities : []), ""],
-                            }))} className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">+ Add Facility</button>
-                        </div>
-
-                        <div className="mt-5">
-
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-
-                                About College
-
-                            </label>
-
-                            <textarea
-
-                                name="about"
-
-                                value={editForm.about}
-
-                                onChange={handleEditChange}
-
-                                rows="5"
-
-                                className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-
-                            />
-
-                        </div>
-
-                        <div className="flex gap-3 mt-6">
-
-                            <button
-
-                                type="button"
-
-                                onClick={updateCollege}
-
-                                disabled={saving}
-
-                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-
-                            >
-
-                                {saving ? "Updating..." : "Update College"}
-
-                            </button>
-
-                            <button
-
-                                type="button"
-
-                                onClick={() => setEditing(false)}
-
-                                disabled={saving}
-
-                                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition disabled:opacity-50"
-
-                            >
-
-                                Cancel
-
-                            </button>
-
-                        </div>
-
                     </div>
 
+                    {/* sidebar */}
+                    <aside className="lg:sticky lg:top-20 lg:self-start">
+                        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-6 text-white shadow-xl shadow-blue-600/20">
+                            <h3 className="font-serif text-2xl font-semibold">Get in touch</h3>
+                            <div className="mt-5 space-y-4 text-sm">
+                                <p className="flex items-start gap-3"><Phone size={18} className="mt-0.5 shrink-0 text-blue-200" /> {college.phone}</p>
+                                <p className="flex items-start gap-3 break-all"><Mail size={18} className="mt-0.5 shrink-0 text-blue-200" /> {college.email}</p>
+                                <a href={college.website} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 break-all hover:text-white">
+                                    <Globe size={18} className="mt-0.5 shrink-0 text-blue-200" /> {college.website}
+                                </a>
+                            </div>
+                            {college.website && (
+                                <a
+                                    href={college.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-6 block rounded-xl bg-white py-3 text-center font-semibold text-blue-700 transition hover:bg-blue-50"
+                                >
+                                    Visit website
+                                </a>
+                            )}
+                        </div>
+
+                        <dl className="mt-5 rounded-2xl bg-white p-6 text-sm shadow-sm ring-1 ring-blue-100">
+                            {[
+                                ["University", college.university],
+                                ["Ownership", college.ownership],
+                                ["Admission", college.admission],
+                                ["Address", place],
+                            ].filter(([, v]) => v).map(([k, v]) => (
+                                <div key={k} className="flex justify-between gap-4 border-b border-slate-100 py-3 first:pt-0 last:border-0 last:pb-0">
+                                    <dt className="text-slate-500">{k}</dt>
+                                    <dd className="text-right font-medium text-blue-950">{v}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </aside>
+                </div>
+
+                {/* ===== 3. ADMIN EDIT ===== */}
+                {isAdmin && (
+                    <div className="mt-14 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-dashed border-blue-300 bg-blue-50 p-5">
+                        <div>
+                            <p className="font-semibold text-blue-950">Admin tools</p>
+                            <p className="text-sm text-slate-600">Edit this college's details, courses and facilities.</p>
+                        </div>
+                        <button onClick={openEditor} className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white transition hover:bg-blue-700">
+                            <Pencil size={16} /> Edit college
+                        </button>
+                    </div>
                 )}
 
-                <button
-
-                    type="button"
-
-                    onClick={startEditing}
-
-                    className="shrink-0 bg-white text-gray-900 px-4 py-2.5 mb-2 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition"
-
-                >
-
-                    ✏️ Edit
-
-                </button>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
-
-                        <p className="text-sm text-gray-500">
-
-                            Established
-
-                        </p>
-
-                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
-
-                            {college.established}
-
-                        </p>
-
+                {/* ===== 4. WRITE A REVIEW ===== */}
+                <div className="mt-20 grid gap-8 lg:grid-cols-[320px_1fr]">
+                    <div>
+                        <Heading id="write-review" title="Write a review" note="Studied here? Help the next batch decide." />
                     </div>
-
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
-
-                        <p className="text-sm text-gray-500">
-
-                            College Type
-
-                        </p>
-
-                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
-
-                            {college.type}
-
-                        </p>
-
-                    </div>
-
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
-
-                        <p className="text-sm text-gray-500">
-
-                            Rating
-
-                        </p>
-
-                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
-
-                            {college.rating}/5
-
-                        </p>
-
-                    </div>
-
-                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
-
-                        <p className="text-sm text-gray-500">
-
-                            Campus
-
-                        </p>
-
-                        <p className="text-xl sm:text-lg font-bold text-gray-900 mt-1">
-
-                            {college.campus}
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <div className="mt-12">
-
-                    <div className="flex items-center gap-3 mb-5">
-
-                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
-
-                        <h2 className="text-3xl font-bold text-gray-900">
-
-                            About College
-
-                        </h2>
-
-                    </div>
-
-                    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-8">
-
-                        <p className="text-gray-700 leading-8 text-[16px]">
-
-                            {college.about}
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <div className="grid lg:grid-cols-2 gap-6 mt-10">
-
-                    <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
-
-                        <div className="flex items-center gap-3 mb-6">
-
-                            <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl overflow-hidden">
-
-                                <img
-
-                                    src={college.logo}
-
-                                    alt={college.name}
-
-                                    className="w-full h-full object-cover"
-
-                                />
-
-                            </div>
-
-                            <div>
-
-                                <h3 className="text-xl font-bold text-gray-900">
-
-                                    Basic Information
-
-                                </h3>
-
-                                <p className="text-sm text-gray-500">
-
-                                    College details
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div className="space-y-4">
-
-                            <div className="flex justify-between gap-4 border-b pb-3">
-
-                                <span className="text-gray-500">
-
-                                    University
-
-                                </span>
-
-                                <span className="font-semibold text-gray-900 text-right">
-
-                                    {college.university}
-
-                                </span>
-
-                            </div>
-
-                            <div className="flex justify-between gap-4 border-b pb-3">
-
-                                <span className="text-gray-500">
-
-                                    Approval
-
-                                </span>
-
-                                <span className="font-semibold text-gray-900 text-right">
-
-                                    {college.approval}
-
-                                </span>
-
-                            </div>
-
-                            <div className="flex justify-between gap-4">
-
-                                <span className="text-gray-500">
-
-                                    Campus Size
-
-                                </span>
-
-                                <span className="font-semibold text-gray-900 text-right">
-
-                                    {college.campus}
-
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div className="border border-gray-200 rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow">
-
-                        <div className="flex items-center gap-3 mb-6">
-
-                            <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
-
-                                📞
-
-                            </div>
-
-                            <div>
-
-                                <h3 className="text-xl font-bold text-gray-900">
-
-                                    Contact Information
-
-                                </h3>
-
-                                <p className="text-sm text-gray-500">
-
-                                    Get in touch
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div className="space-y-4">
-
-                            <div>
-
-                                <p className="text-sm text-gray-500 mb-1">
-
-                                    Phone
-
-                                </p>
-
-                                <p className="font-semibold text-gray-900">
-
-                                    📞 {college.phone}
-
-                                </p>
-
-                            </div>
-
-                            <div>
-
-                                <p className="text-sm text-gray-500 mb-1">
-
-                                    Email
-
-                                </p>
-
-                                <p className="font-semibold text-gray-900 break-all">
-
-                                    ✉️ {college.email}
-
-                                </p>
-
-                            </div>
-
-                            <div>
-
-                                <p className="text-sm text-gray-500 mb-1">
-
-                                    Website
-
-                                </p>
-
-                                <a
-
-                                    href={college.website}
-
-                                    target="_blank"
-
-                                    rel="noopener noreferrer"
-
-                                    className="text-blue-600 font-medium hover:underline break-all"
-
-                                >
-
-                                    🌐 {college.website}
-
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div className="mt-12">
-
-                    <div className="flex items-center gap-3 mb-6">
-
-                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
-
-                        <div>
-
-                            <h2 className="text-3xl font-bold text-gray-900">
-
-                                Courses Offered
-
-                            </h2>
-
-                            <p className="text-gray-500 mt-1">
-
-                                Engineering programs available at the college
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-                        {(college.branches || []).map(
-
-                            (branch) => (
-
-                                <div
-
-                                    key={branch}
-
-                                    className="group border border-gray-200 rounded-2xl p-5 bg-white hover:border-blue-500 hover:shadow-lg transition-all duration-200"
-
-                                >
-
-                                    <div className="flex items-center gap-4">
-
-                                        <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-lg group-hover:bg-blue-600 group-hover:text-white transition">
-
-                                            🎓
-
-                                        </div>
-
-                                        <div>
-
-                                            <p className="font-semibold text-gray-900">
-
-                                                {branch}
-
-                                            </p>
-
-                                            <p className="text-sm text-gray-500">
-
-                                                Engineering Program
-
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            )
-
-                        )}
-
-                    </div>
-
-                </div>
-
-                <div className="mt-12">
-
-                    <div className="flex items-center gap-3 mb-6">
-
-                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
-
-                        <div>
-
-                            <h2 className="text-3xl font-bold text-gray-900">
-
-                                Facilities
-
-                            </h2>
-
-                            <p className="text-gray-500 mt-1">
-
-                                Facilities available on campus
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-                        {(college.facilities || []).map(
-
-                            (facility) => (
-
-                                <div
-
-                                    key={facility}
-
-                                    className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center hover:bg-blue-50 hover:border-blue-200 hover:shadow-md transition"
-
-                                >
-
-                                    <div className="text-2xl mb-3">
-
-                                        🏫
-
-                                    </div>
-
-                                    <p className="font-semibold text-gray-800">
-
-                                        {facility}
-
-                                    </p>
-
-                                </div>
-
-                            )
-
-                        )}
-
-                    </div>
-
-                </div>
-
-                <section className="mt-12">
-
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-
-                        <div className="flex items-center gap-3">
-
-                            <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
-
-                            <div>
-
-                                <h2 className="text-3xl font-bold text-gray-900">
-
-                                    Campus Gallery
-
-                                </h2>
-
-                                <p className="text-gray-500 mt-1">
-
-                                    Explore and share campus photos
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-
-                        <div className="group relative overflow-hidden rounded-2xl shadow-md h-[250px]">
-
-                            <img
-
-                                src={
-
-                                    college.image ||
-
-                                    "/default-college.jpg"
-
-                                }
-
-                                alt={college.name}
-
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-
-                            />
-
-                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5 pt-16">
-
-                                <p className="text-white font-semibold">
-
-                                    {college.name}
-
-                                </p>
-
-                                <p className="text-gray-200 text-sm">
-
-                                    Campus View
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        {images.map((item) => (
-
-                            <div
-
-                                key={item._id}
-
-                                onClick={() => setSelectedImage(item)}
-
-                                className="group relative w-full h-[250px] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in"
-
-                            >
-
-                                <img
-
-                                    src={item.imageUrl}
-
-                                    alt="College campus"
-
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-
-                                />
-
-                            </div>
-
-                        ))}
-
-                        {selectedImage && (
-
-                            <div
-
-                                onClick={() =>
-
-                                    setSelectedImage(null)
-
-                                }
-
-                                className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
-
-                            >
-
-                                <img
-
-                                    src={selectedImage.imageUrl}
-
-                                    alt="College campus"
-
-                                    onClick={(e) =>
-
-                                        e.stopPropagation()
-
-                                    }
-
-                                    className="max-w-full max-h-[90vh] object-contain rounded-lg"
-
-                                />
-
-                                {currentUser?.role === "admin" && (
-
-                                    <button
-
-                                        onClick={(e) => {
-
-                                            e.stopPropagation();
-
-                                            handleDeleteImage(selectedImage._id);
-
-                                        }} className="absolute top-5 left-5 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transition"
-
-                                    >
-
-                                        🗑️
-
-                                    </button>
-
-                                )}
-
+                    <form onSubmit={submitReview} className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-blue-100 sm:p-8">
+                        <p className="mb-2 text-sm font-medium text-slate-700">Your rating</p>
+                        <div className="flex gap-1" onMouseLeave={() => setHoverRating(0)}>
+                            {[1, 2, 3, 4, 5].map((s) => (
                                 <button
-
-                                    onClick={() =>
-
-                                        setSelectedImage(null)
-
-                                    }
-
-                                    className="absolute top-5 right-5 text-white text-3xl hover:text-gray-300"
-
+                                    key={s}
+                                    type="button"
+                                    onMouseEnter={() => setHoverRating(s)}
+                                    onClick={() => setRating(s)}
+                                    aria-label={`${s} star${s > 1 ? "s" : ""}`}
+                                    className="p-0.5 transition hover:scale-110"
                                 >
-
-                                    ✕
-
+                                    <Star size={32} className={s <= (hoverRating || rating) ? "fill-amber-400 text-amber-400" : "fill-slate-100 text-slate-300"} />
                                 </button>
-
-                            </div>
-
-                        )}
-
-                        <div className="h-[250px] border-2 border-dashed border-blue-300 rounded-2xl bg-blue-50 hover:bg-blue-100 hover:border-blue-500 transition-all duration-200 flex flex-col items-center justify-center text-center p-6">
-
-                            <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4">
-
-                                <svg
-
-                                    className="w-8 h-8 text-blue-600"
-
-                                    fill="none"
-
-                                    stroke="currentColor"
-
-                                    viewBox="0 0 24 24"
-
-                                >
-
-                                    <path
-
-                                        strokeLinecap="round"
-
-                                        strokeLinejoin="round"
-
-                                        strokeWidth="2"
-
-                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 014 8.9M12 12v9m0-9l-3 3m3-3l3 3"
-
-                                    />
-
-                                </svg>
-
-                            </div>
-
-                            <h3 className="text-lg font-semibold text-gray-900">
-
-                                Upload Campus Photo
-
-                            </h3>
-
-                            <p className="text-sm text-gray-500 mt-2">
-
-                                {image
-
-                                    ? image.name
-
-                                    : "No file chosen"}
-
-                            </p>
-
-                            <label
-
-                                htmlFor="campus-upload"
-
-                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium cursor-pointer"
-
-                            >
-
-                                {image
-
-                                    ? "Change File"
-
-                                    : "Choose File"}
-
-                            </label>
-
-                            <input
-
-                                id="campus-upload"
-
-                                type="file"
-
-                                accept="image/png,image/jpeg,image/webp"
-
-                                onChange={handleFileChange}
-
-                                className="hidden"
-
-                            />
-
-                            <button
-
-                                type="button"
-
-                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
-
-                                onClick={handleUpload}
-
-                                disabled={uploading}
-
-                            >
-
-                                {uploading
-
-                                    ? "Uploading..."
-
-                                    : "Upload"}
-
-                            </button>
-
+                            ))}
                         </div>
+                        <textarea
+                            rows={5}
+                            value={reviewText}
+                            onChange={(e) => setReviewText(e.target.value)}
+                            placeholder="Teaching, placements, hostel, campus life — what stood out?"
+                            className={`${input} mt-5 resize-none`}
+                        />
+                        <button
+                            type="submit"
+                            disabled={submitting}
+                            className="mt-5 rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+                        >
+                            {submitting ? "Posting..." : "Post review"}
+                        </button>
+                    </form>
+                </div>
 
-                    </div>
-
-                </section>
-
-                <section className="mt-12">
-
-                    <div className="flex items-center gap-3 mb-6">
-
-                        <div className="w-1.5 h-8 bg-blue-600 rounded-full" />
-
-                        <div>
-
-                            <h2 className="text-3xl font-bold text-gray-900">
-
-                                Student Reviews
-
-                            </h2>
-
-                            <p className="text-gray-500 mt-1">
-
-                                Share your experience about this college
-
-                            </p>
-
+                {/* ===== 5. UPLOAD ===== */}
+                <div className="mt-20 grid gap-8 lg:grid-cols-[320px_1fr]">
+                    <Heading id="upload" title="Add a campus photo" note="PNG, JPG or WebP. Photos appear in the gallery below." />
+                    <label
+                        htmlFor="campus-upload"
+                        className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-blue-200 bg-white p-10 text-center transition hover:border-blue-500 hover:bg-blue-50"
+                    >
+                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                            <Upload size={24} />
                         </div>
+                        <p className="mt-4 font-semibold text-blue-950">{file ? file.name : "Choose a photo to upload"}</p>
+                        <p className="mt-1 text-sm text-slate-500">{file ? "Click to pick a different file" : "Click here to browse your files"}</p>
+                        <input id="campus-upload" type="file" accept="image/png,image/jpeg,image/webp" onChange={pickFile} className="hidden" />
+                        <button
+                            type="button"
+                            onClick={(e) => { e.preventDefault(); upload(); }}
+                            disabled={uploading || !file}
+                            className="mt-6 rounded-xl bg-blue-600 px-6 py-2.5 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-40"
+                        >
+                            {uploading ? "Uploading..." : "Upload photo"}
+                        </button>
+                    </label>
+                </div>
 
-                    </div>
-
-                    <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 sm:p-8 mb-8">
-
-                        <h3 className="text-xl font-bold text-gray-900 mb-5">
-
-                            Write a Review
-
-                        </h3>
-
-                        <form onSubmit={handleReviewSubmit}>
-
-                            <div className="mb-5">
-
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-
-                                    Your Rating
-
-                                </label>
-
-                                <div className="flex gap-2">
-
-                                    {[1, 2, 3, 4, 5].map(
-
-                                        (star) => (
-
-                                            <button
-
-                                                key={star}
-
-                                                type="button"
-
-                                                onClick={() =>
-
-                                                    setRating(star)
-
-                                                }
-
-                                                className={`text-2xl transition ${star <= rating
-
-                                                    ? "text-yellow-400"
-
-                                                    : "text-gray-300"
-
-                                                    }`}
-
-                                            >
-
-                                                ★
-
-                                            </button>
-
-                                        )
-
-                                    )}
-
+                {/* ===== 6a. GALLERY ===== */}
+                <div className="mt-20">
+                    <Heading id="gallery" title="Campus gallery" note={`${images.length + 1} photos`} />
+                    <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
+                        <figure className="relative break-inside-avoid overflow-hidden rounded-2xl">
+                            <img src={college.image || "/default-college.jpg"} alt={college.name} className="w-full object-cover" />
+                            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pt-12 text-sm font-medium text-white">
+                                Main campus
+                            </figcaption>
+                        </figure>
+                        {images.map((item) => (
+                            <figure key={item._id} onClick={() => setLightbox(item)} className="group relative cursor-zoom-in break-inside-avoid overflow-hidden rounded-2xl">
+                                <img src={item.imageUrl} alt="College campus" className="w-full object-cover transition duration-500 group-hover:scale-105" />
+                                <div className="absolute inset-0 flex items-end bg-blue-900/0 p-4 opacity-0 transition group-hover:bg-blue-900/30 group-hover:opacity-100">
+                                    <Camera size={18} className="text-white" />
                                 </div>
-
-                            </div>
-
-                            <div className="mb-5">
-
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-
-                                    Your Review
-
-                                </label>
-
-                                <textarea
-
-                                    value={reviewText}
-
-                                    onChange={(e) =>
-
-                                        setReviewText(
-
-                                            e.target.value
-
-                                        )
-
-                                    }
-
-                                    placeholder="Share your experience with this college..."
-
-                                    rows="5"
-
-                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-
-                                />
-
-                            </div>
-
-                            <button
-
-                                type="submit"
-
-                                disabled={submittingReview}
-
-                                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition disabled:opacity-50"
-
-                            >
-
-                                {submittingReview
-
-                                    ? "Submitting..."
-
-                                    : "Submit Review"}
-
-                            </button>
-
-                        </form>
-
+                            </figure>
+                        ))}
                     </div>
+                </div>
 
-                    <div className="space-y-4">
-
-                        {reviews.length === 0 ? (
-
-                            <div className="text-center py-10 text-gray-500">
-
-                                No reviews yet. Be the first to review!
-
+                {/* ===== 6b. REVIEWS ===== */}
+                <div className="mt-20">
+                    <Heading id="reviews" title="What students say" />
+                    <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
+                        <div className="self-start rounded-2xl bg-white p-6 shadow-sm ring-1 ring-blue-100 lg:sticky lg:top-20">
+                            <p className="font-serif text-6xl font-semibold text-blue-950">{stats.avg ? stats.avg.toFixed(1) : "–"}</p>
+                            <div className="mt-2"><Stars value={stats.avg} size={20} /></div>
+                            <p className="mt-2 text-sm text-slate-500">Based on {reviews.length} review{reviews.length === 1 ? "" : "s"}</p>
+                            <div className="mt-5 space-y-2">
+                                {[5, 4, 3, 2, 1].map((n) => {
+                                    const c = stats.counts[n - 1];
+                                    const pct = reviews.length ? (c / reviews.length) * 100 : 0;
+                                    return (
+                                        <div key={n} className="flex items-center gap-3 text-sm">
+                                            <span className="w-3 text-slate-500">{n}</span>
+                                            <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
+                                                <div className="h-full rounded-full bg-blue-600" style={{ width: `${pct}%` }} />
+                                            </div>
+                                            <span className="w-6 text-right text-slate-400">{c}</span>
+                                        </div>
+                                    );
+                                })}
                             </div>
+                        </div>
 
-                        ) : (
-
-                            reviews.map((review) => (
-
-                                <div
-
-                                    key={review._id}
-
-                                    className="w-full bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300"
-
-                                >
-
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-5">
-
-                                        <div className="flex items-center gap-3 min-w-0">
-
-                                            <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
-
-                                                {(review.username)
-
-                                                    .charAt(0)
-
-                                                    .toUpperCase()}
-
+                        <div className="space-y-4">
+                            {reviews.length === 0 ? (
+                                <div className="rounded-2xl border border-dashed border-blue-200 bg-white p-10 text-center text-slate-500">
+                                    No reviews yet. Write the first one above.
+                                </div>
+                            ) : (
+                                reviews.map((r) => (
+                                    <article key={r._id} className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-blue-100">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="flex min-w-0 items-center gap-3">
+                                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-600 font-serif text-lg font-semibold text-white">
+                                                    {(r.username || "A").charAt(0).toUpperCase()}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="truncate font-semibold text-blue-950">{r.username || "Anonymous User"}</p>
+                                                    <p className="text-xs text-slate-500">
+                                                        {r.createdAt
+                                                            ? new Date(r.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+                                                            : ""}
+                                                    </p>
+                                                </div>
                                             </div>
-
-                                            <div className="min-w-auto">
-
-                                                <p className="font-semibold text-gray-900 truncate">
-
-                                                    {review.username}
-
-                                                </p>
-
-                                                <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-
-                                                    Student Review
-
-                                                </p>
-
-                                            </div>
-
-                                        </div>
-
-                                        <span className="text-xs sm:text-sm text-gray-400 whitespace-nowrap sm:pt-1">
-
-                                            {review.createdAt
-
-                                                ? new Date(
-
-                                                    review.createdAt
-
-                                                ).toLocaleDateString(
-
-                                                    "en-IN",
-
-                                                    {
-
-                                                        day: "2-digit",
-
-                                                        month: "short",
-
-                                                        year: "numeric",
-
-                                                    }
-
-                                                )
-
-                                                : ""}
-
-                                        </span>
-
-                                    </div>
-
-                                    <div className="flex items-center gap-3 mb-4">
-
-                                        <div className="flex items-center gap-1">
-
-                                            {[1, 2, 3, 4, 5].map(
-
-                                                (star) => (
-
-                                                    <span
-
-                                                        key={star}
-
-                                                        className={`text-lg sm:text-xl ${star <=
-
-                                                            Number(
-
-                                                                review.rating
-
-                                                            )
-
-                                                            ? "text-yellow-400"
-
-                                                            : "text-gray-200"
-
-                                                            }`}
-                                                    >
-                                                        ★
-                                                    </span>
-                                                )
-                                            )}
-
-                                        </div>
-
-                                        <span className="text-sm font-semibold text-gray-700 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-full">
-
-                                            {review.rating}/5
-
-                                        </span>
-
-                                    </div>
-
-                                    <div className="border-l-4 border-blue-500 bg-gray-50 rounded-r-xl px-4 sm:px-5 py-4">
-
-                                        <p className="text-sm sm:text-base text-gray-700 leading-7 break-words">
-
-                                            {review.review}
-
-                                        </p>
-
-                                    </div>
-
-                                    <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
-
-                                        <span className="text-xs text-gray-400">
-
-                                            Verified Review
-
-                                        </span>
-
-                                        <div className="relative inline-block">
-
-                                            <div className="relative inline-block">
-
-                                                <span
-
-                                                    onClick={() =>
-
-                                                        setOpenMenuId(
-
-                                                            openMenuId === review._id ? null : review._id
-
-                                                        )
-
-                                                    }
-
-                                                    className="text-xs text-gray-400 cursor-pointer"
-
-                                                >
-
-                                                    <CircleChevronUp size={18} />
-
-                                                </span>
-
-                                                {openMenuId === review._id && currentUser?.role === "admin" && (
-
-                                                    <div className="absolute bottom-7 right-0 w-28 bg-white border border-gray-200 rounded-lg shadow-md p-1">
-
-                                                        <button
-
-                                                            onClick={() => {
-
-                                                                handleDeleteReview(review._id);
-
-                                                                setOpenMenuId(null);
-
-                                                            }}
-
-                                                            className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
-
-                                                        >
-
-                                                            Delete
-
+                                            <div className="flex items-center gap-3">
+                                                <Stars value={Number(r.rating)} />
+                                                {isAdmin && (
+                                                    <div className="relative">
+                                                        <button onClick={() => setMenuId(menuId === r._id ? null : r._id)} className="text-slate-400 hover:text-slate-700" aria-label="Review options">
+                                                            <MoreVertical size={18} />
                                                         </button>
-
+                                                        {menuId === r._id && (
+                                                            <button
+                                                                onClick={() => { deleteReview(r._id); setMenuId(null); }}
+                                                                className="absolute right-0 top-7 z-10 flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-red-500 shadow-lg hover:bg-red-50"
+                                                            >
+                                                                <Trash2 size={14} /> Delete review
+                                                            </button>
+                                                        )}
                                                     </div>
-
                                                 )}
-
                                             </div>
-
                                         </div>
-
-                                    </div>
-
-                                </div>
-
-                            ))
-
-                        )}
-
+                                        <p className="mt-4 break-words leading-7 text-slate-700">{r.review}</p>
+                                    </article>
+                                ))
+                            )}
+                        </div>
                     </div>
-
-                </section>
-
+                </div>
             </div>
 
+            {/* ===== lightbox ===== */}
+            {lightbox && (
+                <div onClick={() => setLightbox(null)} className="fixed inset-0 z-[100] flex items-center justify-center bg-blue-950/95 p-4">
+                    <img src={lightbox.imageUrl} alt="College campus" onClick={(e) => e.stopPropagation()} className="max-h-[90vh] max-w-full rounded-lg object-contain" />
+                    {isAdmin && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); deleteImage(lightbox._id); }}
+                            className="absolute left-5 top-5 flex items-center gap-2 rounded-full bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700"
+                        >
+                            <Trash2 size={16} /> Delete
+                        </button>
+                    )}
+                    <button onClick={() => setLightbox(null)} className="absolute right-5 top-5 rounded-full bg-white/10 p-2.5 text-white hover:bg-white/20" aria-label="Close">
+                        <X size={22} />
+                    </button>
+                </div>
+            )}
+
+            {/* ===== admin edit drawer ===== */}
+            {isAdmin && editing && (
+                <div className="fixed inset-0 z-[90] flex justify-end">
+                    <div className="absolute inset-0 bg-blue-950/50" onClick={() => !saving && setEditing(false)} />
+                    <div className="relative flex h-full w-full max-w-2xl flex-col bg-blue-50/50 shadow-2xl">
+                        <div className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
+                            <div>
+                                <h2 className="font-serif text-2xl font-semibold text-blue-950">Edit college</h2>
+                                <p className="text-sm text-slate-500">Changes go live when you save.</p>
+                            </div>
+                            <button onClick={() => setEditing(false)} className="rounded-full p-2 text-slate-500 hover:bg-slate-100" aria-label="Close editor">
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-6">
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                {FIELDS.map(([name, label, type]) => (
+                                    <div key={name}>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700">{label}</label>
+                                        <input
+                                            className={input}
+                                            type={type}
+                                            name={name}
+                                            value={form[name]}
+                                            onChange={(e) => setForm((p) => ({ ...p, [name]: e.target.value }))}
+                                            min={name === "rating" ? "0" : undefined}
+                                            max={name === "rating" ? "5" : undefined}
+                                            step={name === "rating" ? "0.1" : undefined}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            <ListEditor label="Branches" singular="Branch" items={form.branches} onChange={(branches) => setForm((p) => ({ ...p, branches }))} />
+                            <ListEditor label="Facilities" singular="Facility" items={form.facilities} onChange={(facilities) => setForm((p) => ({ ...p, facilities }))} />
+                            <div className="mt-6">
+                                <label className="mb-1.5 block text-sm font-medium text-slate-700">About</label>
+                                <textarea rows={6} className={`${input} resize-none`} value={form.about} onChange={(e) => setForm((p) => ({ ...p, about: e.target.value }))} />
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 border-t border-slate-200 bg-white px-6 py-4">
+                            <button onClick={saveCollege} disabled={saving} className="rounded-xl bg-blue-600 px-6 py-2.5 font-semibold text-white hover:bg-blue-700 disabled:opacity-50">
+                                {saving ? "Saving..." : "Save changes"}
+                            </button>
+                            <button onClick={() => setEditing(false)} disabled={saving} className="rounded-xl bg-slate-100 px-6 py-2.5 font-semibold text-slate-700 hover:bg-slate-200 disabled:opacity-50">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
-
     );
-
 };
 
 export default CollegeInfo;
