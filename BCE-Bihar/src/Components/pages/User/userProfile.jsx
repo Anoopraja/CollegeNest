@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 import api from "../../api/api.js";
-import { NavLink,useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const navigate = useNavigate();
