@@ -240,11 +240,11 @@ const Colleges = () => {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") {
-                  setSearch("");
-                }
-              }}
+              // onKeyDown={(e) => {
+              //   if (e.key === "Escape") {
+              //     setSearch("");
+              //   }
+              // }}
               placeholder="Search colleges by name, district, state..."
               className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-4 pl-14 pr-12 text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-green-500 focus:ring-4 focus:ring-green-500/10"
             />
@@ -255,7 +255,7 @@ const Colleges = () => {
                 className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-red-500"
                 aria-label="Clear search"
               >
-                <X size={19} />
+                {/* <X size={19} /> */}
               </button>
             )}
 
